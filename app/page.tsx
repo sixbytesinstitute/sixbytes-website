@@ -1,9 +1,31 @@
 "use client"
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion"
 import CountUp from "react-countup"
 export default function Home() {
+function Counter({ end, duration = 2000 }: { end: number; duration?: number }) {
+  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [end, duration]);
+
+  return <span>{count.toLocaleString()}</span>;
+}
 return(
 
 <div className="bg-gray-50">
@@ -34,40 +56,57 @@ return(
         />
 
         {/* Heading */}
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
-          SixBytes Educational Institute
-        </h1>
-
+<h1
+  style={{
+    color: "white",
+    textShadow: "2px 2px 6px rgba(0,0,0,0.8)",
+  }}
+  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center"
+>
+  SixBytes Educational Institute
+</h1>
         {/* Subtitle */}
-        <p className="text-gray-200 tracking-wider mb-10">
-          Classes 9–12 | NDA | RMS | Sainik School
-        </p>
+      <p
+  style={{
+    color: "#ffffff",
+    textShadow: "1px 1px 4px rgba(0,0,0,0.8)",
+  }}
+  className="text-sm sm:text-lg mt-4 font-medium mb-8 md:mb-12"
+>
+  Classes 9–10 | Classes 11–12 | NDA | RIMC
+</p>
 
         {/* 🔥 Stats Section */}
-        <div className="flex gap-8 md:gap-16 text-center mb-16">
+        {/* STATS SECTION */}
+        
+<div className="flex justify-center items-center gap-6 md:gap-16 text-center mt-10 mb-16">
 
-          <div className="hover:scale-110 transition duration-300">
-            <h2 className="text-3xl md:text-4xl font-bold text-orange-400">
-              <CountUp end={1200} duration={3} />+
-            </h2>
-            <p className="text-gray-300">Students</p>
-          </div>
+  {/* Students */}
+  <div>
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold">
+  <Counter end={1200} />+
+</h2>
+<p className="stat-label">Students</p>
 
-          <div className="hover:scale-110 transition duration-300">
-            <h2 className="text-3xl md:text-4xl font-bold text-orange-400">
-              <CountUp end={350} duration={3} />+
-            </h2>
-            <p className="text-gray-300">Results</p>
-          </div>
+  </div>
 
-          <div className="hover:scale-110 transition duration-300">
-            <h2 className="text-3xl md:text-4xl font-bold text-orange-400">
-              <CountUp end={8} duration={3} />+
-            </h2>
-            <p className="text-gray-300">Years</p>
-          </div>
+  {/* Results */}
+  <div>
+    <h2 className="text-orange-400 text-3xl sm:text-4xl md:text-5xl font-extrabold">
+      <Counter end={350} />+
+    </h2>
+    <p className="text-white/90 text-sm mt-2">Results</p>
+  </div>
 
-        </div>
+  {/* Years */}
+  <div>
+    <h2 className="text-orange-400 text-3xl sm:text-4xl md:text-5xl font-extrabold">
+      <Counter end={8} />+
+    </h2>
+    <p className="text-white/90 text-sm mt-2">Years</p>
+  </div>
+
+</div>
 
         {/* 🔥 CTA Button */}
         <a

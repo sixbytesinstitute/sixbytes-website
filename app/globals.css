@@ -1,55 +1,88 @@
 @import "tailwindcss";
 
-/* Root colors */
+/* =========================
+   ROOT COLORS
+========================= */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111827; /* dark text */
 }
 
-/* Body */
-body {
+/* =========================
+   BASE STYLES
+========================= */
+html, body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* ----------------------------- */
-/* 🔥 GLOBAL TEXT FIXES */
-/* ----------------------------- */
+/* =========================
+   GLOBAL TEXT FIX
+========================= */
 
-/* Headings */
-h1 {
-  color: #ffffff; /* hero heading white */
+/* Headings always dark */
+h1, h2, h3, h4, h5, h6 {
+  color: #111827;
+  font-weight: 700;
+}
+
+/* Paragraphs readable */
+p {
+  color: #374151; /* gray-700 */
+}
+
+/* =========================
+   SECTION AUTO FIX
+========================= */
+
+/* Light sections → dark text */
+section {
+  color: #111827;
+}
+
+/* If background is white or light */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100 {
+  color: #111827 !important;
+}
+
+/* =========================
+   HERO / DARK BACKGROUND FIX
+========================= */
+
+/* Allow white text only when explicitly needed */
+.text-white {
+  color: #ffffff !important;
+}
+
+/* =========================
+   STATS COLOR FIX (GLOBAL)
+========================= */
+
+/* Make numbers orange everywhere */
+.stats-number {
+  color: #fb923c !important; /* orange-400 */
   font-weight: 800;
 }
 
-h2 {
-  color: #f97316; /* 🔥 ORANGE STATS FIX */
-  font-weight: 800;
+/* Labels under stats */
+.stats-label {
+  color: #d1d5db; /* gray-300 */
 }
 
-h3, h4, h5, h6 {
-  color: #171717;
+/* =========================
+   BUTTON FIX
+========================= */
+button {
   font-weight: 600;
 }
 
-/* Paragraphs */
-p {
-  color: rgba(255, 255, 255, 0.9); /* visible on dark bg */
-}
-
-/* ----------------------------- */
-/* OPTIONAL: Improve readability */
-/* ----------------------------- */
-
-/* Subtitles */
-.subtitle {
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 500;
-}
-
-/* Stats labels */
-.stat-label {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 14px;
+/* =========================
+   SMOOTH TEXT
+========================= */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

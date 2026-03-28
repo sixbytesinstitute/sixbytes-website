@@ -216,59 +216,80 @@ return(
 </section>
 
 {/* RESULTS */}
+<section className="py-20 px-6 bg-gradient-to-b from-[#0a1f44] to-[#102c5c]">
 
-<section className="bg-white py-20">
-  
+  {/* Heading */}
+  <h2 className="text-3xl md:text-5xl font-bold text-center text-white mb-14">
+   Our Top Results
+  </h2>
 
-<h2 className="text-4xl font-bold text-center mb-12">
-Our Top Results
-</h2>
+  {/* Cards */}
+  <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
 
-<div className="backdrop-blur-md bg-white/70 border border-white/30 p-8 rounded-2xl shadow-xl hover:scale-105 transition">
+    {/* Student 1 */}
+    <div className="bg-white rounded-2xl p-8 text-center shadow-xl border border-orange-100 hover:shadow-2xl hover:scale-105 transition-all duration-500">
 
-<motion.div
-whileHover={{scale:1.05}}
-className="bg-gray-50 p-8 rounded-xl shadow text-center"
->
+      <img
+        src="/topper1.jpg"
+        alt="Ishant Bisht"
+        className="w-24 h-24 mx-auto rounded-full border-4 border-orange-400 mb-4"
+      />
 
-<img
-src="/topper1.jpg"
-className="w-24 h-24 rounded-full mx-auto mb-4"
-/>
+      <h3 className="text-xl font-semibold text-gray-900">
+        Ishant Bisht
+      </h3>
 
-<h3 className="text-xl font-bold">Ishant Bisht</h3>
+      <p className="text-gray-500 text-sm">
+        Class 10
+      </p>
 
-<p className="text-gray-600">Class 10</p>
+      <p className="text-4xl font-bold text-orange-500 mt-3 animate-pulse">
+        94%
+      </p>
 
-<p className="text-orange-500 text-3xl font-bold">94%</p>
+      <p className="text-gray-500 mt-2 text-sm">
+        Outstanding performance in board exams
+      </p>
 
-</motion.div>
+    </div>
 
+    {/* Student 2 */}
+    <div className="bg-white rounded-2xl p-8 text-center shadow-xl border border-orange-100 hover:shadow-2xl hover:scale-105 transition-all duration-500">
 
-<motion.div
-whileHover={{scale:1.05}}
-className="bg-gray-50 p-8 rounded-xl shadow text-center"
->
+      <img
+        src="/topper2.jpg"
+        alt="Anshika Baluni"
+        className="w-24 h-24 mx-auto rounded-full border-4 border-orange-400 mb-4"
+      />
 
-<img
-src="/topper2.jpg"
-className="w-24 h-24 rounded-full mx-auto mb-4"
-/>
+      <h3 className="text-xl font-semibold text-gray-900">
+        Anshika Baluni
+      </h3>
 
-<h3 className="text-xl font-bold">Anshika Baluni</h3>
+      <p className="text-gray-500 text-sm">
+        Class 12
+      </p>
 
-<p className="text-gray-600">Class 12</p>
+      <p className="text-4xl font-bold text-orange-500 mt-3 animate-pulse">
+        92%
+      </p>
 
-<p className="text-orange-500 text-3xl font-bold">92%</p>
+      <p className="text-gray-500 mt-2 text-sm">
+        Excellent performance in Science stream
+      </p>
 
-</motion.div>
+    </div>
 
-</div>
+  </div>
+
+  {/* CTA Button */}
+  <div className="text-center mt-14">
+    <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold shadow-lg transition-all duration-300 hover:scale-110">
+      Join Our Success Batch
+    </button>
+  </div>
 
 </section>
-<div className="backdrop-blur-md bg-white/70 border border-white/30 p-8 rounded-2xl shadow-xl hover:scale-105 transition"></div>
-
-
 
 <section className="py-20 bg-gray-50">
 

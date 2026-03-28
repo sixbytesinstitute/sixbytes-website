@@ -3,14 +3,16 @@ export default function AboutPage() {
     <main>
 
       {/* ================= HERO SECTION ================= */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20 px-6 text-center">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">
-          About SixBytes Educational Institute
-        </h1>
-        <p className="text-white/80 text-sm md:text-lg">
-          Shaping Future Leaders through Quality Education
-        </p>
-      </section>
+   <section className="bg-gradient-to-r from-[#0a1f44] to-[#102c5c] py-20 px-6 text-center text-white">
+
+  <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white">
+    About SixBytes Educational Institute
+  </h1>
+
+ <p className="inline-block bg-orange-500 text-white px-5 py-2 rounded-full text-sm md:text-base font-semibold mt-4 shadow-lg">
+  Shaping Future Leaders through Quality Education
+</p>
+</section>
 
 
       {/* ================= WHO WE ARE ================= */}
@@ -54,24 +56,49 @@ export default function AboutPage() {
 
 
           {/* RIGHT SIDE CARD */}
-          <div className="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-2xl p-8 shadow-xl">
+         <section className="py-16 px-6 flex justify-center bg-white">
 
-            <h3 className="text-2xl font-semibold mb-4">
-              Why Choose Us 🎯
-            </h3>
+  <div className="max-w-4xl w-full bg-[#0a1f44] rounded-2xl p-8 md:p-10 shadow-xl transition-all duration-500 hover:scale-[1.02]">
 
-            <ul className="space-y-3 text-sm md:text-base">
-              <li>✅ Expert Faculty with experience</li>
-              <li>✅ Small batch size for personal attention</li>
-              <li>✅ Weekly tests & performance tracking</li>
-              <li>✅ NDA, RMS & Sainik School preparation</li>
-            </ul>
+    {/* Heading */}
+    <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-2 animate-fadeIn">
+      Why Choose Us 🎯
+    </h2>
 
-            <button className="mt-6 bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded-lg font-semibold transition">
-              Book Free Demo
-            </button>
+    {/* Points */}
+    <ul className="space-y-4 text-white/90 text-sm md:text-base">
 
-          </div>
+      <li className="flex items-center gap-3 animate-slideUp">
+        <span className="text-green-400 text-lg">✔</span>
+        Expert Faculty with experience
+      </li>
+
+      <li className="flex items-center gap-3 animate-slideUp delay-100">
+        <span className="text-green-400 text-lg">✔</span>
+        Small batch size for personal attention
+      </li>
+
+      <li className="flex items-center gap-3 animate-slideUp delay-200">
+        <span className="text-green-400 text-lg">✔</span>
+        Weekly tests & performance tracking
+      </li>
+
+      <li className="flex items-center gap-3 animate-slideUp delay-300">
+        <span className="text-green-400 text-lg">✔</span>
+        NDA, RMS & Sainik School preparation
+      </li>
+
+    </ul>
+
+    {/* Button */}
+    <div className="mt-8">
+      <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105">
+        Book Free Demo
+      </button>
+    </div>
+
+  </div>
+</section>
 
         </div>
 

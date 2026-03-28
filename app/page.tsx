@@ -125,51 +125,95 @@ return(
 {/* COURSES */}
 
 
-<section className="py-20 px-6 max-w-6xl mx-auto">
+<section className="py-20 px-6 bg-gray-50">
+  <div className="max-w-6xl mx-auto text-center">
 
-<h2 className="text-4xl font-bold text-center mb-12">
-  
-Our Courses
-</h2>
+    {/* Heading */}
+    <h2 className="text-3xl md:text-4xl font-bold text-orange-500 mb-4">
+      Our Courses
+    </h2>
 
-<div className="grid md:grid-cols-3 gap-10">
+    <p className="text-gray-600 mb-12">
+      Comprehensive coaching programs designed to build strong concepts and deliver excellent results.
+    </p>
 
-<motion.div
-whileHover={{scale:1.08}}
-className="bg-white p-8 rounded-xl shadow-lg text-center"
->
-<h3 className="text-2xl font-bold mb-3">Class 9–10</h3>
-<p className="text-gray-600">
-Strong foundation in Maths & Science
-</p>
-</motion.div>
+    {/* Cards */}
+    <div className="grid md:grid-cols-3 gap-8">
 
+      {/* Card 1 */}
+      <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300">
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          Class 9–10 Foundation
+        </h3>
 
-<motion.div
-whileHover={{scale:1.08}}
-className="bg-white p-8 rounded-xl shadow-lg text-center"
->
-<h3 className="text-2xl font-bold mb-3">Class 11–12</h3>
-<p className="text-gray-600">
-Board exam preparation with weekly tests
-</p>
-</motion.div>
+        <p className="text-gray-600 text-sm mb-4">
+          Build strong fundamentals in Maths & Science with conceptual clarity and regular practice.
+        </p>
 
+        <ul className="text-gray-700 text-sm space-y-2 mb-4">
+          <li>✔ Maths & Science Focus</li>
+          <li>✔ Weekly Tests & Analysis</li>
+          <li>✔ Doubt Solving Sessions</li>
+        </ul>
 
-<motion.div
-whileHover={{scale:1.08}}
-className="bg-white p-8 rounded-xl shadow-lg text-center"
->
-<h3 className="text-2xl font-bold mb-3">NDA</h3>
-<p className="text-gray-600">
-Complete defence exam preparation
-</p>
-</motion.div>
+        <p className="text-orange-500 font-semibold">
+          Strong base for future success
+        </p>
+      </div>
 
-</div>
+      {/* Card 2 */}
+      <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300">
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          Class 11–12 (Boards + Competitive)
+        </h3>
 
+        <p className="text-gray-600 text-sm mb-4">
+          Focused preparation for board exams along with competitive exams like JEE/NEET foundation.
+        </p>
+
+        <ul className="text-gray-700 text-sm space-y-2 mb-4">
+          <li>✔ Physics, Chemistry, Maths/Biology</li>
+          <li>✔ Board + Competitive Strategy</li>
+          <li>✔ Regular Mock Tests</li>
+        </ul>
+
+        <p className="text-orange-500 font-semibold">
+          Score high in boards & entrance exams
+        </p>
+      </div>
+
+      {/* Card 3 */}
+      <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300">
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          NDA / RMS / Sainik School
+        </h3>
+
+        <p className="text-gray-600 text-sm mb-4">
+          Special coaching for defence entrance exams with written + interview preparation.
+        </p>
+
+        <ul className="text-gray-700 text-sm space-y-2 mb-4">
+          <li>✔ Maths + General Ability</li>
+          <li>✔ SSB Interview Guidance</li>
+          <li>✔ Physical & Personality Training</li>
+        </ul>
+
+        <p className="text-orange-500 font-semibold">
+          Complete defence exam preparation
+        </p>
+      </div>
+
+    </div>
+
+    {/* CTA */}
+    <div className="mt-12">
+      <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold shadow-lg">
+        Book Free Demo Class
+      </button>
+    </div>
+
+  </div>
 </section>
-<div className="w-24 h-1 bg-orange-500 mx-auto my-16 rounded"></div>
 
 {/* RESULTS */}
 
@@ -223,6 +267,8 @@ className="w-24 h-24 rounded-full mx-auto mb-4"
 
 </section>
 <div className="backdrop-blur-md bg-white/70 border border-white/30 p-8 rounded-2xl shadow-xl hover:scale-105 transition"></div>
+
+
 
 <section className="py-20 bg-gray-50">
 
@@ -291,6 +337,76 @@ className="w-24 h-24 rounded-full mx-auto mb-4"
 
   </div>
 
+</section>
+
+
+
+{/* SEO SECTION */}
+<section className="py-24 px-6 bg-gradient-to-b from-white to-orange-50 text-gray-800">
+  <div className="max-w-5xl mx-auto text-center">
+
+    {/* Heading */}
+    <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+      Best Coaching Institute in{" "}
+      <span className="text-orange-500">Premnagar, Dehradun</span>
+    </h2>
+
+    {/* Subtitle */}
+    <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-10">
+      SixBytes Educational Institute provides expert coaching for Class 9–12,
+      NDA, RMS, and Sainik School with a focus on conceptual clarity and real results.
+    </p>
+    <p className="text-orange-500 font-semibold mb-6">
+  ✔ Trusted by 1000+ Students in Dehradun
+</p>
+
+    {/* Info Card */}
+    <div className="bg-white shadow-xl rounded-2xl p-8 md:p-10 text-left space-y-6">
+
+      <p className="text-gray-700 leading-relaxed">
+        We specialize in building strong foundations in{" "}
+        <span className="font-semibold text-gray-900">
+          Mathematics, Physics, Chemistry, and Biology
+        </span>.
+        Our experienced faculty ensures that every student receives personal attention.
+      </p>
+
+      <p className="text-gray-700 leading-relaxed">
+        With small batch sizes, regular test series, and doubt-solving sessions,
+        students consistently improve and achieve excellent results.
+      </p>
+
+      <p className="text-gray-700 leading-relaxed">
+        We also provide dedicated preparation for{" "}
+        <span className="font-semibold text-orange-500">
+          NDA, RMS, and Sainik School entrance exams
+        </span>.
+      </p>
+
+    </div>
+
+    {/* Highlights */}
+    <div className="mt-12 flex flex-wrap justify-center gap-4">
+
+      <span className="bg-orange-500 text-white px-5 py-2 rounded-full text-sm font-semibold shadow">
+        Expert Faculty
+      </span>
+
+      <span className="bg-orange-500 text-white px-5 py-2 rounded-full text-sm font-semibold shadow">
+        Small Batch Size
+      </span>
+
+      <span className="bg-orange-500 text-white px-5 py-2 rounded-full text-sm font-semibold shadow">
+        Weekly Tests
+      </span>
+
+      <span className="bg-orange-500 text-white px-5 py-2 rounded-full text-sm font-semibold shadow">
+        Doubt Session
+      </span>
+
+    </div>
+
+  </div>
 </section>
 
 {/* CALL TO ACTION */}

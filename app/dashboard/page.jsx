@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-export const metadata = {
-  robots: "noindex, nofollow",
-};
+
 export default function Dashboard() {
   const [materials, setMaterials] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");

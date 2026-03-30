@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-export const metadata = {
-  robots: "noindex, nofollow",
-};
+
 export default function StudentLogin() {
   const router = useRouter();
 

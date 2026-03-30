@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-export const metadata = {
-  robots: "noindex, nofollow",
-};
+
 export default function UploadPage() {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");

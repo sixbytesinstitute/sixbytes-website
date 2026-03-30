@@ -9,7 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
     "framer-motion": "^12.38.0",
+    "mongoose": "^9.3.3",
     "next": "16.2.1",
     "next-sitemap": "^4.2.3",
     "react": "19.2.4",

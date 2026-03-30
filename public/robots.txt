@@ -7,3 +7,7 @@ Host: https://sixbytes.in
 
 # Sitemaps
 Sitemap: https://sixbytes.in/sitemap.xml
+User-agent: *
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /student-login

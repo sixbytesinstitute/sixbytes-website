@@ -27,7 +27,7 @@ export default function Navbar() {
 
           <a href="/" className={linkStyle("/")}>Home</a>
           <a href="/about" className={linkStyle("/about")}>About Us</a>
-          <a href="/login" className={linkStyle("/login")}>Student Login</a>
+          <a href="/student-login" className={linkStyle("/login")}>Student-Login</a>
 <a href="/courses" className= {linkStyle("/courses")}>Courses</a>
 <a href="/results" className= {linkStyle("/results")}>Results</a>
 <a href="/contact" className= {linkStyle("/contact")}>Contact Us</a>
@@ -48,7 +48,7 @@ export default function Navbar() {
 
           <a href="/">Home</a>
           <a href="/about">About</a>
-          <a href="/login">Student Login</a>
+          <a href="/student-login">Student-Login</a>
           <a href="/courses">Courses</a>
            <a href="/results">results</a>
             <a href="/contact">contact</a>

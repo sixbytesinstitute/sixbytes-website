@@ -1,88 +1,319 @@
 @import "tailwindcss";
 
-/* =========================
-   ROOT COLORS
-========================= */
+/* ==========================================================================
+   SixBytes Educational Institute — Design System Tokens
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #111827; /* dark text */
+  /* Canvas & Surface Colors */
+  --color-obsidian: #0a0c0e;
+  --color-navy: #0f1318;
+  --color-navy-mid: #141a1f;
+  --color-navy-light: #1c242c;
+
+  /* Brand Orange Palette */
+  --color-orange: #F97316;
+  --color-orange-light: #FB923C;
+  --color-orange-dim: rgba(249, 115, 22, 0.12);
+  --color-orange-glow: rgba(249, 115, 22, 0.25);
+
+  /* Typography Colors */
+  --color-cream: #F7F3EC;
+  --color-text-muted: rgba(247, 243, 236, 0.60);
+  --color-text-dim: rgba(247, 243, 236, 0.38);
+
+  /* Glassmorphism & Borders */
+  --color-glass-bg: rgba(20, 26, 31, 0.7);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-glass-border-hover: rgba(249, 115, 22, 0.35);
+
+  /* Font Families */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
 }
 
-/* =========================
-   BASE STYLES
-========================= */
-html, body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, -apple-system, sans-serif;
+/* ==========================================================================
+   Base HTML & Reset
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: var(--color-obsidian);
 }
 
-/* =========================
-   GLOBAL TEXT FIX
-========================= */
-
-/* Headings always dark */
-h1, h2, h3, h4, h5, h6 {
-  color: #111827;
-  font-weight: 700;
-}
-
-/* Paragraphs readable */
-p {
-  color: #374151; /* gray-700 */
-}
-
-/* =========================
-   SECTION AUTO FIX
-========================= */
-
-/* Light sections → dark text */
-section {
-  color: #111827;
-}
-
-/* If background is white or light */
-.bg-white,
-.bg-gray-50,
-.bg-gray-100 {
-  color: #111827 !important;
-}
-
-/* =========================
-   HERO / DARK BACKGROUND FIX
-========================= */
-
-/* Allow white text only when explicitly needed */
-.text-white {
-  color: #ffffff !important;
-}
-
-/* =========================
-   STATS COLOR FIX (GLOBAL)
-========================= */
-
-/* Make numbers orange everywhere */
-.stats-number {
-  color: #fb923c !important; /* orange-400 */
-  font-weight: 800;
-}
-
-/* Labels under stats */
-.stats-label {
-  color: #d1d5db; /* gray-300 */
-}
-
-/* =========================
-   BUTTON FIX
-========================= */
-button {
-  font-weight: 600;
-}
-
-/* =========================
-   SMOOTH TEXT
-========================= */
-* {
+body {
+  background-color: var(--color-obsidian);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-orange);
+  color: #ffffff;
+}
+
+/* Accessible focus visible */
+:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Typography Utilities
+   ========================================================================== */
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.text-cream {
+  color: var(--color-cream);
+}
+
+.text-muted-custom {
+  color: var(--color-text-muted);
+}
+
+.text-dim-custom {
+  color: var(--color-text-dim);
+}
+
+.text-orange-custom {
+  color: var(--color-orange);
+}
+
+.text-gradient-orange {
+  background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   Surface & Glassmorphism Utilities
+   ========================================================================== */
+
+.bg-obsidian {
+  background-color: var(--color-obsidian);
+}
+
+.bg-navy {
+  background-color: var(--color-navy);
+}
+
+.bg-navy-mid {
+  background-color: var(--color-navy-mid);
+}
+
+.glass-card {
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-glass-border-hover);
+  box-shadow: 0 12px 40px 0 rgba(249, 115, 22, 0.15);
+}
+
+/* Subtle background grid pattern */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* ==========================================================================
+   Interactive Buttons & Controls
+   ========================================================================== */
+
+.btn-orange {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.875rem;
+  background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(249, 115, 22, 0.38);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease;
+}
+
+.btn-orange:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.5);
+}
+
+.btn-orange:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.875rem;
+  background: transparent;
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--color-orange);
+  color: var(--color-orange);
+  background: rgba(249, 115, 22, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Section Headers, Pills & Accents
+   ========================================================================== */
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+
+.orange-rule {
+  width: 2rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-orange), transparent);
+  display: inline-block;
+}
+
+.shimmer-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0.5) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 4s infinite linear;
+}
+
+/* ==========================================================================
+   Scroll Reveal Animations
+   ========================================================================== */
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+
+/* ==========================================================================
+   Keyframe Animations
+   ========================================================================== */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.08); }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-float {
+  animation: floatY 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glowPulse 5s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 30s linear infinite;
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

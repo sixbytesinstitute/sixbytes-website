@@ -9,13 +9,20 @@ export async function POST(req) {
 
     const { email, password } = await req.json();
 
-    // check user
-    const user = await Student.findOne({ email });
+    if (!email || !password) {
+      return NextResponse.json({
+        success: false,
+        error: "Please provide both email and password",
+      });
+    }
+
+    // check user (case-insensitive email lookup)
+    const user = await Student.findOne({ email: email.toLowerCase().trim() });
 
     if (!user) {
       return NextResponse.json({
         success: false,
-        error: "User not found",
+        error: "Account not found with this email",
       });
     }
 
@@ -25,24 +32,26 @@ export async function POST(req) {
     if (!isMatch) {
       return NextResponse.json({
         success: false,
-        error: "Invalid password",
+        error: "Incorrect password. Please try again.",
       });
     }
 
     return NextResponse.json({
       success: true,
       user: {
+        id: user._id,
         name: user.name,
         email: user.email,
+        class: user.class || "10",
       },
     });
 
   } catch (error) {
-    console.log("LOGIN ERROR:", error);
+    console.error("LOGIN ERROR:", error);
 
     return NextResponse.json({
       success: false,
-      error: "Server error",
+      error: "An unexpected server error occurred. Please try again.",
     });
   }
 }

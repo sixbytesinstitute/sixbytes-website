@@ -1,13 +1,16 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /student-login
+Disallow: /api
+Disallow: /api/*
 
 # Host
 Host: https://sixbytes.in
 
 # Sitemaps
 Sitemap: https://sixbytes.in/sitemap.xml
-User-agent: *
-Disallow: /admin
-Disallow: /dashboard
-Disallow: /student-login

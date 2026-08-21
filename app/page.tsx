@@ -73,14 +73,14 @@ const TOPPERS = [
     name: "Shubham Bisht",
     exam: "Class 12 Science Board",
     score: "94%",
-    image: "/Student2.jpg",
+    image: "/student2.jpg",
     badge: "School Topper",
   },
   {
     name: "Shray Sundly",
     exam: "Class 12 Science Board",
     score: "87%",
-    image: "/Student1.jpg",
+    image: "/student1.jpg",
     badge: "Merit Achiever",
   },
 ]

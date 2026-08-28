@@ -11,6 +11,14 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { readFileSync } from "fs";
 import { resolve } from "path";
+import dns from "dns";
+
+// Fix Windows DNS querySrv ECONNREFUSED issue
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch (e) {
+  // ignore if in constrained environment
+}
 
 // ─── Parse .env.local manually ──────────────────────────
 function loadEnv() {

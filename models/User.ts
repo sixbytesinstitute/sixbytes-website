@@ -1,20 +1,8 @@
 import mongoose from "mongoose";
+import { CLASSES, STREAMS, ROLES, SUBJECTS } from "@/lib/constants";
 
-// ─── Constants ──────────────────────────────────────────
-export const CLASSES = ["9", "10", "11", "12", "NDA"] as const;
-export const STREAMS = ["PCM", "PCB", "General", "Defence", "N/A"] as const;
-export const ROLES = ["admin", "faculty", "student"] as const;
-export const SUBJECTS = [
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "English",
-  "Hindi",
-  "Social Science",
-  "GAT",
-  "Computer Science",
-] as const;
+// Re-export constants for backward compatibility
+export { CLASSES, STREAMS, ROLES, SUBJECTS };
 
 // ─── Schema ─────────────────────────────────────────────
 const UserSchema = new mongoose.Schema({

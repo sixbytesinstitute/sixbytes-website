@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 import { Playfair_Display, Cormorant_Garamond, DM_Sans } from "next/font/google"
 import Navbar from "./components/navbar"
 import Footer from "./components/footer"
+import ClientProviders from "./components/client-providers"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -150,6 +151,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Navbar />
         <main className="flex-1 w-full">{children}</main>
         <Footer />
+        <ClientProviders />
       </body>
     </html>
   )

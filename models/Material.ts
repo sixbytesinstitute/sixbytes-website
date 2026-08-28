@@ -1,14 +1,8 @@
 import mongoose from "mongoose";
-import { CLASSES } from "./User";
+import { CLASSES, MATERIAL_CATEGORIES } from "@/lib/constants";
 
-export const MATERIAL_CATEGORIES = [
-  "Class Notes",
-  "Formula Sheet",
-  "PYQ Question Bank",
-  "Mock Test Paper",
-  "Syllabus Guide",
-  "Reference",
-] as const;
+// Re-export for backward compatibility
+export { MATERIAL_CATEGORIES };
 
 const MaterialSchema = new mongoose.Schema({
   title: {

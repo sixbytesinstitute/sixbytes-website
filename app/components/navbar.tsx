@@ -9,7 +9,9 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/courses", label: "Courses" },
   { href: "/results", label: "Results" },
+  { href: "/resources", label: "Resources" },
   { href: "/contact", label: "Contact" },
+  { href: "/login", label: "Portal" },
 ]
 
 export default function Navbar() {

@@ -140,6 +140,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       className={`${playfair.variable} ${cormorant.variable} ${dmSans.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
       <head>
         <script

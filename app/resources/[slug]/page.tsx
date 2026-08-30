@@ -343,7 +343,7 @@ export default function ResourceDetailPage() {
         </div>
       )}
 
-      {/* ─── Structured CSS for BYJU'S & SHAALAA HTML Components ─ */}
+      {/* ─── Structured CSS for Academic & Program Components ─ */}
       <style jsx global>{`
         /* Light / Dark Mode Typography & Box Rules */
         .resource-content-area h2 {
@@ -403,7 +403,7 @@ export default function ResourceDetailPage() {
           border-bottom: 1px solid ${isLight ? "#f1f5f9" : "rgba(255,255,255,0.04)"};
         }
 
-        /* BYJU'S Table of Contents Block */
+        /* Table of Contents Block */
         .toc-box {
           background-color: ${isLight ? "#f8fafc" : "rgba(255,255,255,0.03)"};
           border: 1px solid ${isLight ? "#e2e8f0" : "rgba(255,255,255,0.08)"};
@@ -436,7 +436,7 @@ export default function ResourceDetailPage() {
           text-decoration: underline;
         }
 
-        /* SHAALAA QUESTION CARD */
+        /* QUESTION & SOLUTION CARDS */
         .qa-card {
           border-radius: 1rem;
           margin: 1.75rem 0;
@@ -479,25 +479,67 @@ export default function ResourceDetailPage() {
           margin-bottom: 0.75rem;
         }
 
-        /* Chemical Reaction Box (BYJU'S) */
+        /* Multi-line Program & Reaction Code Block Formatting */
+        .resource-content-area pre,
+        .program-box,
+        .reaction-box {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+          font-size: 0.875rem;
+          line-height: 1.7;
+          border-radius: 0.875rem;
+          padding: 1.25rem 1.5rem;
+          margin: 1.25rem 0;
+          overflow-x: auto;
+          white-space: pre-wrap !important;
+          word-break: break-word;
+          tab-size: 4;
+        }
+
+        .resource-content-area pre {
+          background-color: ${isLight ? "#0f172a" : "#07090b"};
+          color: ${isLight ? "#f8fafc" : "#38bdf8"};
+          border: 1px solid ${isLight ? "#334155" : "rgba(255,255,255,0.12)"};
+        }
+
+        .program-box {
+          background-color: ${isLight ? "#0f172a" : "#07090b"};
+          color: ${isLight ? "#38bdf8" : "#38bdf8"};
+          border: 1px solid ${isLight ? "#1e293b" : "rgba(255,255,255,0.14)"};
+          box-shadow: ${isLight ? "0 4px 6px -1px rgba(0, 0, 0, 0.08)" : "0 8px 12px -2px rgba(0, 0, 0, 0.4)"};
+        }
+
         .reaction-box {
           background-color: ${isLight ? "#f1f5f9" : "#07090b"};
           border: 1px solid ${isLight ? "#cbd5e1" : "rgba(255,255,255,0.12)"};
-          border-radius: 0.875rem;
-          padding: 1rem 1.25rem;
-          margin: 1.25rem 0;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 0.875rem;
           color: ${isLight ? "#0f172a" : "#fef08a"};
-          overflow-x: auto;
         }
+
         .reaction-label {
           font-size: 0.75rem;
           font-weight: 700;
           color: #f97316;
-          margin-bottom: 0.35rem;
+          margin-bottom: 0.5rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
+          font-family: var(--font-sans, sans-serif);
+        }
+
+        .resource-content-area code {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          background-color: ${isLight ? "#f1f5f9" : "rgba(255,255,255,0.08)"};
+          color: ${isLight ? "#ea580c" : "#f59e0b"};
+          padding: 0.2rem 0.4rem;
+          border-radius: 0.375rem;
+          font-size: 0.85em;
+        }
+
+        .resource-content-area pre code,
+        .program-box code {
+          background-color: transparent;
+          color: inherit;
+          padding: 0;
+          border-radius: 0;
+          font-size: inherit;
         }
 
         /* Formula Box */

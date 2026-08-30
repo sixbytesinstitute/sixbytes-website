@@ -26,6 +26,7 @@ interface Resource {
   subject: string
   targetClass: string
   board?: string
+  resourceType?: string
   chapter: string | null
   keywords?: string[]
   viewCount: number
@@ -45,6 +46,7 @@ export default function ResourcesPage() {
   const [filterSubject, setFilterSubject] = useState("")
   const [filterClass, setFilterClass] = useState("")
   const [filterBoard, setFilterBoard] = useState("")
+  const [filterType, setFilterType] = useState("")
   const [theme, setTheme] = useState<"dark" | "light">("dark")
 
   useEffect(() => {
@@ -66,6 +68,7 @@ export default function ResourcesPage() {
     if (filterSubject) params.set("subject", filterSubject)
     if (filterClass) params.set("class", filterClass)
     if (filterBoard) params.set("board", filterBoard)
+    if (filterType) params.set("type", filterType)
 
     const timeout = setTimeout(() => {
       fetch(`/api/resources?${params}`)
@@ -78,13 +81,14 @@ export default function ResourcesPage() {
     }, 250)
 
     return () => clearTimeout(timeout)
-  }, [search, filterSubject, filterClass, filterBoard])
+  }, [search, filterSubject, filterClass, filterBoard, filterType])
 
   const isLight = theme === "light"
 
   const subjectOptions = [
     { value: "", label: "All Subjects" },
     ...SUBJECTS.map((s) => ({ value: s, label: s })),
+    { value: "Mathematics", label: "Mathematics" },
   ]
 
   const classOptions = [
@@ -114,7 +118,7 @@ export default function ResourcesPage() {
           <div className="flex items-center gap-2 flex-wrap text-[11px]">
             <span className="font-semibold text-orange-500 flex items-center gap-1">
               <IconGraduationCap size={14} />
-              <span>CBSE &amp; ICSE Free Knowledge Vault</span>
+              <span>SixBytes Free Knowledge Vault</span>
             </span>
             <span className="opacity-40">•</span>
             <span>Classes 9–12 Science, Math &amp; Coding</span>
@@ -129,7 +133,7 @@ export default function ResourcesPage() {
                 ? "bg-white text-slate-700 hover:text-orange-600 border border-slate-300 hover:border-orange-400"
                 : "bg-white/[0.08] text-cream/90 hover:text-orange-400 border border-white/10 hover:border-orange-500/40"
             }`}
-            title={isLight ? "Switch to Dark Mode (Obsidian View)" : "Switch to Light Mode (BYJU'S / Paper View)"}
+            title={isLight ? "Switch to Dark Mode (Obsidian View)" : "Switch to Light Mode (Clean Paper View)"}
           >
             {isLight ? (
               <>
@@ -157,7 +161,7 @@ export default function ResourcesPage() {
             }`}
           >
             <IconSparkles size={13} />
-            <span>Open Educational Repository • Shaalaa &amp; BYJU&apos;S Pattern</span>
+            <span>Open Educational Repository • CBSE &amp; ICSE Curriculum</span>
           </div>
 
           <h1
@@ -172,8 +176,43 @@ export default function ResourcesPage() {
           </h1>
 
           <p className={`text-sm sm:text-base leading-relaxed ${isLight ? "text-slate-600" : "text-muted-custom"}`}>
-            Chapter-wise NCERT &amp; reference notes, chemical equations with catalysts, formula derivations, solved board exam questions, and FAQs for CBSE &amp; ICSE Class 10.
+            Chapter-wise NCERT concept notes, chemical equations with catalysts, formula derivations, solved board exam questions, and FAQs for CBSE &amp; ICSE Class 10 and 12.
           </p>
+
+          {/* Resource Type Switcher Tabs (Topic Guides vs Solved Q&A) */}
+          <div className="flex justify-center pt-2">
+            <div
+              className={`inline-flex p-1 rounded-xl border ${
+                isLight ? "bg-slate-100 border-slate-200" : "bg-black/40 border-white/10"
+              }`}
+            >
+              {[
+                { label: "All Study Resources", value: "" },
+                { label: "Full Chapter Concept Guides", value: "topic_guide" },
+                { label: "Solved Board Questions (Q&A)", value: "question_bank" },
+              ].map((tab) => {
+                const isActive = filterType === tab.value
+                return (
+                  <button
+                    key={tab.value}
+                    onClick={() => {
+                      setFilterType(tab.value)
+                      setLoading(true)
+                    }}
+                    className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      isActive
+                        ? "bg-orange-500 text-white shadow-md shadow-orange-500/25"
+                        : isLight
+                        ? "text-slate-600 hover:text-slate-900"
+                        : "text-muted-custom hover:text-cream"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
         </div>
 
         {/* ─── Search & Filter Bar ────────────────────────── */}
@@ -252,7 +291,7 @@ export default function ResourcesPage() {
             <span className={`text-[10px] font-bold uppercase tracking-wider mr-1 ${isLight ? "text-slate-400" : "text-muted-custom/60"}`}>
               Quick Filter:
             </span>
-            {["", "Chemistry", "Physics", "Biology", "Computer"].map((sub) => {
+            {["", "Chemistry", "Physics", "Biology", "Computer", "Mathematics"].map((sub) => {
               const active = filterSubject === sub
               return (
                 <button
@@ -309,6 +348,7 @@ export default function ResourcesPage() {
                 setFilterSubject("")
                 setFilterClass("")
                 setFilterBoard("")
+                setFilterType("")
               }}
               className="text-xs text-orange-500 font-semibold hover:underline cursor-pointer"
             >
@@ -319,6 +359,7 @@ export default function ResourcesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {resources.map((item) => {
               const boardLabel = item.board || "CBSE & ICSE"
+              const isQA = item.resourceType === "question_bank"
               return (
                 <Link
                   key={item._id}
@@ -332,6 +373,20 @@ export default function ResourcesPage() {
                   <div className="space-y-3">
                     {/* Header Tags */}
                     <div className="flex items-center gap-2 flex-wrap">
+                      <span
+                        className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
+                          isQA
+                            ? isLight
+                              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                              : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            : isLight
+                            ? "bg-purple-50 text-purple-800 border-purple-200"
+                            : "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                        }`}
+                      >
+                        {isQA ? "Solved Board Q&A" : "Concept Topic Guide"}
+                      </span>
+
                       <span
                         className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
                           isLight

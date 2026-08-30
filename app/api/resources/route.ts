@@ -11,12 +11,14 @@ export async function GET(req: NextRequest) {
     const subject = searchParams.get("subject");
     const targetClass = searchParams.get("class");
     const board = searchParams.get("board");
+    const type = searchParams.get("type");
     const search = searchParams.get("search");
 
     const filter: Record<string, unknown> = { published: true };
 
     if (subject) filter.subject = subject;
     if (targetClass) filter.targetClass = targetClass;
+    if (type) filter.resourceType = type;
     if (board) {
       filter.$or = [
         { board: { $regex: board, $options: "i" } },
@@ -40,7 +42,7 @@ export async function GET(req: NextRequest) {
     }
 
     const resources = await Resource.find(filter)
-      .select("slug title metaDescription subject targetClass board chapter keywords viewCount createdAt")
+      .select("slug title metaDescription subject targetClass board resourceType chapter keywords viewCount createdAt")
       .sort({ createdAt: -1 })
       .lean();
 

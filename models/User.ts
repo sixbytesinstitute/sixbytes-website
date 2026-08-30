@@ -69,6 +69,13 @@ const UserSchema = new mongoose.Schema({
     index: true,
   },
 
+  // ── Profile avatar ────────────────────────────────────
+  avatar: {
+    type: String,
+    default: "",
+    trim: true,
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,

@@ -13,6 +13,7 @@ import {
   IconUsers,
   IconSettings,
 } from "../components/ui/icons"
+import { AVATAR_OPTIONS, getAvatarById } from "@/lib/avatars"
 
 /* ─── Types ─────────────────────────────────────────────── */
 interface UserProfile {
@@ -26,12 +27,13 @@ interface UserProfile {
   subjects?: string[]
   assignedClasses?: string[]
   mustChangePassword: boolean
+  avatar?: string
   createdAt?: string
 }
 
 type ActiveTab = "profile" | "security"
 
-/* ─── Shared Input Component ────────────────────────────── */
+/* ─── Reusable Input ────────────────────────────────────── */
 function FieldInput({
   label,
   value,
@@ -72,7 +74,7 @@ function FieldInput({
   )
 }
 
-/* ─── Notification Banners ──────────────────────────────── */
+/* ─── Notification Banner ───────────────────────────────── */
 function Banner({ type, message }: { type: "error" | "success"; message: string }) {
   const isError = type === "error"
   return (
@@ -138,24 +140,54 @@ function PasswordField({
   )
 }
 
-/* ─── Main Settings Page ────────────────────────────────── */
+/* ─── Avatar Bubble ─────────────────────────────────────── */
+function AvatarBubble({
+  avatarId,
+  initial,
+  size = "md",
+}: {
+  avatarId?: string
+  initial: string
+  size?: "sm" | "md" | "lg" | "xl"
+}) {
+  const av = getAvatarById(avatarId)
+  const sizeClasses = {
+    sm: "w-8 h-8 text-xs",
+    md: "w-10 h-10 text-sm",
+    lg: "w-14 h-14 text-xl",
+    xl: "w-20 h-20 text-3xl",
+  }
+  return (
+    <div
+      className={`${sizeClasses[size]} rounded-2xl ${av.borderColor} border flex items-center justify-center font-bold ${av.textColor} shrink-0 shadow-lg`}
+      style={{ background: av.gradient }}
+    >
+      {initial}
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════════════════════ */
+/* ═══ MAIN SETTINGS PAGE ═══════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════ */
 export default function SettingsPage() {
   const router = useRouter()
 
-  /* Auth & User State */
+  /* Auth & User */
   const [user, setUser] = useState<UserProfile | null>(null)
   const [pageLoading, setPageLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<ActiveTab>("profile")
 
-  /* Profile Form State */
+  /* Profile Form */
   const [profileName, setProfileName] = useState("")
   const [profileEmail, setProfileEmail] = useState("")
   const [profilePhone, setProfilePhone] = useState("")
+  const [selectedAvatar, setSelectedAvatar] = useState("")
   const [profileLoading, setProfileLoading] = useState(false)
   const [profileError, setProfileError] = useState("")
   const [profileSuccess, setProfileSuccess] = useState("")
 
-  /* Password Form State */
+  /* Password Form */
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -166,7 +198,7 @@ export default function SettingsPage() {
   const [passwordError, setPasswordError] = useState("")
   const [passwordSuccess, setPasswordSuccess] = useState("")
 
-  /* ─── Fetch User on Mount ─────────────────────────────── */
+  /* ─── Fetch User ──────────────────────────────────────── */
   useEffect(() => {
     fetch("/api/auth/me")
       .then((res) => res.json())
@@ -176,7 +208,7 @@ export default function SettingsPage() {
           setProfileName(data.user.name)
           setProfileEmail(data.user.email)
           setProfilePhone(data.user.phone || "")
-          // If must change password, force security tab
+          setSelectedAvatar(data.user.avatar || "")
           if (data.user.mustChangePassword) {
             setActiveTab("security")
           }
@@ -200,7 +232,7 @@ export default function SettingsPage() {
     }
   }
 
-  /* ─── Profile Update Handler ──────────────────────────── */
+  /* ─── Profile Update ──────────────────────────────────── */
   const handleProfileUpdate = async (e: FormEvent) => {
     e.preventDefault()
     setProfileError("")
@@ -228,6 +260,7 @@ export default function SettingsPage() {
           name: profileName.trim(),
           phone: profilePhone.trim(),
           email: profileEmail.trim(),
+          avatar: selectedAvatar,
         }),
       })
       const data = await res.json()
@@ -240,10 +273,11 @@ export default function SettingsPage() {
                 name: data.user.name,
                 email: data.user.email,
                 phone: data.user.phone,
+                avatar: data.user.avatar,
               }
             : null
         )
-        setTimeout(() => setProfileSuccess(""), 3000)
+        setTimeout(() => setProfileSuccess(""), 4000)
       } else {
         setProfileError(data.error || "Failed to update profile")
       }
@@ -254,7 +288,7 @@ export default function SettingsPage() {
     }
   }
 
-  /* ─── Password Change Handler ─────────────────────────── */
+  /* ─── Password Change (NO redirect — stays on page) ──── */
   const handleChangePassword = async (e: FormEvent) => {
     e.preventDefault()
     setPasswordError("")
@@ -282,11 +316,13 @@ export default function SettingsPage() {
       })
       const data = await res.json()
       if (data.success) {
-        setPasswordSuccess("Password updated successfully! Redirecting...")
+        setPasswordSuccess("Password updated successfully!")
         setCurrentPassword("")
         setNewPassword("")
         setConfirmPassword("")
-        setTimeout(() => router.push(getDashboardHref()), 1200)
+        // Update local state so mustChangePassword is false
+        setUser((prev) => (prev ? { ...prev, mustChangePassword: false } : null))
+        setTimeout(() => setPasswordSuccess(""), 4000)
       } else {
         setPasswordError(data.error || "Failed to change password")
       }
@@ -297,7 +333,7 @@ export default function SettingsPage() {
     }
   }
 
-  /* ─── Loading State ───────────────────────────────────── */
+  /* ─── Loading ─────────────────────────────────────────── */
   if (pageLoading) {
     return (
       <div className="min-h-screen bg-[#0a0c0e] flex flex-col items-center justify-center gap-3">
@@ -314,7 +350,6 @@ export default function SettingsPage() {
     faculty: { label: "Faculty", color: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
     student: { label: "Student", color: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" },
   }
-
   const badge = roleBadge[user.role] || roleBadge.student
 
   const tabs: { key: ActiveTab; label: string; icon: React.ReactNode }[] = [
@@ -324,22 +359,23 @@ export default function SettingsPage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-[#0a0c0e] via-[#0f1318] to-[#0a0c0e] text-cream font-sans overflow-hidden">
-      {/* Ambient decorative glow */}
+      {/* Ambient glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-orange-500/[0.03] rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-6">
-        {/* Page Header */}
+        {/* ─── Page Header ──────────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            {/* User Avatar */}
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/30 flex items-center justify-center text-xl font-bold text-orange-400 shrink-0 shadow-lg shadow-orange-500/10">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
+            <AvatarBubble
+              avatarId={user.avatar}
+              initial={user.name.charAt(0).toUpperCase()}
+              size="lg"
+            />
             <div>
               <h1 className="text-xl sm:text-2xl font-display font-bold text-cream">
                 Account Settings
               </h1>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${badge.color}`}>
                   {badge.label}
                 </span>
@@ -363,15 +399,15 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* Must Change Password Warning */}
+        {/* Must change password warning */}
         {user.mustChangePassword && (
           <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2.5 text-xs text-amber-300">
             <IconAlertCircle size={16} className="text-amber-400 shrink-0" />
-            <span>You must set a personal password before accessing your dashboard. Please update it in the Password tab below.</span>
+            <span>You must set a personal password before accessing your dashboard. Update it in the Password tab below.</span>
           </div>
         )}
 
-        {/* Tab Navigation */}
+        {/* ─── Tab Navigation ───────────────────────────── */}
         <div className="flex gap-1.5 bg-[#0f1318]/80 rounded-xl p-1 border border-white/[0.06]">
           {tabs.map((t) => {
             const isActive = activeTab === t.key
@@ -394,146 +430,186 @@ export default function SettingsPage() {
           })}
         </div>
 
-        {/* ═══════════════════════════════════════════════════ */}
-        {/* PROFILE TAB                                        */}
-        {/* ═══════════════════════════════════════════════════ */}
+        {/* ═══════════════════════════════════════════════ */}
+        {/* PROFILE TAB                                     */}
+        {/* ═══════════════════════════════════════════════ */}
         {activeTab === "profile" && (
-          <div className="rounded-2xl bg-[#0f1318]/90 border border-white/[0.08] backdrop-blur-2xl shadow-2xl shadow-black/60 overflow-hidden">
-            {/* Section Header */}
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
-                <IconUsers size={18} />
+          <div className="space-y-6">
+            {/* Avatar Picker Card */}
+            <div className="rounded-2xl bg-[#0f1318]/90 border border-white/[0.08] backdrop-blur-2xl shadow-2xl shadow-black/60 overflow-hidden">
+              <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+                <AvatarBubble
+                  avatarId={selectedAvatar}
+                  initial={profileName.charAt(0)?.toUpperCase() || "U"}
+                  size="md"
+                />
+                <div>
+                  <h2 className="text-sm font-semibold text-cream">Profile Avatar</h2>
+                  <p className="text-[11px] text-muted-custom">Choose a color theme for your profile picture</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-sm font-semibold text-cream">Personal Information</h2>
-                <p className="text-[11px] text-muted-custom">Update your name, email address, and phone number</p>
+
+              <div className="p-6">
+                <div className="grid grid-cols-6 sm:grid-cols-12 gap-2.5">
+                  {AVATAR_OPTIONS.map((av) => {
+                    const isSelected = selectedAvatar === av.id
+                    return (
+                      <button
+                        key={av.id}
+                        type="button"
+                        onClick={() => setSelectedAvatar(av.id)}
+                        title={av.label}
+                        className={`relative w-full aspect-square rounded-xl border-2 transition-all duration-200 cursor-pointer hover:scale-110 ${
+                          isSelected
+                            ? `${av.borderColor} ring-2 ring-orange-400/50 ring-offset-1 ring-offset-[#0a0c0e] scale-110`
+                            : "border-transparent hover:border-white/20"
+                        }`}
+                        style={{ background: av.gradient }}
+                      >
+                        <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-bold ${av.textColor}`}>
+                          {profileName.charAt(0)?.toUpperCase() || "U"}
+                        </span>
+                        {isSelected && (
+                          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-orange-500 flex items-center justify-center">
+                            <IconCheck size={10} className="text-white" />
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
             </div>
 
-            <form onSubmit={handleProfileUpdate} className="p-6 space-y-5">
-              {profileError && <Banner type="error" message={profileError} />}
-              {profileSuccess && <Banner type="success" message={profileSuccess} />}
+            {/* Personal Info Card */}
+            <div className="rounded-2xl bg-[#0f1318]/90 border border-white/[0.08] backdrop-blur-2xl shadow-2xl shadow-black/60 overflow-hidden">
+              <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+                  <IconUsers size={18} />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-cream">Personal Information</h2>
+                  <p className="text-[11px] text-muted-custom">Update your name, email address, and phone number</p>
+                </div>
+              </div>
 
-              <FieldInput
-                label="Full Name"
-                value={profileName}
-                onChange={setProfileName}
-                placeholder="Enter your full name"
-                required
-              />
+              <form onSubmit={handleProfileUpdate} className="p-6 space-y-5">
+                {profileError && <Banner type="error" message={profileError} />}
+                {profileSuccess && <Banner type="success" message={profileSuccess} />}
 
-              <FieldInput
-                label="Email Address"
-                value={profileEmail}
-                onChange={setProfileEmail}
-                type="email"
-                placeholder="you@example.com"
-                required
-              />
+                <FieldInput
+                  label="Full Name"
+                  value={profileName}
+                  onChange={setProfileName}
+                  placeholder="Enter your full name"
+                  required
+                />
 
-              <FieldInput
-                label="Phone Number"
-                value={profilePhone}
-                onChange={setProfilePhone}
-                type="tel"
-                placeholder="10-digit mobile number"
-                required
-              />
+                <FieldInput
+                  label="Email Address"
+                  value={profileEmail}
+                  onChange={setProfileEmail}
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                />
 
-              {/* Read-Only Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/[0.06]">
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
-                    Role
-                  </label>
-                  <div className="px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-muted-custom capitalize">
-                    {user.role}
+                <FieldInput
+                  label="Phone Number"
+                  value={profilePhone}
+                  onChange={setProfilePhone}
+                  type="tel"
+                  placeholder="10-digit mobile number"
+                  required
+                />
+
+                {/* Read-Only Info */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/[0.06]">
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
+                      Role
+                    </label>
+                    <div className="px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-muted-custom capitalize">
+                      {user.role}
+                    </div>
                   </div>
+
+                  {user.role === "student" && user.class && (
+                    <div className="space-y-1">
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
+                        Class & Stream
+                      </label>
+                      <div className="px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-muted-custom">
+                        Class {user.class} {user.stream && user.stream !== "N/A" ? `· ${user.stream}` : ""}
+                      </div>
+                    </div>
+                  )}
+
+                  {user.role === "faculty" && user.subjects && user.subjects.length > 0 && (
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
+                        Assigned Subjects
+                      </label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {user.subjects.map((s) => (
+                          <span key={s} className="px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-semibold">
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {user.role === "faculty" && user.assignedClasses && user.assignedClasses.length > 0 && (
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
+                        Assigned Classes
+                      </label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {user.assignedClasses.map((c) => (
+                          <span key={c} className="px-2.5 py-1 rounded-full bg-white/[0.06] text-cream border border-white/10 text-[10px] font-semibold">
+                            Class {c}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {user.createdAt && (
+                    <div className="space-y-1">
+                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
+                        Account Created
+                      </label>
+                      <div className="px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-muted-custom">
+                        {new Date(user.createdAt).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {user.role === "student" && user.class && (
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
-                      Class & Stream
-                    </label>
-                    <div className="px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-muted-custom">
-                      Class {user.class} {user.stream && user.stream !== "N/A" ? `· ${user.stream}` : ""}
-                    </div>
-                  </div>
-                )}
-
-                {user.role === "faculty" && user.subjects && user.subjects.length > 0 && (
-                  <div className="space-y-1 sm:col-span-2">
-                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
-                      Assigned Subjects
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {user.subjects.map((s) => (
-                        <span
-                          key={s}
-                          className="px-2.5 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-semibold"
-                        >
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {user.role === "faculty" && user.assignedClasses && user.assignedClasses.length > 0 && (
-                  <div className="space-y-1 sm:col-span-2">
-                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
-                      Assigned Classes
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {user.assignedClasses.map((c) => (
-                        <span
-                          key={c}
-                          className="px-2.5 py-1 rounded-full bg-white/[0.06] text-cream border border-white/10 text-[10px] font-semibold"
-                        >
-                          Class {c}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {user.createdAt && (
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/60">
-                      Account Created
-                    </label>
-                    <div className="px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-muted-custom">
-                      {new Date(user.createdAt).toLocaleDateString("en-IN", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Submit */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={profileLoading}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-orange-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
-                >
-                  {profileLoading ? "Saving Changes..." : "Save Profile Changes"}
-                </button>
-              </div>
-            </form>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={profileLoading}
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-orange-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
+                  >
+                    {profileLoading ? "Saving Changes..." : "Save Profile Changes"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
-        {/* ═══════════════════════════════════════════════════ */}
-        {/* SECURITY TAB                                       */}
-        {/* ═══════════════════════════════════════════════════ */}
+        {/* ═══════════════════════════════════════════════ */}
+        {/* SECURITY TAB                                    */}
+        {/* ═══════════════════════════════════════════════ */}
         {activeTab === "security" && (
           <div className="rounded-2xl bg-[#0f1318]/90 border border-white/[0.08] backdrop-blur-2xl shadow-2xl shadow-black/60 overflow-hidden">
-            {/* Section Header */}
             <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
                 <IconShield size={18} />
@@ -583,7 +659,7 @@ export default function SettingsPage() {
                 onToggle={() => setShowConfirm(!showConfirm)}
               />
 
-              {/* Password Strength Hints */}
+              {/* Password Strength Checklist */}
               {newPassword.length > 0 && (
                 <div className="space-y-1.5 text-[11px]">
                   <p className="font-semibold text-cream/70 uppercase tracking-wider">Password Checklist</p>
@@ -595,11 +671,13 @@ export default function SettingsPage() {
                       { label: "Passwords match", ok: newPassword === confirmPassword && confirmPassword.length > 0 },
                     ].map((rule) => (
                       <div key={rule.label} className="flex items-center gap-1.5">
-                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] ${
-                          rule.ok
-                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                            : "bg-white/[0.04] text-muted-custom border border-white/10"
-                        }`}>
+                        <span
+                          className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] ${
+                            rule.ok
+                              ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                              : "bg-white/[0.04] text-muted-custom border border-white/10"
+                          }`}
+                        >
                           {rule.ok ? "✓" : ""}
                         </span>
                         <span className={rule.ok ? "text-emerald-400" : "text-muted-custom"}>{rule.label}</span>
@@ -609,7 +687,6 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              {/* Submit */}
               <div className="pt-2">
                 <button
                   type="submit"
@@ -623,9 +700,7 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {/* ═══════════════════════════════════════════════════ */}
-        {/* ACCOUNT INFO CARD (always visible)                 */}
-        {/* ═══════════════════════════════════════════════════ */}
+        {/* ─── Support Card (always visible) ────────────── */}
         <div className="rounded-2xl bg-[#0f1318]/60 border border-white/[0.06] p-5 flex items-center gap-4">
           <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-muted-custom">
             <IconSettings size={16} />

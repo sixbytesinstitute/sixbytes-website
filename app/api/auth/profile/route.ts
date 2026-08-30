@@ -8,7 +8,7 @@ export const PUT = withAuth(async (req: NextRequest, { user }) => {
     await connectDB();
 
     const body = await req.json();
-    const { name, phone, email } = body;
+    const { name, phone, email, avatar } = body;
 
     // Validate
     if (!name || !name.trim()) {
@@ -67,15 +67,23 @@ export const PUT = withAuth(async (req: NextRequest, { user }) => {
       }
     }
 
+    // Build update payload
+    const updatePayload: Record<string, unknown> = {
+      name: name.trim(),
+      phone: cleanPhone.slice(-10),
+      email: normalizedEmail,
+      updatedAt: new Date(),
+    };
+
+    // Include avatar if provided
+    if (typeof avatar === "string") {
+      updatePayload.avatar = avatar;
+    }
+
     // Update user profile
     const updatedUser = await User.findByIdAndUpdate(
       user.userId,
-      {
-        name: name.trim(),
-        phone: cleanPhone.slice(-10), // Store last 10 digits
-        email: normalizedEmail,
-        updatedAt: new Date(),
-      },
+      updatePayload,
       { new: true, runValidators: true }
     ).select("-password");
 
@@ -99,6 +107,7 @@ export const PUT = withAuth(async (req: NextRequest, { user }) => {
         stream: updatedUser.stream,
         subjects: updatedUser.subjects,
         assignedClasses: updatedUser.assignedClasses,
+        avatar: updatedUser.avatar || "",
       },
     });
   } catch (error) {

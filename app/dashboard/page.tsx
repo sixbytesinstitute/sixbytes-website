@@ -156,7 +156,7 @@ export default function StudentDashboard() {
   return (
     <div className="min-h-screen bg-obsidian text-cream font-sans">
       {/* Mobile Floating Menu Button */}
-      <div className="fixed top-20 left-4 z-40 lg:hidden">
+      <div className="fixed top-4 left-4 z-40 lg:hidden">
         <button
           onClick={() => setSidebarOpen(true)}
           className="flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-mid/95 border border-white/15 text-cream text-xs font-medium shadow-xl backdrop-blur-xl hover:border-orange-500/40 transition-colors"
@@ -177,7 +177,7 @@ export default function StudentDashboard() {
 
       {/* Sidebar Navigation Drawer */}
       <aside
-        className={`fixed left-0 top-0 lg:top-[70px] bottom-0 z-50 lg:z-30 w-72 lg:w-64 bg-[#0a0c0e]/98 lg:bg-[#0f1318]/95 border-r border-white/[0.08] backdrop-blur-2xl transition-transform duration-300 ease-out lg:translate-x-0 shadow-2xl lg:shadow-none flex flex-col ${
+        className={`fixed left-0 top-0 bottom-0 z-50 lg:z-30 w-72 lg:w-64 bg-[#0a0c0e]/98 lg:bg-[#0f1318]/95 border-r border-white/[0.08] backdrop-blur-2xl transition-transform duration-300 ease-out lg:translate-x-0 shadow-2xl lg:shadow-none flex flex-col ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -287,7 +287,7 @@ export default function StudentDashboard() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="lg:ml-64 min-h-[calc(100vh-70px)] p-6 lg:p-8 max-w-6xl mx-auto space-y-8">
+      <main className="lg:ml-64 min-h-screen p-6 lg:p-8 max-w-6xl mx-auto space-y-8">
         {/* Welcome Banner */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-white/[0.08]">
           <div>

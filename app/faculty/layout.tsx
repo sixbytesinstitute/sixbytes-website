@@ -42,7 +42,7 @@ export default function FacultyLayout({ children }: { children: React.ReactNode 
   return (
     <div className="min-h-screen bg-[#0a0c0e]">
       <DashboardSidebar role="faculty" userName={user.name} userEmail={user.email} />
-      <main className="lg:ml-64 min-h-[calc(100vh-70px)] p-6 lg:p-8">
+      <main className="lg:ml-64 min-h-screen p-6 lg:p-8">
         {children}
       </main>
     </div>

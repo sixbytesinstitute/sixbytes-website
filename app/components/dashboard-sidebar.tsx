@@ -150,7 +150,7 @@ export default function DashboardSidebar({ role, userName, userEmail }: Dashboar
   return (
     <>
       {/* Mobile Floating Toggle */}
-      <div className="fixed top-20 left-4 z-40 lg:hidden">
+      <div className="fixed top-4 left-4 z-40 lg:hidden">
         <button
           onClick={() => setMobileOpen(true)}
           className="flex items-center gap-2 px-3 py-2 rounded-xl bg-navy-mid/95 border border-white/15 text-cream text-xs font-medium shadow-xl backdrop-blur-xl hover:border-orange-500/40 transition-colors"
@@ -171,7 +171,7 @@ export default function DashboardSidebar({ role, userName, userEmail }: Dashboar
 
       {/* Desktop & Mobile Sidebar Drawer */}
       <aside
-        className={`fixed left-0 top-0 lg:top-[70px] bottom-0 z-50 lg:z-30 w-72 lg:w-64 bg-[#0a0c0e]/98 lg:bg-[#0f1318]/95 border-r border-white/[0.08] backdrop-blur-2xl transition-transform duration-300 ease-out lg:translate-x-0 shadow-2xl lg:shadow-none ${
+        className={`fixed left-0 top-0 bottom-0 z-50 lg:z-30 w-72 lg:w-64 bg-[#0a0c0e]/98 lg:bg-[#0f1318]/95 border-r border-white/[0.08] backdrop-blur-2xl transition-transform duration-300 ease-out lg:translate-x-0 shadow-2xl lg:shadow-none ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

@@ -105,10 +105,10 @@ export default function Navbar() {
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <Link
-              href="/student-login"
+              href="/login"
               className="text-xs font-semibold uppercase tracking-wider text-muted-custom hover:text-cream px-3.5 py-2 rounded-lg hover:bg-white/[0.05] transition-colors border border-transparent hover:border-white/10"
             >
-              Student Portal
+              Portal Login
             </Link>
 
             <a
@@ -215,10 +215,11 @@ export default function Navbar() {
             {/* Drawer Footer Actions */}
             <div className="pt-5 border-t border-white/10 flex flex-col gap-2.5">
               <Link
-                href="/student-login"
+                href="/login"
+                onClick={() => setMenuOpen(false)}
                 className="w-full text-center py-2.5 rounded-xl border border-white/15 text-cream text-xs font-semibold hover:bg-white/[0.05] transition-colors"
               >
-                🎓 Student Portal Login
+                Portal Login (Student / Faculty / Admin)
               </Link>
               <a
                 href="https://wa.me/917536839760?text=Hello%20SixBytes!%20I%20would%20like%20to%20book%20a%20Free%20Demo%20Class."

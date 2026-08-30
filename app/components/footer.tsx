@@ -92,8 +92,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/student-login" className="text-muted-custom hover:text-orange-400 transition-colors">
-                  Student Portal Login
+                <Link href="/login" className="text-muted-custom hover:text-orange-400 transition-colors">
+                  Portal Login (Students & Staff)
                 </Link>
               </li>
             </ul>

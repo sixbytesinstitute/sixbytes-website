@@ -30,6 +30,11 @@ const ResourceSchema = new mongoose.Schema({
     required: true,
     enum: [...CLASSES, "All"],
   },
+  board: {
+    type: String,
+    default: "CBSE & ICSE",
+    index: true,
+  },
   chapter: {
     type: String,
     default: null,

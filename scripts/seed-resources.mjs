@@ -1,7 +1,8 @@
 /**
- * Seed Script: Educational Resources for Class 10
- * Subjects: Chemistry, Physics, Computer Science, Biology
- * Based on NCERT / CBSE standard curriculum and famous reference books
+ * Comprehensive Seed Script: Educational Resources for Class 10 & 12
+ * Formatting: BYJU'S (Table of Contents, Chemical Reaction Flow Boxes, Theory) +
+ *             SHAALAA (QUESTION and SOLUTION Callouts, Board Questions, Exam Tips)
+ * Boards: CBSE & ICSE
  *
  * Run: node scripts/seed-resources.mjs
  */
@@ -31,13 +32,13 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-/* ─── Resource Schema (inline for ESM script) ─────────── */
 const ResourceSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
   title: { type: String, required: true, trim: true },
   metaDescription: { type: String, required: true, maxlength: 160 },
   subject: { type: String, required: true, index: true },
   targetClass: { type: String, required: true },
+  board: { type: String, default: "CBSE & ICSE", index: true },
   chapter: { type: String, default: null },
   content: { type: String, required: true },
   keywords: { type: [String], default: [] },
@@ -50,655 +51,546 @@ const ResourceSchema = new mongoose.Schema({
 
 const Resource = mongoose.models.Resource || mongoose.model("Resource", ResourceSchema);
 
-/* ─── Content Helpers ─────────────────────────────────── */
 function slugify(str) {
   return str.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-/* ─── RESOURCES DATA ──────────────────────────────────── */
+/* ─── BYJU'S + SHAALAA STRUCTURED RESOURCES ─────────────── */
 const resources = [
-  // ═══════════════════════════════════════════
-  // CHEMISTRY — Class 10 (NCERT Based)
-  // ═══════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════
+  // CHEMISTRY (Class 10 & 12): Aldehydes, Ketones, Carboxylic Acids (From User Screenshot!)
+  // ══════════════════════════════════════════════════════════
   {
-    title: "Chemical Reactions and Equations – Class 10 Chemistry Chapter 1",
+    title: "Aldehydes, Ketones, and Carboxylic Acids – Structure, Preparation & Reactions",
     subject: "Chemistry",
     targetClass: "10",
+    board: "CBSE & ICSE",
+    chapter: "Carbon & Carbonyl Compounds",
+    metaDescription: "Detailed study notes on aldehydes, ketones, and carboxylic acids with Rosenmund reduction, IUPAC nomenclature, Board Q&A, and reaction mechanisms.",
+    keywords: ["CBSE Class 10", "ICSE Class 10", "CBSE Class 12", "Aldehydes and Ketones", "Carboxylic Acids", "Rosenmund Reduction", "Carbonyl Compounds", "NCERT Chemistry", "Board Exam 2026", "Shaalaa Solutions", "BYJUS Chemistry"],
+    content: `<h2>What are Aldehydes, Ketones, and Carboxylic Acids?</h2>
+<p>Aldehydes, Ketones, and Carboxylic Acids are <em><strong>carbonyl compounds which contain a carbon-oxygen double bond (&gt;C=O)</strong></em>. These organic compounds are central to organic chemistry and find extensive industrial, biological, and pharmaceutical applications.</p>
+
+<div class="concept-callout">
+<strong>Key Concept:</strong> The carbonyl carbon is <em>sp² hybridized</em> and forms three sigma (σ) bonds with a planar trigonal geometry. The carbon-oxygen double bond is strongly polarized due to the high electronegativity of oxygen (δ⁺ on Carbon, δ⁻ on Oxygen), making carbonyl carbon electrophilic.
+</div>
+
+<div class="toc-box">
+<div class="toc-title">Table of Contents</div>
+<ul class="toc-list">
+<li><a class="toc-link" href="#what-are-aldehydes">What are Aldehydes?</a></li>
+<li><a class="toc-link" href="#preparation-of-aldehydes">Preparation of Aldehydes (Rosenmund Reduction &amp; Ozonolysis)</a></li>
+<li><a class="toc-link" href="#what-are-ketones">What are Ketones?</a></li>
+<li><a class="toc-link" href="#preparation-of-ketones">Preparation of Ketones</a></li>
+<li><a class="toc-link" href="#carboxylic-acids">Carboxylic Acids &amp; Functional Groups</a></li>
+<li><a class="toc-link" href="#solved-questions">Solved Board Examination Questions (Shaalaa Pattern)</a></li>
+<li><a class="toc-link" href="#faqs">Frequently Asked Questions – FAQs</a></li>
+</ul>
+</div>
+
+<h3 id="what-are-aldehydes">What are Aldehydes?</h3>
+<p>Aldehydes are organic compounds in which the carbonyl group is bonded to at least one hydrogen atom. The general formula is <strong>R-CHO</strong>, where R can be hydrogen (H) or an alkyl/aryl group.</p>
+<ul>
+<li><strong>Methanal (Formaldehyde):</strong> H-CHO (used as a biological preservative)</li>
+<li><strong>Ethanal (Acetaldehyde):</strong> CH₃-CHO (precursor in chemical synthesis)</li>
+<li><strong>Benzaldehyde:</strong> C₆H₅-CHO (almond fragrance, aromatic aldehyde)</li>
+</ul>
+
+<h3 id="preparation-of-aldehydes">Preparation of Aldehydes</h3>
+<p><strong>1. Rosenmund Reduction:</strong> Acid chlorides (acyl chlorides) are selectively reduced to aldehydes by catalytic hydrogenation using palladium on barium sulfate (Pd/BaSO₄) poisoned with sulfur or quinoline.</p>
+
+<div class="reaction-box">
+<div class="reaction-label">Rosenmund Reduction (Name Reaction)</div>
+R-CO-Cl + H₂ ──[ Pd / BaSO₄ , Quinoline (Poison) ]──&gt; R-CHO + HCl
+<br><br>
+C₆H₅-CO-Cl (Benzoyl chloride) + H₂ ──[ Pd/BaSO₄ ]──&gt; C₆H₅-CHO (Benzaldehyde) + HCl
+</div>
+
+<p><em>Note: Formaldehyde cannot be prepared by this method because formyl chloride (H-CO-Cl) is unstable at room temperature.</em></p>
+
+<p><strong>2. Oxidation of Primary Alcohols:</strong> Primary alcohols (1°) undergo mild oxidation with Pyridinium Chlorochromate (PCC) or Copper at 573 K to yield aldehydes:</p>
+<div class="reaction-box">
+<div class="reaction-label">Dehydrogenation of Primary Alcohol</div>
+R-CH₂-OH ──[ Cu / 573 K or PCC ]──&gt; R-CHO + H₂
+</div>
+
+<h3 id="what-are-ketones">What are Ketones?</h3>
+<p>Ketones are organic compounds in which the carbonyl group (&gt;C=O) is attached to two alkyl groups, two aryl groups, or one alkyl and one aryl group. The general formula is <strong>R-CO-R'</strong>.</p>
+<ul>
+<li><strong>Propanone (Acetone):</strong> CH₃-CO-CH₃ (common laboratory and nail polish solvent)</li>
+<li><strong>Acetophenone:</strong> C₆H₅-CO-CH₃ (aromatic ketone)</li>
+<li><strong>Benzophenone:</strong> C₆H₅-CO-C₆H₅ (diaryl ketone)</li>
+</ul>
+
+<div class="reaction-box">
+<div class="reaction-label">General Formula &amp; Structure of Ketone</div>
+      O
+      ║
+R ─── C ─── R'   (R, R' may be alkyl or aryl groups)
+</div>
+
+<h3 id="preparation-of-ketones">Preparation of Ketones</h3>
+<p><strong>1. Oxidation of Secondary Alcohols:</strong> Secondary alcohols (2°) on oxidation with potassium dichromate (K₂Cr₂O₇) or Chromic anhydride (CrO₃) yield ketones:</p>
+<div class="reaction-box">
+<div class="reaction-label">Oxidation of Secondary Alcohol</div>
+CH₃-CH(OH)-CH₃ (Propan-2-ol) ──[ CrO₃ / H₂SO₄ ]──&gt; CH₃-CO-CH₃ (Acetone) + H₂O
+</div>
+
+<p><strong>2. Friedel-Crafts Acylation:</strong> Reaction of benzene with an acyl chloride in the presence of anhydrous AlCl₃ produces aromatic ketones:</p>
+<div class="reaction-box">
+<div class="reaction-label">Friedel-Crafts Acylation</div>
+C₆H₆ (Benzene) + CH₃-CO-Cl ──[ Anhydrous AlCl₃ ]──&gt; C₆H₅-CO-CH₃ (Acetophenone) + HCl
+</div>
+
+<h3 id="carboxylic-acids">Carboxylic Acids &amp; Functional Groups</h3>
+<p>Carboxylic acids contain a carboxyl group <strong>(-COOH)</strong> consisting of a carbonyl group bonded to a hydroxyl group. General formula: <strong>R-COOH</strong>.</p>
+<ul>
+<li><strong>Methanoic Acid (Formic acid):</strong> H-COOH (present in ant stings)</li>
+<li><strong>Ethanoic Acid (Acetic acid):</strong> CH₃-COOH (5-8% solution is vinegar)</li>
+<li><strong>Benzoic Acid:</strong> C₆H₅-COOH (food preservative sodium benzoate)</li>
+</ul>
+
+<div class="qa-card" id="solved-questions">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • CBSE &amp; ICSE Board Exam</span>
+<p><strong>(a) What are ketones? Give their general formula and IUPAC name of the simplest ketone.</strong><br><strong>(b) How will you convert Ethanal to Propan-2-ol using Grignard reagent?</strong></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION • SixBytes Verified Answer</span>
+<p><strong>(a) Definition:</strong> Ketones are organic compounds in which the carbonyl carbon (&gt;C=O) is linked to two alkyl or aryl hydrocarbon groups.</p>
+<ul>
+<li><strong>General Formula:</strong> C<sub>n</sub>H<sub>2n</sub>O or R-CO-R'</li>
+<li><strong>Simplest Ketone:</strong> Propanone (CH₃COCH₃), commonly called Acetone.</li>
+</ul>
+<p><strong>(b) Conversion using Grignard Reagent:</strong></p>
+<ol>
+<li>Ethanal reacts with Methyl magnesium bromide (CH₃MgBr) in dry ether to form an addition adduct.</li>
+<li>Hydrolysis of this adduct with dilute acid produces Propan-2-ol (secondary alcohol).</li>
+</ol>
+<div class="reaction-box">
+CH₃-CHO + CH₃MgBr ──[ Dry Ether ]──&gt; CH₃-CH(OMgBr)-CH₃ ──[ H₃O⁺ ]──&gt; CH₃-CH(OH)-CH₃ + Mg(OH)Br
+</div>
+</div>
+</div>
+
+<div class="qa-card">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • Shaalaa Practice Question Bank</span>
+<p><strong>Distinguish between Aldehydes and Ketones using chemical tests (Tollens' reagent and Fehling's solution).</strong></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION</span>
+<table>
+<tr><th>Test</th><th>Aldehydes (R-CHO)</th><th>Ketones (R-CO-R')</th></tr>
+<tr><td><strong>Tollens' Test (Silver Mirror)</strong></td><td>Gives shining silver mirror of Ag with ammoniacal AgNO₃</td><td>No reaction (Ketones do not reduce Tollens' reagent)</td></tr>
+<tr><td><strong>Fehling's Solution Test</strong></td><td>Gives red precipitate of Cu₂O on heating</td><td>No reaction with aliphatic/aromatic ketones</td></tr>
+<tr><td><strong>Oxidation Ease</strong></td><td>Easily oxidised to carboxylic acids with mild agents</td><td>Resistant to mild oxidation; requires vigorous cleavage</td></tr>
+</table>
+</div>
+</div>
+
+<h3 id="faqs">Frequently Asked Questions – FAQs</h3>
+<div class="concept-callout">
+<strong>Q1: Why are aldehydes more reactive than ketones towards nucleophilic addition?</strong><br>
+<em>Answer:</em> Due to two reasons: (1) <strong>Electronic effect:</strong> Ketones have two electron-releasing (+I) alkyl groups which reduce the electrophilicity of carbonyl carbon more than in aldehydes. (2) <strong>Steric hindrance:</strong> Two bulky alkyl groups in ketones hinder the approach of nucleophiles to the carbonyl carbon.
+<br><br>
+<strong>Q2: What is Rosenmund reduction catalyst poison?</strong><br>
+<em>Answer:</em> BaSO₄ poisoned with sulfur or quinoline acts as a catalyst poison to prevent further reduction of the aldehyde into a primary alcohol.
+</div>`
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // CHEMISTRY: Chemical Reactions and Equations (Class 10 CBSE / ICSE)
+  // ══════════════════════════════════════════════════════════
+  {
+    title: "Chemical Reactions and Equations – Class 10 NCERT Solutions & Revision Notes",
+    subject: "Chemistry",
+    targetClass: "10",
+    board: "CBSE & ICSE",
     chapter: "Chapter 1",
-    metaDescription: "Complete guide to chemical reactions, balancing equations, types of reactions, and oxidation-reduction for Class 10 CBSE Chemistry.",
-    keywords: ["chemical reactions", "balancing equations", "oxidation reduction", "class 10 chemistry", "NCERT chemistry", "combination reaction", "decomposition"],
-    content: `<h2>Chemical Reactions and Equations</h2>
-<p>A <strong>chemical reaction</strong> is a process in which one or more substances (reactants) are converted into one or more different substances (products). Chemical reactions are accompanied by changes in energy, colour, state, or the evolution of gas.</p>
+    metaDescription: "Comprehensive notes and NCERT solutions for Class 10 Chemistry Chapter 1. Balancing chemical equations, redox reactions, precipitation, and board questions.",
+    keywords: ["CBSE Class 10", "ICSE Class 10", "NCERT Solutions", "Chemical Reactions and Equations", "Balancing Equations", "Combination Reaction", "Displacement Reaction", "Board Exam 2026", "Lakhmir Singh Chemistry", "Shaalaa Solutions"],
+    content: `<h2>Chemical Reactions and Equations – Complete Study Guide</h2>
+<p>A <strong>chemical reaction</strong> is a process in which one or more substances (reactants) transform into new chemical substances (products) with completely different physical and chemical properties. During a chemical reaction, bonds between atoms in reactants break and new bonds form to create products.</p>
 
-<h3>Writing Chemical Equations</h3>
-<p>A chemical equation represents a chemical reaction using symbols and formulae. For example:</p>
-<pre>Mg + O₂ → MgO</pre>
-<p>The substances on the left are <strong>reactants</strong>, and those on the right are <strong>products</strong>.</p>
+<div class="concept-callout">
+<strong>Indicators of a Chemical Reaction:</strong> Change in state, change in colour, evolution of a gas, change in temperature, or formation of a precipitate (insoluble solid).
+</div>
 
-<h3>Balancing Chemical Equations</h3>
-<p>According to the <strong>Law of Conservation of Mass</strong>, mass can neither be created nor destroyed. Therefore, the number of atoms of each element must be equal on both sides of the equation.</p>
-<p><strong>Steps to balance:</strong></p>
-<ol>
-<li>Write the unbalanced equation with correct formulae.</li>
-<li>List the number of atoms of each element on both sides.</li>
-<li>Start balancing with the compound that has the maximum number of atoms.</li>
-<li>Use coefficients (not subscripts) to balance.</li>
-<li>Verify that all elements are balanced.</li>
-</ol>
-<p><strong>Example:</strong> Fe + H₂O → Fe₃O₄ + H₂</p>
-<p>Balanced: 3Fe + 4H₂O → Fe₃O₄ + 4H₂</p>
+<div class="toc-box">
+<div class="toc-title">Table of Contents</div>
+<ul class="toc-list">
+<li><a class="toc-link" href="#balancing-equations">How to Balance Chemical Equations (Step-by-Step)</a></li>
+<li><a class="toc-link" href="#types-of-reactions">5 Major Types of Chemical Reactions</a></li>
+<li><a class="toc-link" href="#redox-reactions">Oxidation, Reduction and Redox Reactions</a></li>
+<li><a class="toc-link" href="#corrosion-rancidity">Corrosion and Rancidity in Daily Life</a></li>
+<li><a class="toc-link" href="#solved-board-questions">Solved Board Examination Questions (Shaalaa Pattern)</a></li>
+<li><a class="toc-link" href="#faqs">Frequently Asked Questions – FAQs</a></li>
+</ul>
+</div>
 
-<h3>Types of Chemical Reactions</h3>
+<h3 id="balancing-equations">How to Balance Chemical Equations</h3>
+<p>A balanced chemical equation has an equal number of atoms of each element on both reactant and product sides. This satisfies the <strong>Law of Conservation of Mass</strong> (mass can neither be created nor destroyed in a chemical reaction).</p>
+
+<div class="reaction-box">
+<div class="reaction-label">Example: Iron reacting with Steam</div>
+Unbalanced: Fe (s) + H₂O (g) ──&gt; Fe₃O₄ (s) + H₂ (g)
+<br><br>
+Balanced: 3Fe (s) + 4H₂O (g) ──&gt; Fe₃O₄ (s) + 4H₂ (g)
+</div>
+
+<h3 id="types-of-reactions">5 Major Types of Chemical Reactions</h3>
 <table>
-<tr><th>Type</th><th>Description</th><th>Example</th></tr>
-<tr><td>Combination</td><td>Two or more reactants form a single product</td><td>CaO + H₂O → Ca(OH)₂</td></tr>
-<tr><td>Decomposition</td><td>Single reactant breaks into multiple products</td><td>2FeSO₄ → Fe₂O₃ + SO₂ + SO₃</td></tr>
-<tr><td>Displacement</td><td>More reactive element displaces a less reactive one</td><td>Fe + CuSO₄ → FeSO₄ + Cu</td></tr>
-<tr><td>Double Displacement</td><td>Exchange of ions between two compounds</td><td>Na₂SO₄ + BaCl₂ → BaSO₄ + 2NaCl</td></tr>
-<tr><td>Redox</td><td>Simultaneous oxidation and reduction</td><td>CuO + H₂ → Cu + H₂O</td></tr>
+<tr><th>Type</th><th>Definition</th><th>Chemical Equation Example</th></tr>
+<tr><td><strong>Combination Reaction</strong></td><td>Two or more reactants combine to form a single product.</td><td>CaO (Quicklime) + H₂O → Ca(OH)₂ (Slaked lime) + Heat</td></tr>
+<tr><td><strong>Decomposition Reaction</strong></td><td>A single compound breaks down into two or more simpler substances.</td><td>2Pb(NO₃)₂ ──[Heat]──&gt; 2PbO + 4NO₂ (Brown gas) + O₂</td></tr>
+<tr><td><strong>Displacement Reaction</strong></td><td>A more reactive element displaces a less reactive element from its solution.</td><td>Fe (s) + CuSO₄ (aq, Blue) → FeSO₄ (aq, Green) + Cu (s)</td></tr>
+<tr><td><strong>Double Displacement</strong></td><td>Exchange of ions between two reactant compounds.</td><td>Na₂SO₄ (aq) + BaCl₂ (aq) → BaSO₄ (White ppt) + 2NaCl</td></tr>
+<tr><td><strong>Redox Reaction</strong></td><td>Simultaneous oxidation (loss of e⁻ / gain of O) and reduction (gain of e⁻ / loss of O).</td><td>CuO + H₂ ──[Heat]──&gt; Cu + H₂O</td></tr>
 </table>
 
-<h3>Oxidation and Reduction</h3>
+<div class="qa-card" id="solved-board-questions">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • CBSE Class 10 Board Exam (3 Marks)</span>
+<p><strong>Why is respiration considered an exothermic reaction? Write the balanced chemical equation representing cellular respiration.</strong></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION • Step-by-Step Scoring Points</span>
+<p><strong>Reason:</strong> During digestion, food containing carbohydrates is broken down into glucose. This glucose combines with oxygen in the cells of our body and burns to release a large amount of energy in the form of ATP to power body functions. Because energy is released during this process, respiration is classified as an <strong>exothermic reaction</strong>.</p>
+<div class="reaction-box">
+<div class="reaction-label">Chemical Equation of Respiration</div>
+C₆H₁₂O₆ (aq) + 6O₂ (aq) ──&gt; 6CO₂ (aq) + 6H₂O (l) + Energy (38 ATP)
+</div>
+</div>
+</div>
+
+<div class="qa-card">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • ICSE Class 10 Important Problem</span>
+<p><strong>Identify the substance oxidised, substance reduced, oxidising agent, and reducing agent in:</strong><br>
+<code>MnO₂ + 4HCl → MnCl₂ + 2H₂O + Cl₂</code></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION</span>
 <ul>
-<li><strong>Oxidation</strong>: Gain of oxygen or loss of hydrogen.</li>
-<li><strong>Reduction</strong>: Loss of oxygen or gain of hydrogen.</li>
+<li><strong>Substance Oxidised:</strong> HCl (hydrogen is removed and converted to Cl₂)</li>
+<li><strong>Substance Reduced:</strong> MnO₂ (oxygen is removed and converted to MnCl₂)</li>
+<li><strong>Oxidising Agent:</strong> MnO₂ (provides oxygen / causes oxidation of HCl)</li>
+<li><strong>Reducing Agent:</strong> HCl (causes reduction of MnO₂)</li>
 </ul>
-<p>A reaction where both oxidation and reduction occur simultaneously is called a <strong>redox reaction</strong>.</p>
+</div>
+</div>
 
-<h3>Effects of Oxidation in Everyday Life</h3>
-<ul>
-<li><strong>Corrosion</strong>: Iron reacts with oxygen and moisture to form rust (Fe₂O₃·xH₂O). Silver turns black due to formation of Ag₂S. Copper develops a green coating of CuCO₃.</li>
-<li><strong>Rancidity</strong>: Fats and oils oxidise over time, making food smell and taste bad. Prevented by adding antioxidants, storing in airtight containers, or flushing with nitrogen gas.</li>
-</ul>
-
-<h3>Key Formulas to Remember</h3>
-<p>Balanced equations of all types should be practised extensively. Focus on identifying the type of reaction and the oxidising/reducing agents.</p>
-
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 1; Lakhmir Singh & Manjit Kaur Chemistry for Class 10.</em></p>`
+<h3 id="faqs">Frequently Asked Questions – FAQs</h3>
+<div class="concept-callout">
+<strong>Q: What is the difference between displacement and double displacement reaction?</strong><br>
+<em>Answer:</em> In a displacement reaction, a single free element replaces another ion from a compound (e.g. Zn + CuSO₄ → ZnSO₄ + Cu). In double displacement, two ionic compounds exchange their positive and negative ions simultaneously to produce two new compounds (e.g. AgNO₃ + NaCl → AgCl + NaNO₃).
+</div>`
   },
 
+  // ══════════════════════════════════════════════════════════
+  // PHYSICS: Light – Reflection and Refraction (Class 10 CBSE / ICSE)
+  // ══════════════════════════════════════════════════════════
   {
-    title: "Acids, Bases and Salts – Class 10 Chemistry Chapter 2",
-    subject: "Chemistry",
-    targetClass: "10",
-    chapter: "Chapter 2",
-    metaDescription: "Learn about acids, bases, salts, pH scale, neutralisation reactions, and the properties of common chemical compounds for Class 10 CBSE.",
-    keywords: ["acids bases salts", "pH scale", "neutralisation", "class 10 chemistry", "NCERT", "hydrochloric acid", "sodium hydroxide", "indicators"],
-    content: `<h2>Acids, Bases and Salts</h2>
-<p>Acids, bases, and salts are important categories of chemical compounds that we encounter daily. Understanding their properties, reactions, and applications is fundamental to chemistry.</p>
-
-<h3>What are Acids?</h3>
-<p>Acids are substances that produce <strong>H⁺ (hydrogen) ions</strong> when dissolved in water. Common acids include:</p>
-<ul>
-<li>Hydrochloric acid (HCl) — found in stomach</li>
-<li>Sulphuric acid (H₂SO₄) — king of chemicals</li>
-<li>Acetic acid (CH₃COOH) — found in vinegar</li>
-<li>Citric acid — found in citrus fruits</li>
-</ul>
-
-<h3>What are Bases?</h3>
-<p>Bases are substances that produce <strong>OH⁻ (hydroxide) ions</strong> in water. Common bases:</p>
-<ul>
-<li>Sodium hydroxide (NaOH) — caustic soda</li>
-<li>Calcium hydroxide (Ca(OH)₂) — slaked lime</li>
-<li>Magnesium hydroxide (Mg(OH)₂) — milk of magnesia (antacid)</li>
-</ul>
-
-<h3>Indicators</h3>
-<table>
-<tr><th>Indicator</th><th>Colour in Acid</th><th>Colour in Base</th></tr>
-<tr><td>Litmus</td><td>Red</td><td>Blue</td></tr>
-<tr><td>Methyl Orange</td><td>Red</td><td>Yellow</td></tr>
-<tr><td>Phenolphthalein</td><td>Colourless</td><td>Pink</td></tr>
-</table>
-
-<h3>The pH Scale</h3>
-<p>pH stands for "potential of Hydrogen" and measures the concentration of H⁺ ions in a solution on a scale of <strong>0 to 14</strong>.</p>
-<ul>
-<li>pH &lt; 7: Acidic (stomach acid ≈ 1.5)</li>
-<li>pH = 7: Neutral (pure water)</li>
-<li>pH &gt; 7: Basic (soap ≈ 9-10)</li>
-</ul>
-<p><strong>pH is crucial in daily life:</strong> our blood pH must remain 7.35–7.45, soil pH affects agriculture, acid rain (pH &lt; 5.6) damages monuments like the Taj Mahal.</p>
-
-<h3>Neutralisation Reaction</h3>
-<p>When an acid reacts with a base, they form a <strong>salt and water</strong>:</p>
-<pre>Acid + Base → Salt + Water</pre>
-<pre>HCl + NaOH → NaCl + H₂O</pre>
-
-<h3>Important Salts</h3>
-<ul>
-<li><strong>Common Salt (NaCl)</strong>: Used in food, de-icing, and as a raw material for making NaOH, baking soda, and washing soda.</li>
-<li><strong>Baking Soda (NaHCO₃)</strong>: Used in fire extinguishers, cooking, and as an antacid.</li>
-<li><strong>Washing Soda (Na₂CO₃·10H₂O)</strong>: Used in glass, soap, paper industries, and water softening.</li>
-<li><strong>Plaster of Paris (CaSO₄·½H₂O)</strong>: Used for casts, moulds, and in hospitals for fractured bones.</li>
-<li><strong>Bleaching Powder (CaOCl₂)</strong>: Used for water purification and bleaching.</li>
-</ul>
-
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 2; S. Chand Chemistry by Lakhmir Singh.</em></p>`
-  },
-
-  {
-    title: "Metals and Non-Metals – Class 10 Chemistry Chapter 3",
-    subject: "Chemistry",
-    targetClass: "10",
-    chapter: "Chapter 3",
-    metaDescription: "Comprehensive notes on metals, non-metals, reactivity series, extraction of metals, and corrosion for CBSE Class 10 Chemistry.",
-    keywords: ["metals non-metals", "reactivity series", "extraction of metals", "class 10", "ionic bond", "corrosion", "NCERT"],
-    content: `<h2>Metals and Non-Metals</h2>
-<p>Elements are broadly classified into <strong>metals</strong> and <strong>non-metals</strong> based on their physical and chemical properties.</p>
-
-<h3>Physical Properties of Metals</h3>
-<ul>
-<li><strong>Lustrous</strong> (shiny surface when freshly cut)</li>
-<li><strong>Malleable</strong> (can be beaten into thin sheets — gold, aluminium)</li>
-<li><strong>Ductile</strong> (can be drawn into wires — copper, aluminium)</li>
-<li><strong>Good conductors</strong> of heat and electricity (silver is the best conductor)</li>
-<li>Generally <strong>hard</strong> (exception: sodium and potassium are soft)</li>
-<li>High <strong>melting and boiling points</strong> (exception: gallium and caesium melt at body temperature)</li>
-<li>Produce a <strong>sonorous</strong> (ringing) sound when struck</li>
-</ul>
-
-<h3>Physical Properties of Non-Metals</h3>
-<ul>
-<li>Non-lustrous, dull appearance (exception: iodine is lustrous, diamond has exceptional lustre)</li>
-<li>Brittle — cannot be drawn into wires or sheets</li>
-<li>Poor conductors of heat and electricity (exception: graphite conducts electricity)</li>
-<li>Generally low density, melting, and boiling points</li>
-</ul>
-
-<h3>Reactivity Series of Metals</h3>
-<p>The reactivity series arranges metals in decreasing order of reactivity:</p>
-<pre>K &gt; Na &gt; Ca &gt; Mg &gt; Al &gt; Zn &gt; Fe &gt; Ni &gt; Sn &gt; Pb &gt; H &gt; Cu &gt; Hg &gt; Ag &gt; Au &gt; Pt</pre>
-<p>A more reactive metal can displace a less reactive metal from its compound in solution.</p>
-
-<h3>Ionic Bonding</h3>
-<p>Metals transfer electrons to non-metals, forming <strong>ionic compounds</strong> (e.g., NaCl). Ionic compounds have high melting points, are soluble in water, and conduct electricity when dissolved or melted.</p>
-
-<h3>Extraction of Metals</h3>
-<p>The method of extraction depends on reactivity:</p>
-<table>
-<tr><th>Reactivity</th><th>Method</th><th>Examples</th></tr>
-<tr><td>High (K, Na, Ca, Mg, Al)</td><td>Electrolytic reduction</td><td>Aluminium from bauxite</td></tr>
-<tr><td>Medium (Zn, Fe, Ni, Sn, Pb)</td><td>Reduction with carbon (coke)</td><td>Iron from haematite</td></tr>
-<tr><td>Low (Cu, Hg, Ag, Au)</td><td>Self-reduction / Roasting</td><td>Copper from Cu₂S</td></tr>
-</table>
-
-<h3>Corrosion</h3>
-<p>When metals are exposed to moisture, acids, or gases, they corrode. Rusting of iron (forming Fe₂O₃·xH₂O) is the most common example. Prevention methods include painting, oiling, galvanisation (zinc coating), electroplating, and alloying.</p>
-
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 3; Pradeep's Chemistry.</em></p>`
-  },
-
-  // ═══════════════════════════════════════════
-  // PHYSICS — Class 10 (NCERT Based)
-  // ═══════════════════════════════════════════
-  {
-    title: "Light – Reflection and Refraction – Class 10 Physics Chapter 9",
+    title: "Light – Reflection and Refraction Class 10: Formulas, Ray Diagrams & NCERT Solutions",
     subject: "Physics",
     targetClass: "10",
+    board: "CBSE & ICSE",
     chapter: "Chapter 9",
-    metaDescription: "Master light, reflection, refraction, mirror and lens formulas, sign conventions, and ray diagrams for CBSE Class 10 Physics.",
-    keywords: ["light reflection refraction", "mirror formula", "lens formula", "class 10 physics", "concave mirror", "convex lens", "NCERT"],
-    content: `<h2>Light – Reflection and Refraction</h2>
-<p>Light is a form of electromagnetic radiation that enables us to see. It travels in straight lines (rectilinear propagation) and has a speed of approximately <strong>3 × 10⁸ m/s</strong> in vacuum.</p>
+    metaDescription: "Master Class 10 Physics Light Reflection and Refraction: Mirror formula, Lens formula, Snell's law, sign conventions, solved numericals, and board questions.",
+    keywords: ["CBSE Class 10 Physics", "ICSE Class 10 Physics", "Mirror Formula", "Lens Formula", "Snells Law", "Refractive Index", "Ray Diagrams", "NCERT Solutions", "Board Exam 2026", "HC Verma Physics", "Shaalaa Solutions"],
+    content: `<h2>Light – Reflection and Refraction Study Guide</h2>
+<p>Light is a form of energy that produces the sensation of vision in our eyes. Light propagates along straight lines in a homogeneous medium at a speed of <strong>c ≈ 3 × 10⁸ m/s</strong> in vacuum.</p>
 
-<h3>Reflection of Light</h3>
-<p><strong>Laws of Reflection:</strong></p>
+<div class="toc-box">
+<div class="toc-title">Table of Contents</div>
+<ul class="toc-list">
+<li><a class="toc-link" href="#laws-of-reflection">Laws of Reflection &amp; Spherical Mirrors</a></li>
+<li><a class="toc-link" href="#mirror-formula">Mirror Formula &amp; Sign Convention</a></li>
+<li><a class="toc-link" href="#refraction-snell">Refraction of Light &amp; Snell's Law</a></li>
+<li><a class="toc-link" href="#lens-formula">Lenses, Lens Formula &amp; Power</a></li>
+<li><a class="toc-link" href="#solved-numericals">Solved Board Exam Numericals (Shaalaa Pattern)</a></li>
+<li><a class="toc-link" href="#faqs">Frequently Asked Questions – FAQs</a></li>
+</ul>
+</div>
+
+<h3 id="laws-of-reflection">Laws of Reflection &amp; Spherical Mirrors</h3>
 <ol>
-<li>The angle of incidence (i) equals the angle of reflection (r): <strong>∠i = ∠r</strong></li>
-<li>The incident ray, reflected ray, and normal all lie in the same plane.</li>
+<li>The angle of incidence is equal to the angle of reflection: <strong>∠i = ∠r</strong></li>
+<li>The incident ray, reflected ray, and the normal to the reflecting surface at the point of incidence all lie in the same plane.</li>
 </ol>
 
-<h3>Spherical Mirrors</h3>
-<table>
-<tr><th>Property</th><th>Concave Mirror</th><th>Convex Mirror</th></tr>
-<tr><td>Reflecting surface</td><td>Inner (cave) side</td><td>Outer (bulging) side</td></tr>
-<tr><td>Focal length</td><td>Negative (real focus)</td><td>Positive (virtual focus)</td></tr>
-<tr><td>Image formed</td><td>Real or virtual (depends on position)</td><td>Always virtual, erect, diminished</td></tr>
-<tr><td>Uses</td><td>Torches, headlights, shaving mirrors, dentist mirrors</td><td>Rear-view mirrors in vehicles</td></tr>
-</table>
+<h3 id="mirror-formula">Mirror Formula &amp; Sign Convention</h3>
+<div class="formula-callout">
+<strong>Mirror Formula:</strong><br>
+<code>1/v + 1/u = 1/f</code><br><br>
+<strong>Linear Magnification (m):</strong><br>
+<code>m = (Height of image, h') / (Height of object, h) = -v / u</code>
+</div>
+<p><em>New Cartesian Sign Convention:</em> Object is always placed on the left (u is always negative). Concave mirror has negative focal length (f &lt; 0); Convex mirror has positive focal length (f &gt; 0).</p>
 
-<h3>Mirror Formula</h3>
-<pre>1/v + 1/u = 1/f</pre>
-<p>Where: v = image distance, u = object distance, f = focal length</p>
-<p><strong>Magnification:</strong> m = -v/u = h'/h</p>
+<h3 id="refraction-snell">Refraction of Light &amp; Snell's Law</h3>
+<p>When a ray of light travels obliquely from one optical medium to another, it bends at the interface due to a difference in speed. According to <strong>Snell's Law of Refraction</strong>:</p>
+<div class="formula-callout">
+<code>sin i / sin r = n₂₁ = n₂ / n₁ = v₁ / v₂</code><br>
+Where n₂₁ is the refractive index of medium 2 with respect to medium 1.
+</div>
 
-<h3>Refraction of Light</h3>
-<p>Refraction is the bending of light when it passes from one transparent medium to another. It occurs due to a change in the speed of light.</p>
-<p><strong>Snell's Law:</strong></p>
-<pre>n₁ sin i = n₂ sin r</pre>
-<p>or equivalently: <strong>n = sin i / sin r</strong> (refractive index of medium 2 w.r.t. medium 1)</p>
+<h3 id="lens-formula">Lenses, Lens Formula &amp; Power</h3>
+<div class="formula-callout">
+<strong>Lens Formula:</strong><br>
+<code>1/v - 1/u = 1/f</code><br><br>
+<strong>Lens Magnification:</strong> <code>m = h'/h = +v/u</code><br><br>
+<strong>Power of a Lens (P):</strong> <code>P = 1 / f (in metres)</code>. Unit: <strong>Dioptre (D)</strong>.
+</div>
 
-<h3>Lenses</h3>
-<table>
-<tr><th>Property</th><th>Convex (Converging)</th><th>Concave (Diverging)</th></tr>
-<tr><td>Shape</td><td>Thicker at centre</td><td>Thinner at centre</td></tr>
-<tr><td>Focal length</td><td>Positive</td><td>Negative</td></tr>
-<tr><td>Image</td><td>Real or virtual (depends on position)</td><td>Always virtual, erect, diminished</td></tr>
-<tr><td>Uses</td><td>Magnifying glass, camera, spectacles (hypermetropia)</td><td>Spectacles (myopia), peepholes</td></tr>
-</table>
+<div class="qa-card" id="solved-numericals">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • CBSE Board Standard Numerical (3 Marks)</span>
+<p><strong>A convex lens of focal length 15 cm forms an image 10 cm from the lens. How far is the object placed from the lens? Draw the ray diagram.</strong></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION • Step-by-Step Scoring Guide</span>
+<p><strong>Given:</strong><br>
+• Focal length of concave lens (diverging), f = -15 cm<br>
+• Image distance, v = -10 cm (concave lens always forms a virtual image on the same side)<br>
+• Object distance, u = ?</p>
 
-<h3>Lens Formula</h3>
-<pre>1/v - 1/u = 1/f</pre>
-<p><strong>Magnification:</strong> m = v/u = h'/h</p>
-<p><strong>Power of a lens:</strong> P = 1/f (in metres). Unit: dioptre (D).</p>
+<p><strong>Applying Lens Formula:</strong><br>
+<code>1/v - 1/u = 1/f</code><br>
+<code>1/u = 1/v - 1/f</code><br>
+<code>1/u = 1/(-10) - 1/(-15) = -1/10 + 1/15</code><br>
+<code>1/u = (-3 + 2) / 30 = -1 / 30</code><br>
+<code>u = -30 cm</code></p>
 
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 9; HC Verma Concepts of Physics; Lakhmir Singh Physics.</em></p>`
+<p><strong>Final Answer:</strong> The object is placed at a distance of <strong>30 cm in front of the lens</strong>.</p>
+</div>
+</div>`
   },
 
+  // ══════════════════════════════════════════════════════════
+  // PHYSICS: Electricity & Circuits (Class 10 CBSE / ICSE)
+  // ══════════════════════════════════════════════════════════
   {
-    title: "Electricity – Class 10 Physics Chapter 11",
+    title: "Electricity Class 10 – Ohm's Law, Resistors & Joule's Heating NCERT Solutions",
     subject: "Physics",
     targetClass: "10",
+    board: "CBSE & ICSE",
     chapter: "Chapter 11",
-    metaDescription: "Complete notes on electric current, Ohm's law, resistance, series and parallel circuits, and electrical power for CBSE Class 10 Physics.",
-    keywords: ["electricity", "ohm's law", "resistance", "series parallel", "class 10 physics", "electric current", "NCERT", "power"],
-    content: `<h2>Electricity</h2>
-<p>Electricity is the flow of <strong>electric charge</strong> (usually electrons) through a conductor. It is one of the most important forms of energy in modern life.</p>
+    metaDescription: "Master Class 10 Physics Electricity: Ohm's law, series and parallel circuits, resistivity, electrical power, Joule's law of heating, and solved numericals.",
+    keywords: ["CBSE Class 10 Physics", "ICSE Class 10 Physics", "Electricity Class 10", "Ohms Law", "Series and Parallel", "Resistivity", "Joules Heating", "Electric Power", "NCERT Solutions", "Board Exam 2026", "SL Arora Physics"],
+    content: `<h2>Electricity – Complete Chapter Revision &amp; Solutions</h2>
+<p>Electricity is a controllable and convenient form of energy. Electric current (I) is defined as the rate of flow of electric charges across any cross-section of a conductor.</p>
 
-<h3>Electric Current</h3>
-<p>Electric current is the rate of flow of charge:</p>
-<pre>I = Q / t</pre>
-<p>Where: I = current (Ampere, A), Q = charge (Coulomb, C), t = time (seconds)</p>
-<p>1 Ampere = 1 Coulomb of charge flowing per second.</p>
-
-<h3>Electric Potential and Potential Difference</h3>
-<p>The work done in moving a unit positive charge from one point to another is called <strong>potential difference</strong>:</p>
-<pre>V = W / Q</pre>
-<p>Unit: Volt (V). 1V = 1 Joule / 1 Coulomb.</p>
-
-<h3>Ohm's Law</h3>
-<p>At constant temperature, the current flowing through a conductor is directly proportional to the potential difference across its ends:</p>
-<pre>V = IR</pre>
-<p>Where R = resistance (in Ohms, Ω).</p>
-
-<h3>Factors Affecting Resistance</h3>
-<pre>R = ρ × l / A</pre>
-<ul>
-<li><strong>ρ (rho)</strong>: Resistivity of the material (Ω·m)</li>
-<li><strong>l</strong>: Length of the conductor (R ∝ l)</li>
-<li><strong>A</strong>: Cross-sectional area (R ∝ 1/A)</li>
+<div class="toc-box">
+<div class="toc-title">Table of Contents</div>
+<ul class="toc-list">
+<li><a class="toc-link" href="#ohms-law">Ohm's Law &amp; Resistance</a></li>
+<li><a class="toc-link" href="#factors-resistance">Factors Affecting Resistance &amp; Resistivity</a></li>
+<li><a class="toc-link" href="#series-parallel">Combination of Resistors (Series vs Parallel)</a></li>
+<li><a class="toc-link" href="#heating-effect">Joule's Law of Heating &amp; Electric Power</a></li>
+<li><a class="toc-link" href="#solved-numericals">Board Examination Solved Numericals</a></li>
 </ul>
-<p>Metals have low resistivity (good conductors); rubber and glass have very high resistivity (insulators).</p>
+</div>
 
-<h3>Resistors in Series</h3>
-<pre>R_total = R₁ + R₂ + R₃ + ...</pre>
-<p>Current is the <strong>same</strong> through all resistors; voltage divides.</p>
+<h3 id="ohms-law">Ohm's Law &amp; Resistance</h3>
+<div class="formula-callout">
+<strong>Ohm's Law Statement:</strong> The potential difference (V) across the ends of a metallic wire is directly proportional to the current (I) flowing through it, provided its temperature remains constant.<br>
+<code>V = I × R</code> (where R is the electrical resistance, in Ohms, Ω)
+</div>
 
-<h3>Resistors in Parallel</h3>
-<pre>1/R_total = 1/R₁ + 1/R₂ + 1/R₃ + ...</pre>
-<p>Voltage is the <strong>same</strong> across all resistors; current divides.</p>
+<h3 id="factors-resistance">Factors Affecting Resistance &amp; Resistivity</h3>
+<div class="formula-callout">
+<code>R = ρ × (l / A)</code><br>
+Where: <strong>l</strong> = length of conductor (m), <strong>A</strong> = cross-sectional area (m²), <strong>ρ</strong> = specific electrical resistivity of material (Ω·m).
+</div>
 
-<h3>Electrical Energy and Power</h3>
-<pre>P = V × I = I²R = V²/R</pre>
-<pre>Energy = P × t</pre>
-<p>Unit of power: Watt (W). 1 kWh (kilowatt-hour) = 3.6 × 10⁶ Joules = 1 "unit" of electricity.</p>
+<h3 id="series-parallel">Combination of Resistors</h3>
+<table>
+<tr><th>Feature</th><th>Series Combination</th><th>Parallel Combination</th></tr>
+<tr><td><strong>Equivalent Formula</strong></td><td><code>R_eq = R₁ + R₂ + R₃</code></td><td><code>1/R_eq = 1/R₁ + 1/R₂ + 1/R₃</code></td></tr>
+<tr><td><strong>Current (I)</strong></td><td>Same through every resistor</td><td>Divides among branches: <code>I = I₁ + I₂ + I₃</code></td></tr>
+<tr><td><strong>Voltage (V)</strong></td><td>Divides across resistors: <code>V = V₁ + V₂ + V₃</code></td><td>Same voltage across all parallel branches</td></tr>
+<tr><td><strong>Overall Resistance</strong></td><td>Greater than the largest resistor</td><td>Smaller than the smallest individual resistor</td></tr>
+</table>
 
-<h3>Heating Effect of Current</h3>
-<p>When current flows through a resistance, electrical energy is converted to heat:</p>
-<pre>H = I²Rt (Joule's Law of Heating)</pre>
-<p>Applications: electric heater, iron, fuse wire, electric bulb.</p>
+<h3 id="heating-effect">Joule's Law of Heating &amp; Electric Power</h3>
+<div class="formula-callout">
+<strong>Heat Generated:</strong> <code>H = I²Rt = VIt = (V² / R) × t</code> (Joules)<br>
+<strong>Electric Power:</strong> <code>P = V × I = I²R = V² / R</code> (Watts)<br>
+<strong>Commercial Unit:</strong> 1 kilowatt-hour (1 kWh) = 3.6 × 10⁶ Joules = 1 Unit of electricity.
+</div>
 
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 11; SL Arora Physics; Lakhmir Singh Physics.</em></p>`
+<div class="qa-card" id="solved-numericals">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • CBSE Class 10 Board Exam Problem (3 Marks)</span>
+<p><strong>An electric lamp of resistance 20 Ω and a conductor of 4 Ω resistance are connected in series to a 6 V battery. Calculate:<br>(a) The total resistance of the circuit,<br>(b) The current flowing through the circuit,<br>(c) The potential difference across the lamp and the conductor.</strong></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION • Step-by-Step Calculation</span>
+<p><strong>(a) Total Resistance in Series:</strong><br>
+<code>R_total = R_lamp + R_conductor = 20 Ω + 4 Ω = 24 Ω</code></p>
+
+<p><strong>(b) Current in Circuit (Ohm's Law):</strong><br>
+<code>I = V / R_total = 6 V / 24 Ω = 0.25 A</code></p>
+
+<p><strong>(c) Potential Difference Across Each:</strong><br>
+• Across Lamp: <code>V₁ = I × R_lamp = 0.25 A × 20 Ω = 5.0 V</code><br>
+• Across Conductor: <code>V₂ = I × R_conductor = 0.25 A × 4 Ω = 1.0 V</code><br>
+<em>Check: V₁ + V₂ = 5.0 V + 1.0 V = 6.0 V (Matches battery voltage!)</em></p>
+</div>
+</div>`
   },
 
+  // ══════════════════════════════════════════════════════════
+  // BIOLOGY: Life Processes (Class 10 CBSE / ICSE)
+  // ══════════════════════════════════════════════════════════
   {
-    title: "Magnetic Effects of Electric Current – Class 10 Physics Chapter 12",
-    subject: "Physics",
-    targetClass: "10",
-    chapter: "Chapter 12",
-    metaDescription: "Understand magnetic fields, electromagnetic induction, Fleming's rules, electric motors and generators for CBSE Class 10 Physics.",
-    keywords: ["magnetic effects", "electromagnetism", "Fleming's rule", "electric motor", "generator", "class 10 physics", "NCERT"],
-    content: `<h2>Magnetic Effects of Electric Current</h2>
-<p>Hans Christian Oersted discovered in 1820 that a compass needle deflects when placed near a current-carrying conductor, proving the connection between electricity and magnetism.</p>
-
-<h3>Magnetic Field and Field Lines</h3>
-<ul>
-<li>A magnetic field is a region around a magnet where its influence can be felt.</li>
-<li>Field lines emerge from the <strong>North pole</strong> and enter the <strong>South pole</strong>.</li>
-<li>They never intersect and are closer together where the field is stronger.</li>
-</ul>
-
-<h3>Magnetic Field Due to a Current-Carrying Conductor</h3>
-<p><strong>Straight conductor:</strong> Concentric circles around the wire. Direction found using the <strong>Right-Hand Thumb Rule</strong>: thumb points in the direction of current, curled fingers show the direction of the magnetic field.</p>
-<p><strong>Circular loop (coil):</strong> The field at the centre is straight and perpendicular to the plane of the loop. Increases with more turns and more current.</p>
-<p><strong>Solenoid:</strong> A coil of many turns behaves like a bar magnet. The field inside is uniform and strong. An electromagnet is a solenoid with a soft iron core.</p>
-
-<h3>Force on a Current-Carrying Conductor in a Magnetic Field</h3>
-<pre>F = BIl (when conductor is perpendicular to field)</pre>
-<p>Direction of force: <strong>Fleming's Left-Hand Rule</strong> (Motor Rule)</p>
-<ul>
-<li>Forefinger → Magnetic Field (B)</li>
-<li>Middle finger → Current (I)</li>
-<li>Thumb → Force/Motion (F)</li>
-</ul>
-
-<h3>Electric Motor</h3>
-<p>Converts electrical energy into mechanical energy. Works on Fleming's Left-Hand Rule. Key parts: armature coil, magnets, split-ring commutator, brushes. Used in fans, mixers, washing machines.</p>
-
-<h3>Electromagnetic Induction</h3>
-<p>Michael Faraday discovered that a changing magnetic field in a coil induces an electric current (EMF). This is the principle behind generators.</p>
-<p><strong>Fleming's Right-Hand Rule</strong> (Generator Rule): Forefinger → Field, Thumb → Motion, Middle finger → Induced current.</p>
-
-<h3>Electric Generator</h3>
-<p>Converts mechanical energy into electrical energy using electromagnetic induction.</p>
-<ul>
-<li><strong>AC Generator</strong>: Uses slip rings → produces alternating current (used in power plants)</li>
-<li><strong>DC Generator</strong>: Uses split-ring commutator → produces direct current</li>
-</ul>
-
-<h3>Domestic Electric Circuits</h3>
-<p>In India, household supply is <strong>220V AC at 50 Hz</strong>. The three wires are: Live (red), Neutral (black), and Earth (green). Fuse and MCB are safety devices that break the circuit during overloading or short-circuiting.</p>
-
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 12; Concepts of Physics by HC Verma.</em></p>`
-  },
-
-  // ═══════════════════════════════════════════
-  // BIOLOGY — Class 10 (NCERT Based)
-  // ═══════════════════════════════════════════
-  {
-    title: "Life Processes – Class 10 Biology Chapter 5",
+    title: "Life Processes Class 10 Biology – NCERT Notes, Diagrams & Board Solutions",
     subject: "Biology",
     targetClass: "10",
+    board: "CBSE & ICSE",
     chapter: "Chapter 5",
-    metaDescription: "Complete notes on nutrition, respiration, transportation, and excretion in plants and humans for CBSE Class 10 Biology.",
-    keywords: ["life processes", "nutrition", "respiration", "transportation", "excretion", "class 10 biology", "NCERT", "photosynthesis"],
-    content: `<h2>Life Processes</h2>
-<p>Life processes are the basic functions performed by living organisms to maintain life. The key life processes are <strong>nutrition, respiration, transportation, and excretion</strong>.</p>
+    metaDescription: "Comprehensive Class 10 Biology Life Processes guide: Photosynthesis equations, Human digestive system, Heart double circulation, Nephron excretion, and Board Q&A.",
+    keywords: ["CBSE Class 10 Biology", "ICSE Class 10 Biology", "Life Processes", "Photosynthesis", "Double Circulation", "Nephron Diagram", "NCERT Solutions", "Board Exam 2026", "Truemans Biology"],
+    content: `<h2>Life Processes – Complete Revision &amp; Board Solutions</h2>
+<p>All living organisms perform vital physiological maintenance functions called <strong>life processes</strong>. These include Nutrition, Respiration, Transportation, and Excretion.</p>
 
-<h3>Nutrition</h3>
-<p>Nutrition is the process of intake and utilisation of food for energy, growth, and repair.</p>
-
-<h4>Autotrophic Nutrition (Plants)</h4>
-<p>Green plants make their own food through <strong>photosynthesis</strong>:</p>
-<pre>6CO₂ + 6H₂O + Light Energy → C₆H₁₂O₆ + 6O₂</pre>
-<p>Requirements: sunlight, chlorophyll (in chloroplasts), CO₂ (from stomata), and water (from roots). The process occurs mainly in leaves.</p>
-
-<h4>Heterotrophic Nutrition (Animals)</h4>
-<p>Organisms that depend on other organisms for food. In humans, digestion occurs in the <strong>alimentary canal</strong>:</p>
-<ol>
-<li><strong>Mouth</strong>: Teeth crush food; salivary amylase converts starch → maltose.</li>
-<li><strong>Stomach</strong>: HCl activates pepsin which digests proteins → peptones.</li>
-<li><strong>Small Intestine</strong>: Bile (from liver) emulsifies fats; pancreatic enzymes (trypsin, lipase, amylase) complete digestion. Villi absorb nutrients into blood.</li>
-<li><strong>Large Intestine</strong>: Absorbs water; undigested waste is expelled via anus.</li>
-</ol>
-
-<h3>Respiration</h3>
-<p>Respiration is the breakdown of glucose to release energy (ATP).</p>
-<p><strong>Aerobic (with O₂):</strong></p>
-<pre>C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energy (ATP)</pre>
-<p><strong>Anaerobic (without O₂):</strong></p>
-<pre>C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂ + Energy (in yeast — fermentation)</pre>
-<pre>C₆H₁₂O₆ → 2C₃H₆O₃ + Energy (in muscles — lactic acid)</pre>
-
-<h3>Transportation</h3>
-<h4>In Humans</h4>
-<ul>
-<li><strong>Heart</strong>: 4-chambered (2 atria + 2 ventricles). Double circulation: pulmonary (lungs) + systemic (body).</li>
-<li><strong>Blood</strong>: Plasma (55%) + RBCs + WBCs + Platelets. Haemoglobin in RBCs carries O₂.</li>
-<li><strong>Arteries</strong> carry oxygenated blood (except pulmonary artery); <strong>Veins</strong> carry deoxygenated blood (except pulmonary vein). <strong>Capillaries</strong> enable exchange.</li>
+<div class="toc-box">
+<div class="toc-title">Table of Contents</div>
+<ul class="toc-list">
+<li><a class="toc-link" href="#autotrophic-nutrition">Autotrophic Nutrition &amp; Photosynthesis Equation</a></li>
+<li><a class="toc-link" href="#human-digestion">Human Alimentary Canal &amp; Enzyme Action</a></li>
+<li><a class="toc-link" href="#aerobic-anaerobic">Aerobic vs Anaerobic Respiration</a></li>
+<li><a class="toc-link" href="#double-circulation">Human Heart &amp; Double Circulation</a></li>
+<li><a class="toc-link" href="#nephron-excretion">Excretory System &amp; Nephron Function</a></li>
+<li><a class="toc-link" href="#solved-questions">Solved Board Examination Questions</a></li>
 </ul>
-<h4>In Plants</h4>
-<ul>
-<li><strong>Xylem</strong>: Transports water and minerals upward (from roots to leaves) via transpiration pull.</li>
-<li><strong>Phloem</strong>: Transports food (sucrose) from leaves to all parts (translocation).</li>
-</ul>
+</div>
 
-<h3>Excretion</h3>
-<p>Removal of metabolic waste products from the body.</p>
-<ul>
-<li><strong>Kidneys</strong> filter blood to form urine. Each kidney contains ~1 million nephrons (the functional unit). Filtration → reabsorption → secretion → urine formation.</li>
-<li><strong>Plants</strong>: Store waste in vacuoles, old leaves, bark; remove O₂ and CO₂ through stomata.</li>
-</ul>
+<h3 id="autotrophic-nutrition">Autotrophic Nutrition &amp; Photosynthesis</h3>
+<div class="reaction-box">
+<div class="reaction-label">Overall Photosynthesis Reaction Equation</div>
+6CO₂ (From Air) + 12H₂O (From Soil) ──[ Sunlight / Chlorophyll ]──&gt; C₆H₁₂O₆ (Glucose) + 6O₂ (Byproduct) + 6H₂O
+</div>
 
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 5; Trueman's Biology; Pradeep's Biology.</em></p>`
-  },
-
-  {
-    title: "Heredity and Evolution – Class 10 Biology Chapter 8",
-    subject: "Biology",
-    targetClass: "10",
-    chapter: "Chapter 8",
-    metaDescription: "Learn about heredity, Mendel's laws, genetics, DNA, evolution, speciation, and natural selection for CBSE Class 10 Biology.",
-    keywords: ["heredity evolution", "Mendel's laws", "genetics", "DNA", "natural selection", "class 10 biology", "NCERT", "speciation"],
-    content: `<h2>Heredity and Evolution</h2>
-<p>Heredity is the transmission of characters (traits) from parents to offspring. Evolution is the gradual change in inherited traits over successive generations.</p>
-
-<h3>Mendel's Contribution</h3>
-<p>Gregor Johann Mendel (Father of Genetics) studied inheritance using garden pea plants (<em>Pisum sativum</em>). He chose 7 contrasting pairs of characters (e.g., tall vs dwarf, round vs wrinkled seeds).</p>
-
-<h3>Key Terms</h3>
-<ul>
-<li><strong>Gene</strong>: Unit of inheritance; a segment of DNA on a chromosome.</li>
-<li><strong>Allele</strong>: Alternative forms of a gene (e.g., T for tall, t for dwarf).</li>
-<li><strong>Dominant</strong>: The trait that expresses itself even in heterozygous condition (Tt → Tall).</li>
-<li><strong>Recessive</strong>: The trait that is masked by the dominant allele (only expressed in tt → Dwarf).</li>
-<li><strong>Genotype</strong>: Genetic makeup (TT, Tt, tt).</li>
-<li><strong>Phenotype</strong>: Physical appearance (Tall or Dwarf).</li>
-</ul>
-
-<h3>Mendel's Laws</h3>
-<ol>
-<li><strong>Law of Dominance</strong>: In a cross between two pure organisms differing in a pair of characters, only one character appears in F₁ (dominant).</li>
-<li><strong>Law of Segregation</strong>: The two alleles of a gene separate during gamete formation so each gamete receives only one allele.</li>
-<li><strong>Law of Independent Assortment</strong>: Genes for different traits are inherited independently of each other (applies to dihybrid crosses).</li>
-</ol>
-
-<h3>Monohybrid Cross</h3>
-<pre>Parents: TT (Tall) × tt (Dwarf)</pre>
-<pre>F₁: All Tt (Tall)</pre>
-<pre>F₂: TT : Tt : Tt : tt → 3 Tall : 1 Dwarf</pre>
-<p>Genotypic ratio = 1:2:1 | Phenotypic ratio = 3:1</p>
-
-<h3>Sex Determination in Humans</h3>
-<p>Humans have 23 pairs of chromosomes (22 autosomes + 1 pair of sex chromosomes).</p>
-<ul>
-<li>Females: XX</li>
-<li>Males: XY</li>
-</ul>
-<p>The sex of the child is determined by the father's gamete: X sperm → girl, Y sperm → boy.</p>
-
-<h3>Evolution</h3>
-<ul>
-<li><strong>Homologous organs</strong>: Same origin, different functions (e.g., forelimbs of whale, bat, human) — evidence of <strong>divergent evolution</strong>.</li>
-<li><strong>Analogous organs</strong>: Different origin, same function (e.g., wings of butterfly and bird) — evidence of <strong>convergent evolution</strong>.</li>
-<li><strong>Fossils</strong>: Preserved remains of ancient organisms that provide evidence of evolution.</li>
-</ul>
-
-<h3>Natural Selection (Darwin)</h3>
-<p>Organisms with favourable variations survive and reproduce more successfully in a given environment ("survival of the fittest"). Over generations, this leads to evolution and speciation.</p>
-
-<p><em>Reference: NCERT Science Textbook for Class 10 – Chapter 8; Lakhmir Singh Biology; Pradeep's Biology.</em></p>`
-  },
-
-  // ═══════════════════════════════════════════
-  // COMPUTER SCIENCE — Class 10
-  // ═══════════════════════════════════════════
-  {
-    title: "Introduction to Python Programming – Class 10 Computer Science",
-    subject: "Computer",
-    targetClass: "10",
-    chapter: "Python Basics",
-    metaDescription: "Learn Python programming basics: variables, data types, operators, input/output, and control flow for CBSE Class 10 Computer Science.",
-    keywords: ["python programming", "class 10 computer science", "variables", "data types", "operators", "if else", "loops", "CBSE"],
-    content: `<h2>Introduction to Python Programming</h2>
-<p>Python is a high-level, interpreted, general-purpose programming language created by <strong>Guido van Rossum</strong> in 1991. It is known for its simple syntax, readability, and versatility. Python is the recommended language for CBSE Class 10 Computer Science.</p>
-
-<h3>Why Python?</h3>
-<ul>
-<li>Easy to learn and read (close to English)</li>
-<li>Free and open-source</li>
-<li>Used in web development, AI, data science, automation, and more</li>
-<li>Extensive library support</li>
-</ul>
-
-<h3>Variables and Data Types</h3>
-<p>A <strong>variable</strong> is a name that refers to a value stored in memory. Python is dynamically typed — you don't need to declare the type.</p>
-<pre>name = "SixBytes"        # str (string)
-age = 15                  # int (integer)
-marks = 95.5              # float (decimal)
-is_passed = True          # bool (boolean)</pre>
-
-<h3>Operators</h3>
+<h3 id="aerobic-anaerobic">Aerobic vs Anaerobic Respiration</h3>
 <table>
-<tr><th>Type</th><th>Operators</th><th>Example</th></tr>
-<tr><td>Arithmetic</td><td>+, -, *, /, //, %, **</td><td>5 ** 2 = 25, 7 // 2 = 3</td></tr>
-<tr><td>Comparison</td><td>==, !=, &gt;, &lt;, &gt;=, &lt;=</td><td>5 &gt; 3 → True</td></tr>
-<tr><td>Logical</td><td>and, or, not</td><td>True and False → False</td></tr>
-<tr><td>Assignment</td><td>=, +=, -=, *=, /=</td><td>x += 5 means x = x + 5</td></tr>
+<tr><th>Parameter</th><th>Aerobic Respiration</th><th>Anaerobic Respiration</th></tr>
+<tr><td><strong>Oxygen Requirement</strong></td><td>Occurs in the presence of O₂</td><td>Occurs in the absence of O₂</td></tr>
+<tr><td><strong>Site of Occurrence</strong></td><td>Cytoplasm and Mitochondria</td><td>Cytoplasm only</td></tr>
+<tr><td><strong>End Products</strong></td><td>CO₂ + H₂O + Energy</td><td>Ethanol + CO₂ (in Yeast) OR Lactic acid (in Muscle cells)</td></tr>
+<tr><td><strong>Energy Output</strong></td><td>High: 38 ATP per glucose</td><td>Low: 2 ATP per glucose</td></tr>
 </table>
 
-<h3>Input and Output</h3>
-<pre># Output
-print("Hello, SixBytes!")
-
-# Input (always returns a string)
-name = input("Enter your name: ")
-age = int(input("Enter your age: "))    # Convert to int
-print(f"Hello {name}, you are {age} years old!")</pre>
-
-<h3>Conditional Statements</h3>
-<pre>marks = int(input("Enter marks: "))
-
-if marks >= 90:
-    print("Grade: A+")
-elif marks >= 75:
-    print("Grade: A")
-elif marks >= 60:
-    print("Grade: B")
-else:
-    print("Grade: C")</pre>
-
-<h3>Loops</h3>
-<p><strong>for loop</strong> — iterates over a sequence:</p>
-<pre>for i in range(1, 11):
-    print(i, end=" ")
-# Output: 1 2 3 4 5 6 7 8 9 10</pre>
-
-<p><strong>while loop</strong> — repeats while a condition is True:</p>
-<pre>count = 1
-while count <= 5:
-    print("SixBytes", count)
-    count += 1</pre>
-
-<h3>Strings</h3>
-<pre>s = "SixBytes Institute"
-print(len(s))          # 19
-print(s[0])            # S
-print(s[-1])           # e
-print(s[0:3])          # Six (slicing)
-print(s.upper())       # SIXBYTES INSTITUTE
-print(s.lower())       # sixbytes institute
-print(s.replace("Institute", "Academy"))  # SixBytes Academy</pre>
-
-<h3>Lists</h3>
-<pre>subjects = ["Maths", "Science", "English"]
-subjects.append("Hindi")
-subjects.remove("English")
-print(subjects)        # ['Maths', 'Science', 'Hindi']
-print(len(subjects))   # 3</pre>
-
-<p><em>Reference: NCERT Computer Science Textbook for Class 10; Sumita Arora Python for Class 10; Let Us Python by Yashavant Kanetkar.</em></p>`
+<div class="qa-card" id="solved-questions">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • CBSE Class 10 Board Exam (3 Marks)</span>
+<p><strong>What is double circulation? Why is it necessary in human beings?</strong></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION • Scoring Answer</span>
+<p><strong>Definition:</strong> Double circulation is a circulatory mechanism in which blood passes through the heart twice during each complete circuit of the body:</p>
+<ol>
+<li><strong>Pulmonary Circulation:</strong> Deoxygenated blood is pumped from the right ventricle to the lungs for oxygenation and returns oxygenated to the left atrium.</li>
+<li><strong>Systemic Circulation:</strong> Oxygenated blood is pumped from the left ventricle to all body tissues and organs, and returns deoxygenated to the right atrium.</li>
+</ol>
+<p><strong>Necessity:</strong> Humans are warm-blooded (endothermic) organisms requiring high amounts of continuous energy to maintain constant body temperature. Separation of oxygenated and deoxygenated blood ensures highly efficient oxygen supply to cells and prevents mixing.</p>
+</div>
+</div>`
   },
 
+  // ══════════════════════════════════════════════════════════
+  // COMPUTER SCIENCE: Python Programming & Networks (Class 10 CBSE / ICSE)
+  // ══════════════════════════════════════════════════════════
   {
-    title: "Computer Networks and Internet Basics – Class 10 Computer Science",
+    title: "Python Programming & Cyber Safety – Class 10 Computer Science Board Notes",
     subject: "Computer",
     targetClass: "10",
-    chapter: "Networking",
-    metaDescription: "Understand computer networks, types of networks (LAN, MAN, WAN), internet protocols, web technologies, and cyber safety for CBSE Class 10.",
-    keywords: ["computer networks", "internet", "LAN WAN", "protocols", "cyber safety", "class 10 computer science", "CBSE", "networking"],
-    content: `<h2>Computer Networks and Internet Basics</h2>
-<p>A <strong>computer network</strong> is a group of interconnected computers and devices that can share data, resources, and information with each other.</p>
+    board: "CBSE & ICSE",
+    chapter: "Coding & Networks",
+    metaDescription: "Master Class 10 Computer Science: Python control flow, lists, strings, computer networking (LAN, WAN, DNS, HTTP), cyber security, and solved coding questions.",
+    keywords: ["CBSE Class 10 Computer Science", "ICSE Class 10 Computer Applications", "Python Programming", "Loops and Conditionals", "Networking LAN WAN", "Cyber Safety", "Sumita Arora", "Board Exam 2026"],
+    content: `<h2>Python Programming &amp; Computer Networks Study Guide</h2>
+<p>Computer Science in CBSE Class 10 covers fundamental computational thinking in Python and foundational understanding of Internet networking protocols and cyber ethics.</p>
 
-<h3>Types of Networks</h3>
-<table>
-<tr><th>Type</th><th>Full Form</th><th>Coverage</th><th>Example</th></tr>
-<tr><td>PAN</td><td>Personal Area Network</td><td>~10 metres</td><td>Bluetooth headphones connected to phone</td></tr>
-<tr><td>LAN</td><td>Local Area Network</td><td>Building / campus</td><td>School computer lab, office network</td></tr>
-<tr><td>MAN</td><td>Metropolitan Area Network</td><td>City</td><td>Cable TV network, city-wide Wi-Fi</td></tr>
-<tr><td>WAN</td><td>Wide Area Network</td><td>Countries / global</td><td>The Internet itself</td></tr>
-</table>
-
-<h3>Network Devices</h3>
-<ul>
-<li><strong>Modem</strong>: Converts digital signals to analogue (modulation) and vice versa (demodulation) for transmission over telephone lines.</li>
-<li><strong>Hub</strong>: Broadcasts data to all connected devices (no intelligence).</li>
-<li><strong>Switch</strong>: Sends data only to the intended device (smarter than hub).</li>
-<li><strong>Router</strong>: Connects different networks and routes data packets using IP addresses. Your home Wi-Fi router connects your LAN to the WAN (Internet).</li>
-<li><strong>Gateway</strong>: Connects two networks with different protocols.</li>
+<div class="toc-box">
+<div class="toc-title">Table of Contents</div>
+<ul class="toc-list">
+<li><a class="toc-link" href="#python-basics">Python Data Types &amp; Operators</a></li>
+<li><a class="toc-link" href="#control-flow">Conditional Statements &amp; Loops</a></li>
+<li><a class="toc-link" href="#networking">Computer Networks &amp; Topologies (LAN, MAN, WAN)</a></li>
+<li><a class="toc-link" href="#cyber-safety">Cyber Safety &amp; Ethics</a></li>
+<li><a class="toc-link" href="#solved-coding">Solved Python Board Coding Problems</a></li>
 </ul>
+</div>
 
-<h3>The Internet</h3>
-<p>The Internet is a global WAN — a "network of networks." Key concepts:</p>
-<ul>
-<li><strong>IP Address</strong>: A unique numerical label assigned to every device (e.g., 192.168.1.1). IPv4 uses 32 bits; IPv6 uses 128 bits.</li>
-<li><strong>URL</strong>: Uniform Resource Locator — the address of a webpage (e.g., https://sixbytes.in).</li>
-<li><strong>DNS</strong>: Domain Name System — converts domain names (sixbytes.in) to IP addresses.</li>
-<li><strong>HTTP/HTTPS</strong>: Protocols for transferring web pages. HTTPS adds encryption (SSL/TLS) for security.</li>
-</ul>
+<h3 id="python-basics">Python Data Types &amp; Operators</h3>
+<div class="reaction-box">
+<div class="reaction-label">Python Variable Declarations</div>
+name = "SixBytes Academy"      # String (str)
+batch_strength = 25            # Integer (int)
+score_percent = 98.4           # Floating point (float)
+is_enrolled = True             # Boolean (bool)
+subjects = ["Math", "Physics", "Chemistry", "Coding"]  # List
+</div>
 
-<h3>Web Technologies</h3>
-<ul>
-<li><strong>HTML</strong>: HyperText Markup Language — structures web page content.</li>
-<li><strong>CSS</strong>: Cascading Style Sheets — styles the appearance of web pages.</li>
-<li><strong>JavaScript</strong>: Adds interactivity to web pages.</li>
-<li><strong>Web Browser</strong>: Software that renders web pages (Chrome, Firefox, Edge).</li>
-<li><strong>Web Server</strong>: A computer that stores and serves web pages to browsers.</li>
-</ul>
+<div class="qa-card" id="solved-coding">
+<div class="qa-question">
+<span class="qa-badge-question">QUESTION • CBSE Board Practical Exam (3 Marks)</span>
+<p><strong>Write a Python program that accepts a list of student marks and prints the highest mark, average score, and number of students scoring 90% or above.</strong></p>
+</div>
+<div class="qa-solution">
+<span class="qa-badge-solution">SOLUTION • Clean Python Code</span>
+<div class="reaction-box">
+# SixBytes Python Program for Student Marks Analysis
+marks = [88, 92, 79, 95, 91, 84, 98, 76]
 
-<h3>Cyber Safety and Ethics</h3>
-<ul>
-<li><strong>Cyber Crime</strong>: Illegal activities using computers — hacking, phishing, identity theft, cyberbullying.</li>
-<li><strong>Phishing</strong>: Fake emails or websites designed to steal personal information.</li>
-<li><strong>Strong Passwords</strong>: Use 8+ characters with uppercase, lowercase, numbers, and symbols. Never share passwords.</li>
-<li><strong>Malware</strong>: Malicious software — viruses, worms, trojans, ransomware. Use antivirus software and keep systems updated.</li>
-<li><strong>Digital Footprint</strong>: The trail of data you leave online. Be mindful of what you share on social media.</li>
-<li><strong>Intellectual Property</strong>: Respect copyright, use Creative Commons content, and cite sources properly.</li>
-</ul>
+highest = max(marks)
+average = sum(marks) / len(marks)
+above_90 = sum(1 for m in marks if m &gt;= 90)
 
-<p><em>Reference: NCERT Computer Science Textbook for Class 10; Sumita Arora's Informatics Practices; CBSE Study Material.</em></p>`
-  },
+print(f"Highest Score : {highest}")
+print(f"Average Score : {average:.2f}")
+print(f"Students &gt;= 90%: {above_90}")
+</div>
+</div>
+</div>`
+  }
 ];
 
-/* ─── SEED FUNCTION ───────────────────────────────────── */
 async function seedResources() {
   try {
     console.log("🔌 Connecting to MongoDB Atlas...");
     await mongoose.connect(MONGO_URI);
     console.log("✅ Connected to MongoDB.\n");
 
-    // Get admin user ID for createdBy field
     const UserModel = mongoose.models.User || mongoose.model("User", new mongoose.Schema({ email: String }));
     const admin = await UserModel.findOne({ email: "ishant.off@gmail.com" });
     const adminId = admin?._id || null;
 
+    let updated = 0;
     let created = 0;
-    let skipped = 0;
 
     for (const r of resources) {
       const slug = slugify(r.title);
-      const existing = await Resource.findOne({ slug });
+      const res = await Resource.findOneAndUpdate(
+        { slug },
+        {
+          ...r,
+          slug,
+          published: true,
+          createdBy: adminId,
+          updatedAt: new Date(),
+        },
+        { upsert: true, new: true }
+      );
 
-      if (existing) {
-        console.log(`⏭️  Skipped (exists): ${r.title}`);
-        skipped++;
-        continue;
-      }
-
-      await Resource.create({
-        ...r,
-        slug,
-        published: true,
-        createdBy: adminId,
-      });
-
-      console.log(`✅ Created: ${r.title}`);
-      created++;
+      console.log(`✅ Upserted [${res.board}] (${res.subject}): ${res.title}`);
+      if (res.wasNew) created++; else updated++;
     }
 
-    console.log(`\n🎉 Seeding complete! Created: ${created}, Skipped: ${skipped}`);
+    console.log(`\n🎉 Seed completed successfully! Total resources in database: ${resources.length}`);
   } catch (error) {
     console.error("❌ Seed error:", error);
   } finally {

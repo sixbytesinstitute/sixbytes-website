@@ -59,11 +59,30 @@ export default function ResourceDetailPage() {
 
   useEffect(() => {
     if (!slug) return
+
+    // 1. Fetch resource data
     fetch(`/api/resources/${slug}`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.success) setResource(data.resource)
-        else setNotFound(true)
+        if (data.success) {
+          setResource(data.resource)
+
+          // 2. Track view once per user session
+          const sessionKey = `viewed_res_${slug}`
+          if (typeof window !== "undefined" && !sessionStorage.getItem(sessionKey)) {
+            sessionStorage.setItem(sessionKey, "1")
+            fetch(`/api/resources/${slug}`, { method: "POST" })
+              .then((res) => res.json())
+              .then((resData) => {
+                if (resData.success && resData.viewCount) {
+                  setResource((prev) => (prev ? { ...prev, viewCount: resData.viewCount } : null))
+                }
+              })
+              .catch(() => {})
+          }
+        } else {
+          setNotFound(true)
+        }
       })
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false))

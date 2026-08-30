@@ -1,0 +1,27 @@
+name: SixBytes Daytime Organic Traffic & Indexing Crons
+
+on:
+  schedule:
+    # Runs at 03:30, 06:30, 09:30, 12:30, 15:30 UTC
+    # (Equals 09:00 AM, 12:00 PM, 03:00 PM, 06:00 PM, 09:00 PM IST - Active Daytime Hours)
+    - cron: "30 3,6,9,12,15 * * *"
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping-and-read:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Ping Local Search & Uttarakhand SEO Pinger
+        run: |
+          echo "Triggering Uttarakhand Local Search & SEO Pinger..."
+          curl -s -X GET "https://sixbytes.in/api/cron/local-search-pinger" || true
+
+      - name: 2. Trigger Organic Resource Reader & Cache Warmer
+        run: |
+          echo "Triggering Organic Resource Reader..."
+          curl -s -X GET "https://sixbytes.in/api/cron/resource-reader" || true
+
+      - name: 3. Ping Google Sitemap Index
+        run: |
+          echo "Pinging Google Sitemap for SixBytes..."
+          curl -s "https://www.google.com/ping?sitemap=https://sixbytes.in/sitemap.xml" || true

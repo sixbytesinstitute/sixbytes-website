@@ -8,6 +8,7 @@ interface User {
   name: string
   email: string
   role: string
+  avatar?: string
 }
 
 export default function FacultyLayout({ children }: { children: React.ReactNode }) {
@@ -41,7 +42,7 @@ export default function FacultyLayout({ children }: { children: React.ReactNode 
 
   return (
     <div className="min-h-screen bg-[#0a0c0e]">
-      <DashboardSidebar role="faculty" userName={user.name} userEmail={user.email} />
+      <DashboardSidebar role="faculty" userName={user.name} userEmail={user.email} userAvatar={user.avatar} />
       <main className="lg:ml-64 min-h-screen p-6 lg:p-8">
         {children}
       </main>

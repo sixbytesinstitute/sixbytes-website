@@ -15,6 +15,7 @@ import {
   IconLogout,
   IconX,
 } from "./ui/icons"
+import { getAvatarById } from "@/lib/avatars"
 
 interface SidebarLink {
   href: string
@@ -26,9 +27,10 @@ interface DashboardSidebarProps {
   role: "admin" | "faculty"
   userName?: string
   userEmail?: string
+  userAvatar?: string
 }
 
-export default function DashboardSidebar({ role, userName, userEmail }: DashboardSidebarProps) {
+export default function DashboardSidebar({ role, userName, userEmail, userAvatar }: DashboardSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [loggingOut, setLoggingOut] = useState(false)
@@ -93,9 +95,17 @@ export default function DashboardSidebar({ role, userName, userEmail }: Dashboar
       {/* User Card */}
       <div className="px-5 py-4 border-b border-white/[0.06] bg-white/[0.02]">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/30 flex items-center justify-center text-xs font-bold text-orange-400 shrink-0">
-            {userName ? userName.charAt(0).toUpperCase() : "U"}
-          </div>
+          {(() => {
+            const av = getAvatarById(userAvatar)
+            return (
+              <div
+                className={`w-9 h-9 rounded-xl ${av.borderColor} border flex items-center justify-center text-xs font-bold ${av.textColor} shrink-0`}
+                style={{ background: av.gradient }}
+              >
+                {userName ? userName.charAt(0).toUpperCase() : "U"}
+              </div>
+            )
+          })()}
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold text-cream truncate">{userName || "Authorized User"}</p>
             <p className="text-[10px] text-muted-custom truncate">{userEmail || ""}</p>

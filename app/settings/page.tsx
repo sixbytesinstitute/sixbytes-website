@@ -367,8 +367,8 @@ export default function SettingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
             <AvatarBubble
-              avatarId={user.avatar}
-              initial={user.name.charAt(0).toUpperCase()}
+              avatarId={selectedAvatar || user.avatar}
+              initial={(profileName || user.name || "U").charAt(0).toUpperCase()}
               size="lg"
             />
             <div>

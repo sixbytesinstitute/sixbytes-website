@@ -19,6 +19,7 @@ import {
   IconX,
   IconDashboard,
 } from "@/app/components/ui/icons"
+import { getAvatarById } from "@/lib/avatars"
 
 type Tab = "assignments" | "materials" | "notices"
 
@@ -59,6 +60,7 @@ interface UserProfile {
   class: string
   stream: string
   role: string
+  avatar?: string
 }
 
 export default function StudentDashboard() {
@@ -208,9 +210,17 @@ export default function StudentDashboard() {
         {/* Student Profile Card */}
         <div className="px-5 py-4 border-b border-white/[0.06] bg-white/[0.02]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/30 flex items-center justify-center text-xs font-bold text-orange-400 shrink-0">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
+            {(() => {
+              const av = getAvatarById(user.avatar)
+              return (
+                <div
+                  className={`w-9 h-9 rounded-xl ${av.borderColor} border flex items-center justify-center text-xs font-bold ${av.textColor} shrink-0 shadow-md`}
+                  style={{ background: av.gradient }}
+                >
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+              )
+            })()}
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold text-cream truncate">{user.name}</p>
               <div className="flex items-center gap-1.5 mt-1">

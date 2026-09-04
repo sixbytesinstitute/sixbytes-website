@@ -88,6 +88,48 @@ export default function ResourceDetailPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
+  // Inject copy buttons into all code blocks after content renders
+  useEffect(() => {
+    if (!resource) return
+
+    const timer = setTimeout(() => {
+      const codeBlocks = document.querySelectorAll(
+        ".resource-content-area .program-box, .resource-content-area pre"
+      )
+
+      codeBlocks.forEach((block) => {
+        if (block.querySelector(".copy-code-btn")) return // already injected
+
+        const wrapper = document.createElement("div")
+        wrapper.style.position = "relative"
+        block.parentNode?.insertBefore(wrapper, block)
+        wrapper.appendChild(block)
+
+        const btn = document.createElement("button")
+        btn.className = "copy-code-btn"
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>`
+        btn.title = "Copy code to clipboard"
+
+        btn.addEventListener("click", () => {
+          const codeEl = block.querySelector("code")
+          const text = codeEl ? codeEl.textContent : block.textContent
+          navigator.clipboard.writeText(text || "").then(() => {
+            btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Copied!</span>`
+            btn.classList.add("copied")
+            setTimeout(() => {
+              btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>`
+              btn.classList.remove("copied")
+            }, 2000)
+          })
+        })
+
+        wrapper.appendChild(btn)
+      })
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [resource])
+
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-70px)] bg-[#0a0c0e] flex flex-col items-center justify-center gap-3">
@@ -160,7 +202,7 @@ export default function ResourceDetailPage() {
                 ? "bg-white text-slate-700 hover:text-orange-600 border border-slate-300 hover:border-orange-400"
                 : "bg-white/[0.08] text-cream/90 hover:text-orange-400 border border-white/10 hover:border-orange-500/40"
             }`}
-            title={isLight ? "Switch to Dark Mode (Obsidian View)" : "Switch to Light Mode (BYJU'S / Paper View)"}
+            title={isLight ? "Switch to Dark Mode (Obsidian View)" : "Switch to Light Mode (Clean Paper View)"}
           >
             {isLight ? (
               <>
@@ -294,7 +336,7 @@ export default function ResourceDetailPage() {
           </div>
         </header>
 
-        {/* ─── Byju's & Shaalaa Styled Article Content ────── */}
+        {/* ─── Academic Styled Article Content ────── */}
         <div
           className={`rounded-2xl border p-6 sm:p-10 transition-colors shadow-xl leading-relaxed resource-content-area ${
             isLight
@@ -512,6 +554,39 @@ export default function ResourceDetailPage() {
           white-space: pre-wrap !important;
           word-break: break-word;
           tab-size: 4;
+          position: relative;
+        }
+
+        /* Copy Code Button */
+        .copy-code-btn {
+          position: absolute;
+          top: 0.625rem;
+          right: 0.625rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.375rem;
+          padding: 0.3rem 0.65rem;
+          border-radius: 0.5rem;
+          font-size: 0.6875rem;
+          font-weight: 600;
+          font-family: var(--font-sans, sans-serif);
+          cursor: pointer;
+          transition: all 0.15s ease;
+          z-index: 10;
+          border: 1px solid rgba(255,255,255,0.15);
+          background: rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.7);
+          backdrop-filter: blur(8px);
+        }
+        .copy-code-btn:hover {
+          background: rgba(255,255,255,0.15);
+          color: #ffffff;
+          border-color: rgba(255,255,255,0.3);
+        }
+        .copy-code-btn.copied {
+          background: rgba(16, 185, 129, 0.2);
+          color: #34d399;
+          border-color: rgba(16, 185, 129, 0.4);
         }
 
         .resource-content-area pre {

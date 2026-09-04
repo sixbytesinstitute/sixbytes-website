@@ -2,6 +2,7 @@ import "./globals.css"
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
 import { Playfair_Display, Cormorant_Garamond, DM_Sans } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import SiteLayout from "./components/site-layout"
 
 const playfair = Playfair_Display({
@@ -149,6 +150,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="bg-obsidian text-cream font-sans antialiased min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
         <SiteLayout>{children}</SiteLayout>
+        <Analytics />
       </body>
     </html>
   )

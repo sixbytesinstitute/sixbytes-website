@@ -103,14 +103,16 @@ export const metadata: Metadata = {
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
-  "@type": "EducationalOrganization",
+  "@type": ["EducationalOrganization", "LocalBusiness"],
   name: "SixBytes Educational Institute",
-  alternateName: "SixBytes Institute",
+  alternateName: ["SixBytes Institute", "SixBytes Coaching Dehradun"],
   url: "https://sixbytes.in",
   logo: "https://sixbytes.in/logo.png",
+  image: "https://sixbytes.in/logo.png",
   founder: {
     "@type": "Person",
     name: "Jaspal Singh Chauhan",
+    jobTitle: "Founder & Lead Faculty",
   },
   address: {
     "@type": "PostalAddress",
@@ -125,13 +127,37 @@ const organizationJsonLd = {
     latitude: "30.3340",
     longitude: "77.9620",
   },
+  hasMap: "https://maps.google.com/?q=SixBytes+Educational+Institute+Shyampur+Premnagar+Dehradun",
   telephone: "+91-7536839760",
   priceRange: "₹₹",
+  currenciesAccepted: "INR",
+  paymentAccepted: "Cash, UPI, Net Banking",
+  areaServed: [
+    { "@type": "Place", "name": "Shyampur, Dehradun" },
+    { "@type": "Place", "name": "Premnagar, Dehradun" },
+    { "@type": "Place", "name": "Selaqui, Dehradun" },
+    { "@type": "Place", "name": "Bidholi, Dehradun" },
+    { "@type": "Place", "name": "Dehradun, Uttarakhand" },
+  ],
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "08:00",
+      closes: "20:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Sunday"],
+      opens: "09:00",
+      closes: "14:00",
+    },
+  ],
   sameAs: [
     "https://www.instagram.com/sixbytes",
   ],
   description:
-    "Leading coaching institute in Shyampur, Premnagar, Dehradun for CBSE/ICSE Class 9-12 and Defence Exams (NDA, RIMC, Sainik School).",
+    "Leading coaching institute in Shyampur, Premnagar, Dehradun for CBSE/ICSE Class 9-12 and Defence Exams (NDA, RIMC, Sainik School). Founded by Jaspal Singh Chauhan.",
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

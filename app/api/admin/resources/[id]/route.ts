@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
 import { withAuth } from "@/lib/middleware-auth";
+import { submitUrlsToIndexNow } from "@/lib/indexnow";
 
 // ─── PUT: Update resource ───────────────────────────────
 export const PUT = withAuth(
@@ -34,6 +35,10 @@ export const PUT = withAuth(
           { success: false, error: "Resource not found" },
           { status: 404 }
         );
+      }
+
+      if (resource.published) {
+        submitUrlsToIndexNow([`https://sixbytes.in/resources/${resource.slug}`]).catch(() => {});
       }
 
       return NextResponse.json({

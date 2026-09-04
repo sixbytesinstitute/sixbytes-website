@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
 import { withAuth } from "@/lib/middleware-auth";
+import { submitUrlsToIndexNow } from "@/lib/indexnow";
 
 // ─── Slug generator ─────────────────────────────────────
 function generateSlug(title: string): string {
@@ -57,6 +58,10 @@ export const POST = withAuth(
         published: published || false,
         createdBy: user.userId,
       });
+
+      if (resource.published) {
+        submitUrlsToIndexNow([`https://sixbytes.in/resources/${resource.slug}`]).catch(() => {});
+      }
 
       return NextResponse.json(
         {

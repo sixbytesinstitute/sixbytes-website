@@ -156,6 +156,28 @@
 
 ---
 
+## Phase 7 — NCERT Curriculum Expansion & Resources Engine
+
+```
+[x] 7.1  Expand NCERT Class 10 Science Coverage
+         - Seeded missing chapters: Chemical Reactions & Equations, Acids Bases & Salts, Metals & Non-Metals, Life Processes, Control & Coordination, Our Environment
+         - Detailed formula sheets, concepts, reaction mechanisms, and 5-mark board Q&As
+         Status: Verified in scripts/seed-ncert-science.mjs
+
+[x] 7.2  Expand NCERT Class 10 Mathematics Coverage
+         - Complete curriculum coverage: Real Numbers, Polynomials, Linear Equations, Quadratic Equations, AP, Triangles, Coordinate Geometry, Trigonometry, Heights & Distances, Circles, Surface Areas & Volumes, Statistics, Probability
+         - High-yield theorem proofs, step-by-step NCERT exercise solutions, board exam traps
+         Status: Verified in scripts/seed-ncert-maths.mjs
+
+[x] 7.3  Resources Metadata Normalization & Filtering
+         - Standardized resourceType (topic_guide / question_bank), targetClass, and board
+         - Added intelligent subject filtering supporting "Computer Science" / "Computer" aliases and broad "Science" grouping
+         - Live verified across 42 published resources on sixbytes.in
+         Status: Verified on production (42 resources active)
+```
+
+---
+
 ## Summary
 
 | Phase | Tasks | Status |
@@ -166,4 +188,6 @@
 | Phase 4 — Page Redesigns | 4.1–4.5 | **COMPLETE ✅** |
 | Phase 5 — SEO | 5.1–5.4 | **COMPLETE ✅** |
 | Phase 6 — Polish & QA | 6.1–6.4 | **COMPLETE ✅** |
-| **Total Tasks** | **24 / 24** | **100% COMPLETE** |
+| Phase 7 — NCERT Curriculum Engine | 7.1–7.3 | **COMPLETE ✅** |
+| **Total Tasks** | **27 / 27** | **100% COMPLETE** |
+

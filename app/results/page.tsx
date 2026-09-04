@@ -26,7 +26,7 @@ export const metadata = {
 const TOPPERS = [
   {
     name: "Ishant Bisht",
-    class: "Class 10 CBSE Board",
+    class: "Class 10 ICSE Board",
     score: "94%",
     image: "/topper1.jpg",
     badge: "Subject Topper",
@@ -35,7 +35,7 @@ const TOPPERS = [
   },
   {
     name: "Anshika Baluni",
-    class: "Class 12 Science (PCM)",
+    class: "Class 12 ISC Board (PCM)",
     score: "94%",
     image: "/topper2.jpg",
     badge: "District Ranker",
@@ -44,7 +44,7 @@ const TOPPERS = [
   },
   {
     name: "Shubham Bisht",
-    class: "Class 12 Science (PCM)",
+    class: "Class 12 ISC Board (PCM)",
     score: "94%",
     image: "/student2.jpg",
     badge: "School Topper",
@@ -53,7 +53,7 @@ const TOPPERS = [
   },
   {
     name: "Shray Sundly",
-    class: "Class 12 Science (PCB)",
+    class: "Class 12 ISC Board (PCB)",
     score: "87%",
     image: "/student1.jpg",
     badge: "Merit Achiever",

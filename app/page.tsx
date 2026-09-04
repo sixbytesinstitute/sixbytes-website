@@ -138,28 +138,28 @@ const STUDY_MODES = [
 const TOPPERS = [
   {
     name: "Ishant Bisht",
-    exam: "Class 10 CBSE Board",
+    exam: "Class 10 ICSE Board",
     score: "94%",
     image: "/topper1.jpg",
     badge: "Subject Topper",
   },
   {
     name: "Anshika Baluni",
-    exam: "Class 12 Science Board",
+    exam: "Class 12 ISC Board",
     score: "94%",
     image: "/topper2.jpg",
     badge: "District Ranker",
   },
   {
     name: "Shubham Bisht",
-    exam: "Class 12 Science Board",
+    exam: "Class 12 ISC Board",
     score: "94%",
     image: "/student2.jpg",
     badge: "School Topper",
   },
   {
     name: "Shray Sundly",
-    exam: "Class 12 Science Board",
+    exam: "Class 12 ISC Board",
     score: "87%",
     image: "/student1.jpg",
     badge: "Merit Achiever",
@@ -169,23 +169,23 @@ const TOPPERS = [
 const TESTIMONIALS = [
   {
     quote:
-      "The individual attention, regular parent-student feedback sessions, and rigorous test series at SixBytes completely transformed my board preparation. My conceptual understanding and academic progress jumped to a 94% aggregate in Class 10 CBSE boards.",
+      "The individual attention, regular parent-student feedback sessions, and rigorous test series at SixBytes completely transformed my board preparation. My conceptual understanding and academic progress jumped to a 94% aggregate in Class 10 ICSE boards.",
     name: "Ishant Bisht",
-    role: "Scored 94% in Class 10 Boards (CBSE)",
+    role: "Scored 94% in Class 10 Boards (ICSE)",
     rating: 5,
   },
   {
     quote:
-      "SixBytes provided the exact personalized learning environment I needed for Class 12 Science (PCM). The tailored learning pace and deep subject knowledge in Physics and Chemistry made board exams and competitive entrance prep crystal clear.",
+      "SixBytes provided the exact personalized learning environment I needed for Class 12 Science (PCM). The tailored learning pace and deep subject knowledge in Physics and Chemistry made ISC board exams and competitive entrance prep crystal clear.",
     name: "Anshika Baluni",
-    role: "Scored 94% in Class 12 Science Board",
+    role: "Scored 94% in Class 12 Science (ISC Board)",
     rating: 5,
   },
   {
     quote:
       "Best coaching institute in the Premnagar and Shyampur area. Sir personally tracks every student’s academic progress, conducts transparent feedback sessions, and turns weaknesses into solid strengths. You won't find this level of mentorship in generic home tuition.",
     name: "Rajeev Sundly",
-    role: "Parent of Class 12 Student",
+    role: "Parent of Class 12 ISC Student",
     rating: 5,
   },
 ]
@@ -512,7 +512,7 @@ export default function Home() {
             label="Hall of Fame"
             title="Consistent Results,"
             highlightedWord="Extraordinary"
-            subtitle="Numbers speak louder than promises. Celebrate the brilliant milestones achieved by SixBytes students in CBSE & ICSE Boards."
+            subtitle="Numbers speak louder than promises. Celebrate the brilliant milestones achieved by SixBytes students in ICSE & ISC Board Exams."
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

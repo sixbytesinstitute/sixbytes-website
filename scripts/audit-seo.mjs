@@ -21,6 +21,8 @@ async function checkSeo(url) {
 }
 
 async function run() {
+  await checkSeo("https://sixbytes.in/about");
+  await checkSeo("https://sixbytes.in/courses");
   await checkSeo("https://sixbytes.in/resources");
   await checkSeo("https://sixbytes.in/resources/carbon-and-its-compounds-class-10-chemistry-ncert-notes");
   await checkSeo("https://sixbytes.in/resources/real-numbers-class-10-maths-ncert-notes");

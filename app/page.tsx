@@ -9,11 +9,27 @@ import TagPill from "./components/ui/tag-pill"
 import ShimmerLine from "./components/ui/shimmer-line"
 import OrbitRings from "./components/ui/orbit-rings"
 import PremiumIcon, { type IconName } from "./components/ui/premium-icon"
+import FAQItem from "./components/ui/faq-item"
 
 export const metadata = {
   title: "SixBytes Educational Institute | Premier Coaching in Premnagar & Shyampur, Dehradun",
   description:
-    "Dehradun's top-ranked coaching institute for Class 9–12 CBSE/ICSE, NDA, RIMC, and Sainik School preparation in Shyampur & Premnagar. Small batches, individual mentorship by Jaspal Singh Chauhan.",
+    "Dehradun's top-ranked coaching institute for Class 9–12 CBSE/ICSE board exams, NDA, RIMC, and Sainik School. Small batches, personalized learning, expert faculty, and proven 94% board results.",
+  keywords: [
+    "coaching institute in Premnagar",
+    "coaching institute in Shyampur",
+    "coaching center in Dehradun",
+    "best tuition in Premnagar Dehradun",
+    "CBSE Class 10 coaching Dehradun",
+    "Class 12 science tuition Dehradun",
+    "NDA coaching in Dehradun",
+    "educational institute Dehradun",
+    "board exams preparation Dehradun",
+    "personalized learning coaching",
+  ],
+  alternates: {
+    canonical: "https://sixbytes.in",
+  },
 }
 
 const COURSES: Array<{
@@ -30,8 +46,8 @@ const COURSES: Array<{
     title: "Class 9 & 10",
     subtitle: "CBSE & ICSE Board Excellence",
     iconName: "compass",
-    desc: "Rigorous concept clarity in Mathematics and Science with regular test series, doubt clearing, and board pattern practice.",
-    highlights: ["Mathematics & Science", "Weekly Assessment Tests", "Small Batch Sizes (15 max)"],
+    desc: "Rigorous concept clarity in Mathematics and Science with regular test series, doubt clearing, and board pattern practice for secondary school academic courses.",
+    highlights: ["Mathematics & Science", "Weekly Assessment Tests", "Small Batch Sizes (15 max)", "NCERT Exemplar Solutions"],
     href: "/courses",
   },
   {
@@ -39,8 +55,8 @@ const COURSES: Array<{
     title: "Class 11 & 12",
     subtitle: "Science Stream (PCM / PCB)",
     iconName: "atom",
-    desc: "Targeted coaching for Physics, Chemistry, Mathematics, and Biology with dual focus on CBSE/ISC board exams and competitive entrance.",
-    highlights: ["Physics, Chem, Maths, Bio", "Competitive Foundation", "Past 10-Year Question Drill"],
+    desc: "Targeted classroom programs for Physics, Chemistry, Mathematics, and Biology with dual focus on CBSE/ISC board exams and competitive entrance foundations.",
+    highlights: ["Physics, Chem, Maths, Bio", "Competitive Foundation", "Past 10-Year Question Drill", "Formula Derivation Mastery"],
     href: "/courses",
   },
   {
@@ -48,9 +64,74 @@ const COURSES: Array<{
     title: "NDA & RIMC / RMS",
     subtitle: "Officer Cadre Entrance Prep",
     iconName: "shield",
-    desc: "Specialized defence wing coaching covering Mathematics, General Ability Test (GAT), English, and physical/SSB mentorship.",
-    highlights: ["NDA Written & GAT", "Sainik School & RMS Prep", "Expert Defence Faculty"],
+    desc: "Specialized defence wing coaching covering Mathematics, General Ability Test (GAT), English language classes, character building, and SSB physical mentorship.",
+    highlights: ["NDA Written & GAT", "Sainik School & RMS Prep", "Expert Defence Faculty", "SSB Interview & Personality Prep"],
     href: "/courses",
+  },
+]
+
+const INSTITUTE_BENEFITS: Array<{
+  title: string
+  desc: string
+  icon: IconName
+  tag: string
+}> = [
+  {
+    title: "Personalized Learning & Tailored Pace",
+    desc: "A strict limit of 15 students per batch ensures smart guidance calibrated to every student's tailored learning pace, unlocking deep subject knowledge without cognitive stress.",
+    icon: "users",
+    tag: "Individual Focus",
+  },
+  {
+    title: "Academic Excellence in Board Exams",
+    desc: "Laser-focused CBSE & ICSE board exams curriculum with rigorous formula derivations, chemical equation balancing, and past 10-year question drills that produce consistent 90%+ aggregates.",
+    icon: "trophy",
+    tag: "94% Top Scores",
+  },
+  {
+    title: "Intensive Courses & One-Day Seminars",
+    desc: "Targeted intensive course crash batches, formula masterclasses, and one-day seminars on high-weightage selected topics to maximize revision velocity before finals.",
+    icon: "sparkles",
+    tag: "High-Yield Prep",
+  },
+  {
+    title: "Competitive Exams & Defence Preparation",
+    desc: "Specialized classroom programs for NDA, RIMC, Rashtriya Military School (RMS), and Sainik School combining advanced mathematics with General Ability Test (GAT) drills.",
+    icon: "shield",
+    tag: "Officer Cadre",
+  },
+  {
+    title: "Character Building & Communication Skills",
+    desc: "Holistic skills development encompassing English communication skills, structured group discussions, and mental discipline essential for NDA SSB interviews and life success.",
+    icon: "target",
+    tag: "Holistic Mentorship",
+  },
+  {
+    title: "Transparent Feedback Sessions & Progress",
+    desc: "Continuous diagnostic assessment with weekly test analytics and structured parent feedback sessions to track measurable student progress and eliminate exam anxiety.",
+    icon: "chart",
+    tag: "Continuous Growth",
+  },
+]
+
+const STUDY_MODES = [
+  {
+    title: "Offline Classroom Programs",
+    badge: "Primary Campus Mode",
+    desc: "Immersive face-to-face daily classroom coaching at our Shyampur campus with experienced faculty mentors, structured blackboard derivations, and lively peer problem-solving.",
+    bullets: ["Direct mentor eye contact & daily accountability", "Live interactive doubt elimination", "Exam-simulated weekly test drills"],
+  },
+  {
+    title: "Interactive Doubt & Practice Clinics",
+    badge: "Personalized Care",
+    desc: "Daily post-class doubt resolution where students master tricky formulas, challenging NCERT problems, and selected topics at their own individual learning pace.",
+    bullets: ["Zero backlog accumulation", "1-on-1 mentor guidance on weak topics", "Customized remedial question sets"],
+  },
+  {
+    title: "Digital Study Hub & Resource Library",
+    badge: "Online Support",
+    desc: "Comprehensive chapter-wise NCERT concept notes, solved question banks, formula sheets, and chemical reaction guides available 24/7 through our student resource library.",
+    bullets: ["Self-paced revision at home", "High-yield board exam summaries", "Free access for all enrolled students"],
   },
 ]
 
@@ -88,30 +169,82 @@ const TOPPERS = [
 const TESTIMONIALS = [
   {
     quote:
-      "The individual attention and rigorous test series at SixBytes completely transformed my board preparation. The teachers explain tough concepts with crystal clarity.",
+      "The individual attention, regular parent-student feedback sessions, and rigorous test series at SixBytes completely transformed my board preparation. My conceptual understanding and academic progress jumped to a 94% aggregate in Class 10 CBSE boards.",
     name: "Ishant Bisht",
-    role: "Scored 94% in Class 10 Boards",
+    role: "Scored 94% in Class 10 Boards (CBSE)",
     rating: 5,
   },
   {
     quote:
-      "SixBytes provided the exact environment I needed for Class 12 Science. The structured study material and doubt clearing sessions made all the difference.",
+      "SixBytes provided the exact personalized learning environment I needed for Class 12 Science (PCM). The tailored learning pace and deep subject knowledge in Physics and Chemistry made board exams and competitive entrance prep crystal clear.",
     name: "Anshika Baluni",
-    role: "Scored 94% in Class 12 Science",
+    role: "Scored 94% in Class 12 Science Board",
     rating: 5,
   },
   {
     quote:
-      "Best coaching institute in the Premnagar and Shyampur area. Sir personally tracks every student’s weaknesses and turns them into strengths.",
+      "Best coaching institute in the Premnagar and Shyampur area. Sir personally tracks every student’s academic progress, conducts transparent feedback sessions, and turns weaknesses into solid strengths. You won't find this level of mentorship in generic home tuition.",
     name: "Rajeev Sundly",
     role: "Parent of Class 12 Student",
     rating: 5,
   },
 ]
 
+const FAQS = [
+  {
+    question: "Why choose SixBytes Educational Institute over generic home tuition or online tuition in Premnagar?",
+    answer:
+      "Unlike isolated home tuition or passive online tuition, SixBytes delivers a structured offline classroom program with small batches capped at 15 students. Learners benefit from direct mentorship by experienced faculty, healthy peer motivation, daily doubt-clearing sessions, and board-pattern test series that cultivate deep subject knowledge and academic excellence.",
+  },
+  {
+    question: "What academic courses and classroom programs are offered at SixBytes?",
+    answer:
+      "We offer comprehensive offline tuition and classroom courses for secondary and senior secondary students: Class 9 & 10 Foundation (CBSE/ICSE Mathematics & Science) and Class 11 & 12 Senior Wing (Physics, Chemistry, Mathematics, Biology). In addition, we run dedicated defence academy coaching for competitive exams including NDA, RIMC, RMS, and Sainik School.",
+  },
+  {
+    question: "How does the institute ensure personalized learning and a tailored learning pace?",
+    answer:
+      "Every learner has distinct cognitive strengths. By strictly limiting batch sizes to 15 students, our mentors provide smart guidance adapted to each student's tailored learning pace. We conduct 1-on-1 doubt clinics on selected topics, customized problem sets, and diagnostic revision before major board exams.",
+  },
+  {
+    question: "How are student progress reports and parent feedback sessions organized?",
+    answer:
+      "We conduct weekly chapter-wise assessment tests and regular parent feedback sessions. Parents receive clear analytics on student progress, attendance, homework completion, and conceptual accuracy, ensuring continuous academic growth without undue pressure or exam anxiety.",
+  },
+  {
+    question: "What preparation is provided for NDA, RIMC, and competitive defence exams?",
+    answer:
+      "Our Defence Academy classroom program covers advanced Mathematics, General Ability Test (GAT), and English language classes. We also emphasize character building, communication skills, analytical problem-solving, and SSB interview guidance led by experienced mentors.",
+  },
+  {
+    question: "Does the institute conduct intensive courses and one-day seminars for board revision?",
+    answer:
+      "Yes. Ahead of CBSE and ICSE board exams, SixBytes conducts intensive courses, weekend test drills, and high-impact one-day seminars focusing on high-weightage selected topics, past 10-year question patterns, and board exam scoring techniques.",
+  },
+]
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer,
+    },
+  })),
+}
+
 export default function Home() {
   return (
     <div className="relative overflow-hidden">
+      {/* FAQ Schema for Google Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       {/* ══════════════════════════════════════════════════════════════════════
           1. HERO SECTION — Flush Window Height
       ══════════════════════════════════════════════════════════════════════ */}
@@ -128,7 +261,7 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/10 mb-6">
               <span className="w-2 h-2 rounded-full bg-orange-400" />
               <span className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-orange-400">
-                #1 Coaching Institute in Premnagar & Shyampur
+                #1 Coaching Institute in Premnagar & Shyampur, Dehradun
               </span>
             </div>
           </RevealWrapper>
@@ -148,7 +281,7 @@ export default function Home() {
           {/* Subtitle */}
           <RevealWrapper delay={300}>
             <p className="text-base sm:text-xl font-serif italic text-muted-custom max-w-3xl mx-auto mb-6 leading-relaxed font-light">
-              Specialized coaching for CBSE/ICSE Classes 9–12 (Science & Maths), NDA, RIMC, RMS & Sainik School in Dehradun.
+              Premier educational institute delivering personalized learning, academic excellence in CBSE & ICSE board exams, and dedicated defence coaching for NDA, RIMC, RMS & Sainik School.
             </p>
           </RevealWrapper>
 
@@ -193,7 +326,7 @@ export default function Home() {
                 Book a Free Demo Class
               </CTAButton>
               <CTAButton href="/courses" variant="outline" className="w-full sm:w-auto text-base !py-3 !px-8">
-                Explore Programs
+                Explore Classroom Programs
               </CTAButton>
             </div>
           </RevealWrapper>
@@ -206,14 +339,56 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          2. PROGRAMS & COURSES SECTION — Full Viewport Screen
+          2. BENEFITS & METHODOLOGY — The SixBytes Institute Advantage
       ══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8 bg-navy">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-navy border-b border-white/5">
+        <div className="max-w-7xl mx-auto w-full">
+          <SectionHeader
+            label="Why Choose Our Institute"
+            title="Engineered for"
+            highlightedWord="Academic Excellence"
+            subtitle="Explore the proven educational pillars that set SixBytes apart from generic home tuition and commercial coaching chains in Dehradun."
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {INSTITUTE_BENEFITS.map((benefit, index) => (
+              <RevealWrapper key={benefit.title} delay={index * 70}>
+                <GlassCard className="h-full flex flex-col justify-between border-white/[0.08] hover:border-orange-500/30 transition-all p-6 sm:p-7 group">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <PremiumIcon name={benefit.icon} size="md" variant="orange" />
+                      <TagPill variant="orange">{benefit.tag}</TagPill>
+                    </div>
+
+                    <h3 className="text-xl font-display font-bold text-cream mb-2 group-hover:text-orange-400 transition-colors">
+                      {benefit.title}
+                    </h3>
+
+                    <p className="text-xs sm:text-sm text-muted-custom leading-relaxed font-sans">
+                      {benefit.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-5 pt-3 border-t border-white/5 flex items-center gap-2 text-xs font-semibold text-orange-400/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+                    <span>Smart Guidance & Board Mentorship</span>
+                  </div>
+                </GlassCard>
+              </RevealWrapper>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          3. PROGRAMS & COURSES SECTION — Full Viewport Screen
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative min-h-screen flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8 bg-obsidian">
         <div className="max-w-7xl mx-auto w-full my-auto">
           <SectionHeader
             label="Academic Wings"
-            title="Crafted for Academic"
-            highlightedWord="Champions"
+            title="Classroom Programs &"
+            highlightedWord="Academic Courses"
             subtitle="Precision-crafted curricula engineered to build unshakable conceptual mastery, rigorous problem-solving skills, and top board results."
           />
 
@@ -263,7 +438,73 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          3. TOPPERS & RESULTS SHOWCASE — Prominent, Big & Highly Readable Cards
+          4. STUDY MODES & OFFLINE TUITION ADVANTAGE
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-navy border-y border-white/5">
+        <div className="max-w-7xl mx-auto w-full">
+          <SectionHeader
+            label="Flexible Study Modes"
+            title="Offline Tuition with"
+            highlightedWord="Comprehensive Digital Support"
+            subtitle="How SixBytes blends disciplined classroom learning with personalized doubt-clearing and 24/7 digital resource access."
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {STUDY_MODES.map((mode, idx) => (
+              <RevealWrapper key={mode.title} delay={idx * 80}>
+                <GlassCard className="h-full flex flex-col justify-between border-white/[0.08] hover:border-orange-500/30 p-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-orange-400 px-2.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
+                        {mode.badge}
+                      </span>
+                      <PremiumIcon name="book" size="sm" variant="orange" />
+                    </div>
+
+                    <h3 className="text-xl font-display font-bold text-cream mb-2">
+                      {mode.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-custom leading-relaxed mb-4">
+                      {mode.desc}
+                    </p>
+
+                    <ul className="space-y-2 border-t border-white/10 pt-3">
+                      {mode.bullets.map((b) => (
+                        <li key={b} className="text-xs text-cream/90 flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </GlassCard>
+              </RevealWrapper>
+            ))}
+          </div>
+
+          {/* Comparison banner: Why Classroom beats Home/Online */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-orange-500/10 via-amber-500/5 to-transparent border border-orange-500/20 flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 max-w-3xl">
+              <h4 className="text-lg sm:text-xl font-display font-bold text-cream">
+                Why Classroom Coaching Outperforms Generic Home Tuition & Online Courses
+              </h4>
+              <p className="text-xs sm:text-sm text-muted-custom leading-relaxed">
+                Generic home tuition often lacks structured peer benchmarking, while isolated online tuition suffers from high distraction and low accountability. At SixBytes, structured offline batches foster competitive discipline, mentor-guided study routines, and instant concept clarification.
+              </p>
+            </div>
+            <CTAButton
+              href="https://wa.me/917536839760?text=Hello%20SixBytes!%20I%20want%20to%20schedule%20an%20offline%20demo%20class."
+              variant="filled"
+              className="shrink-0 text-xs sm:text-sm !py-3 !px-6 whitespace-nowrap"
+            >
+              Experience a Classroom Demo
+            </CTAButton>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          5. TOPPERS & RESULTS SHOWCASE — Prominent, Big & Highly Readable Cards
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8 bg-obsidian">
         <div className="max-w-7xl mx-auto w-full my-auto">
@@ -318,7 +559,7 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          4. FOUNDER & PEDAGOGY SPOTLIGHT — Full Viewport Screen
+          6. FOUNDER & PEDAGOGY SPOTLIGHT — Full Viewport Screen
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8 bg-navy overflow-hidden">
         <div className="max-w-6xl mx-auto w-full my-auto">
@@ -367,7 +608,7 @@ export default function Home() {
                       <span className="text-orange-400 text-xs sm:text-sm font-bold">Small Batches</span>
                     </div>
                     <p className="text-[11px] text-muted-custom leading-relaxed">
-                      Strict limit of 15 students per batch ensures direct interaction and prompt doubt resolution.
+                      Strict limit of 15 students per batch ensures direct interaction, prompt doubt resolution, and tailored learning pace.
                     </p>
                   </div>
                   <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-orange-500/30 transition-colors">
@@ -376,9 +617,19 @@ export default function Home() {
                       <span className="text-orange-400 text-xs sm:text-sm font-bold">Test Analytics</span>
                     </div>
                     <p className="text-[11px] text-muted-custom leading-relaxed">
-                      Weekly exams with in-depth feedback pinpointing conceptual gaps early.
+                      Weekly assessment exams with in-depth feedback pinpointing conceptual gaps and exam stress early.
                     </p>
                   </div>
+                </div>
+
+                {/* Pedagogical Heritage & Meaning of Institute */}
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs text-muted-custom space-y-1">
+                  <div className="font-semibold text-orange-400/90 uppercase tracking-wider text-[10px]">
+                    The True Essence of an Educational Institute
+                  </div>
+                  <p className="text-[11px] leading-relaxed font-sans text-gray-400">
+                    Derived from the classical Latin <em>institutus</em> and <em>instituere</em> (which entered Middle English around the 14th century, 1534 as an established statute of learning and character building), an institute is far more than a tutoring center. SixBytes was instituted to function as an institute for research on student learning psychology, helping students master subject knowledge while eliminating the root causes of mental fatigue and exam stress.
+                  </p>
                 </div>
 
                 <div className="pt-1">
@@ -393,7 +644,7 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          5. TESTIMONIALS SECTION — Full Viewport Screen
+          7. TESTIMONIALS SECTION — Full Viewport Screen
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8 bg-obsidian">
         <div className="max-w-7xl mx-auto w-full my-auto">
@@ -401,7 +652,7 @@ export default function Home() {
             label="Student & Parent Voices"
             title="Trusted by Families in"
             highlightedWord="Premnagar & Shyampur"
-            subtitle="Read how our dedicated faculty and personalized approach help students achieve their dream scores."
+            subtitle="Read how our dedicated faculty, regular feedback sessions, and personalized approach help students achieve their dream scores."
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -435,7 +686,33 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          6. LOCAL SEO & FINAL CTA — Full Viewport Screen
+          8. FREQUENTLY ASKED QUESTIONS (FAQ) SECTION
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-navy border-t border-white/5">
+        <div className="max-w-4xl mx-auto w-full">
+          <SectionHeader
+            label="Got Questions?"
+            title="Frequently Asked"
+            highlightedWord="Questions"
+            subtitle="Everything parents and students need to know about our admissions, batch sizes, academic courses, and coaching methodology."
+          />
+
+          <div className="space-y-4">
+            {FAQS.map((faq, idx) => (
+              <RevealWrapper key={faq.question} delay={idx * 60}>
+                <FAQItem
+                  question={faq.question}
+                  answer={faq.answer}
+                  defaultOpen={idx === 0}
+                />
+              </RevealWrapper>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          9. LOCAL SEO & FINAL CTA — Full Viewport Screen
       ══════════════════════════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8 bg-navy-mid/70 border-t border-white/10">
         <div className="max-w-5xl mx-auto text-center space-y-6 w-full my-auto">
@@ -445,7 +722,7 @@ export default function Home() {
               Why SixBytes is the #1 Choice in Shyampur & Premnagar, Dehradun
             </h2>
             <p className="text-xs sm:text-sm text-muted-custom font-sans leading-relaxed max-w-3xl mx-auto">
-              Conveniently situated opposite Lane No. 3 in Sai Vihar, Shyampur, SixBytes is the trusted coaching center for students from schools across Premnagar, Manduwala, Sudhowala, and the wider Dehradun valley. Whether preparing for Class 10/12 Board Exams or the prestigious National Defence Academy (NDA), our faculty brings proven results to your neighborhood.
+              Conveniently situated opposite Lane No. 3 in Sai Vihar, Shyampur, SixBytes is the trusted coaching center for students from schools across Premnagar, Manduwala, Sudhowala, Selaqui, and the wider Dehradun valley. Whether preparing for Class 10/12 Board Exams or the prestigious National Defence Academy (NDA), our faculty brings proven results to your neighborhood.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
               <span className="text-xs px-3.5 py-1.5 rounded-full bg-white/[0.04] text-gray-300 border border-white/10 flex items-center gap-1.5">
@@ -468,7 +745,7 @@ export default function Home() {
               Admissions Open for New Session
             </h3>
             <p className="text-xs sm:text-sm text-muted-custom max-w-xl mx-auto">
-              Seats in our core batches are strictly limited to ensure personalized attention for every student.
+              Seats in our core batches are strictly limited to 15 students to ensure personalized attention and tailored learning pace for every learner.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <CTAButton

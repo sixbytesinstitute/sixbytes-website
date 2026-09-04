@@ -1,5 +1,8 @@
+"use client"
+
 import Link from "next/link"
 import type { ReactNode } from "react"
+import { trackWhatsAppClick, trackPhoneCallClick } from "@/lib/analytics"
 
 interface CTAButtonProps {
   href?: string
@@ -41,11 +44,21 @@ export default function CTAButton({
   if (href) {
     const isExternal = href.startsWith("http") || href.startsWith("tel:") || href.startsWith("https://wa.me")
     if (isExternal) {
+      const handleExternalClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (href.startsWith("https://wa.me") || href.includes("wa.me")) {
+          trackWhatsAppClick("cta_button", href);
+        } else if (href.startsWith("tel:")) {
+          trackPhoneCallClick(href);
+        }
+        onClick?.();
+      };
+
       return (
         <a
           href={href}
           target={target || "_blank"}
           rel={rel || "noopener noreferrer"}
+          onClick={handleExternalClick}
           className={`${baseClasses} ${className}`}
           aria-label={ariaLabel}
         >

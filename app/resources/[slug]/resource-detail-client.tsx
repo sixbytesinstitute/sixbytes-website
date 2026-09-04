@@ -14,6 +14,7 @@ import {
   IconSun,
   IconMoon,
 } from "../../components/ui/icons";
+import { trackWhatsAppClick } from "@/lib/analytics";
 
 export interface ResourceDetail {
   _id: string;
@@ -398,6 +399,7 @@ export default function ResourceDetailClient({
               )}%20study%20notes%20and%20want%20to%20inquire%20about%20admissions.`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick("resource_article_cta", resource.title)}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-semibold shadow-lg shadow-orange-500/25 hover:scale-[1.02] transition-all shrink-0 cursor-pointer"
             >
               <span>Inquire on WhatsApp</span>

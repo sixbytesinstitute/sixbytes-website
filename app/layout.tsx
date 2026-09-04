@@ -2,7 +2,6 @@ import "./globals.css"
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
 import { Playfair_Display, Cormorant_Garamond, DM_Sans } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
 import SiteLayout from "./components/site-layout"
 
 const playfair = Playfair_Display({
@@ -99,6 +98,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://sixbytes.in",
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || undefined,
+    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } }
+      : {}),
+  },
 }
 
 const organizationJsonLd = {
@@ -176,7 +182,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="bg-obsidian text-cream font-sans antialiased min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
         <SiteLayout>{children}</SiteLayout>
-        <Analytics />
       </body>
     </html>
   )

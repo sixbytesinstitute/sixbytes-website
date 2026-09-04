@@ -12,6 +12,15 @@ export const metadata = {
   title: "Courses & Programs | Class 9–12 & Defence Coaching in Dehradun",
   description:
     "Explore courses at SixBytes Institute: Class 9–10 Foundation, Class 11–12 Science (PCM/PCB), and Defence Wing (NDA, RIMC, Sainik School). Located in Shyampur & Premnagar, Dehradun.",
+  alternates: {
+    canonical: "https://sixbytes.in/courses",
+  },
+  openGraph: {
+    title: "Courses & Programs | Class 9–12 & Defence Coaching in Dehradun",
+    description:
+      "Class 9–10 Foundation, Class 11–12 Science (PCM/PCB), and Defence Wing (NDA, RIMC, Sainik School) coaching at SixBytes Institute.",
+    url: "https://sixbytes.in/courses",
+  },
 }
 
 const COURSES: Array<{

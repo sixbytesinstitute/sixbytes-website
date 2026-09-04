@@ -12,6 +12,15 @@ export const metadata = {
   title: "Results & Board Toppers | SixBytes Institute Premnagar & Shyampur",
   description:
     "Explore the top board examination scores and rankers from SixBytes Educational Institute in Shyampur & Premnagar, Dehradun. Consistent 94%+ toppers in Class 10 & 12 Science.",
+  alternates: {
+    canonical: "https://sixbytes.in/results",
+  },
+  openGraph: {
+    title: "Results & Board Toppers | SixBytes Institute Premnagar & Shyampur",
+    description:
+      "Consistent 94%+ toppers in CBSE & ICSE Class 10 & 12 Science at SixBytes Educational Institute, Dehradun.",
+    url: "https://sixbytes.in/results",
+  },
 }
 
 const TOPPERS = [

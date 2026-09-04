@@ -13,6 +13,15 @@ export const metadata = {
   title: "About SixBytes Institute | Top Coaching in Premnagar & Shyampur, Dehradun",
   description:
     "Learn about SixBytes Educational Institute, founded by Jaspal Singh Chauhan. Our mission, 6 academic pillars, and track record of board & defence exam success in Shyampur, Premnagar, Dehradun.",
+  alternates: {
+    canonical: "https://sixbytes.in/about",
+  },
+  openGraph: {
+    title: "About SixBytes Institute | Top Coaching in Premnagar & Shyampur, Dehradun",
+    description:
+      "Learn about SixBytes Educational Institute, founded by Jaspal Singh Chauhan. Our mission, 6 academic pillars, and track record of board & defence exam success.",
+    url: "https://sixbytes.in/about",
+  },
 }
 
 const PILLARS: Array<{

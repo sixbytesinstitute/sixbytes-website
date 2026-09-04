@@ -11,6 +11,15 @@ export const metadata = {
   title: "Contact & Location | SixBytes Institute Shyampur & Premnagar, Dehradun",
   description:
     "Visit SixBytes Educational Institute Opp. Lane No. 3, Sai Vihar, Shyampur, Premnagar, Dehradun. Call +91 75368 39760 or chat on WhatsApp for demo class bookings.",
+  alternates: {
+    canonical: "https://sixbytes.in/contact",
+  },
+  openGraph: {
+    title: "Contact & Location | SixBytes Institute Shyampur & Premnagar, Dehradun",
+    description:
+      "Visit SixBytes Educational Institute Opp. Lane No. 3, Sai Vihar, Shyampur, Premnagar, Dehradun. Call +91 75368 39760 or chat on WhatsApp.",
+    url: "https://sixbytes.in/contact",
+  },
 }
 
 const contactJsonLd = {

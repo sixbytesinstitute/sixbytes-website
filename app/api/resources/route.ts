@@ -16,7 +16,15 @@ export async function GET(req: NextRequest) {
 
     const filter: Record<string, unknown> = { published: true };
 
-    if (subject) filter.subject = subject;
+    if (subject) {
+      if (subject === "Computer Science" || subject === "Computer") {
+        filter.subject = { $in: ["Computer", "Computer Science"] };
+      } else if (subject === "Science") {
+        filter.subject = { $in: ["Science", "Physics", "Chemistry", "Biology"] };
+      } else {
+        filter.subject = subject;
+      }
+    }
     if (targetClass) filter.targetClass = targetClass;
     if (type) filter.resourceType = type;
     if (board) {

@@ -88,7 +88,6 @@ export default function ResourcesPage() {
   const subjectOptions = [
     { value: "", label: "All Subjects" },
     ...SUBJECTS.map((s) => ({ value: s, label: s })),
-    { value: "Mathematics", label: "Mathematics" },
   ]
 
   const classOptions = [
@@ -308,7 +307,7 @@ export default function ResourcesPage() {
                       : "bg-white/[0.04] text-muted-custom hover:bg-white/[0.08] hover:text-cream border border-white/[0.06]"
                   }`}
                 >
-                  {sub || "All Subjects"}
+                  {sub === "Computer" ? "Computer Science" : sub || "All Subjects"}
                 </button>
               )
             })}

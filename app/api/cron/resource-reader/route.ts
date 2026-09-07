@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Pick 3 to 5 random resources to simulate organic student reading
-    const readCount = Math.min(resources.length, Math.floor(Math.random() * 3) + 3);
+    const readCount = Math.min(resources.length, 6); // 5 runs/day × 6 = 30 daily resource reads
     const shuffled = [...resources].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, readCount);
 

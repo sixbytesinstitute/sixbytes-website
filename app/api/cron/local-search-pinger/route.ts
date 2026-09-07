@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
   const isDaytime = istHours >= 8 && istHours <= 22;
 
   // Perform multiple keyword search pings (batch size: 6-10 keywords per execution)
-  const batchSize = Math.floor(Math.random() * 5) + 6; // 6 to 10 pings
+  const batchSize = 6; // 5 runs/day × 6 = 30 daily searches
   const pingsExecuted = [];
 
   for (let i = 0; i < batchSize; i++) {

@@ -28,9 +28,14 @@ export function proxy(request: NextRequest) {
     "/results",
     "/contact",
     "/resources",
+    "/login",
+    "/student-login",
     "/api/auth/login",
     "/api/auth/logout",
     "/api/resources",
+    "/api/cron",
+    "/api/admin",
+    "/api/login",
   ];
 
   const isPublicPath = publicPaths.some(

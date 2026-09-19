@@ -23,7 +23,11 @@ export const COOKIE_CONFIG = {
 // ─── JWT Helpers ────────────────────────────────────────
 
 function getSecret(): string {
-  return process.env.JWT_SECRET || "k9X2mP7vQ4wR8nL1jF6hT3bY5cA0dE9gI2uO4sW7zM1xN6qJ3pV8rK5tH0yB4fD";
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET is not defined in environment variables");
+  }
+  return secret;
 }
 
 /**

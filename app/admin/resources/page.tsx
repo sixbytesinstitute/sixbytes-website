@@ -38,6 +38,7 @@ export default function AdminResourcesPage() {
   const [search, setSearch] = useState("")
   const [filterSubject, setFilterSubject] = useState("")
   const [error, setError] = useState("")
+  const [loadError, setLoadError] = useState("")
   const [success, setSuccess] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
@@ -54,15 +55,26 @@ export default function AdminResourcesPage() {
   })
 
   const fetchResources = async () => {
+    setLoading(true)
+    setLoadError("")
+
     try {
       const params = new URLSearchParams()
       if (search) params.set("search", search)
       if (filterSubject) params.set("subject", filterSubject)
       const res = await fetch(`/api/admin/resources?${params}`)
       const data = await res.json()
-      if (data.success) setResources(data.resources)
+      if (!res.ok || !data.success) {
+        setResources([])
+        setLoadError("The resources service is unavailable right now.")
+        return
+      }
+
+      setResources(data.resources)
     } catch (err) {
       console.error(err)
+      setResources([])
+      setLoadError("The resources service is unavailable right now.")
     } finally {
       setLoading(false)
     }
@@ -199,6 +211,28 @@ export default function AdminResourcesPage() {
           <span>Publish SEO Article</span>
         </button>
       </div>
+
+      {loadError && (
+        <div
+          role="alert"
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/25 text-sm text-red-200"
+        >
+          <div className="flex items-start gap-2.5">
+            <IconAlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-red-100">Unable to load SEO resources</p>
+              <p className="text-xs text-red-200/75 mt-0.5">The server could not retrieve the resource list. Please try again.</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={fetchResources}
+            className="self-start sm:self-auto px-3 py-1.5 rounded-lg border border-red-400/30 text-xs font-semibold text-red-100 hover:bg-red-500/10 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Filter & Search Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

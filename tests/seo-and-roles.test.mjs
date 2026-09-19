@@ -96,3 +96,11 @@ test("resource search tracking exposes a real analytics event helper", () => {
     },
   );
 });
+
+test("admin resource list surfaces API failures instead of showing a false empty state", () => {
+  const page = readFileSync("app/admin/resources/page.tsx", "utf8");
+
+  assert.match(page, /res\.ok/);
+  assert.match(page, /loadError/);
+  assert.match(page, /Unable to load SEO resources/);
+});

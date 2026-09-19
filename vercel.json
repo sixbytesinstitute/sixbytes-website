@@ -1,12 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/cron/local-search-pinger",
+      "path": "/api/cron/seo-maintenance",
       "schedule": "0 5 * * *"
-    },
-    {
-      "path": "/api/cron/resource-reader",
-      "schedule": "30 7 * * *"
     }
   ]
 }

@@ -57,3 +57,31 @@ export function trackResourceRead(title: string, subject: string, targetClass: s
     resource_class: targetClass,
   });
 }
+
+export type ResourceSearchFilters = {
+  subject?: string;
+  targetClass?: string;
+  board?: string;
+  resourceType?: string;
+};
+
+export function buildResourceSearchEvent(
+  search: string,
+  filters: ResourceSearchFilters = {},
+) {
+  return {
+    event_category: "Engagement",
+    search_query: search.trim().slice(0, 100),
+    subject: filters.subject || "",
+    target_class: filters.targetClass || "",
+    board: filters.board || "",
+    resource_type: filters.resourceType || "",
+  };
+}
+
+export function trackResourceSearch(search: string, filters: ResourceSearchFilters = {}) {
+  const query = search.trim();
+  if (!query) return;
+
+  trackEvent("resource_search", buildResourceSearchEvent(query, filters));
+}

@@ -6,6 +6,7 @@ import ParticleField from "../components/ui/particle-field"
 import ShimmerLine from "../components/ui/shimmer-line"
 import CustomSelect from "../components/ui/custom-select"
 import { SUBJECTS, CLASSES } from "@/lib/constants"
+import { trackResourceSearch } from "@/lib/analytics"
 import {
   IconBookOpen,
   IconSearch,
@@ -82,7 +83,17 @@ export default function ResourcesPage({ initialResources }: { initialResources: 
       fetch(`/api/resources?${params}`)
         .then((r) => r.json())
         .then((data) => {
-          if (data.success) setResources(data.resources)
+          if (data.success) {
+            setResources(data.resources)
+            if (search.trim()) {
+              trackResourceSearch(search, {
+                subject: filterSubject,
+                targetClass: filterClass,
+                board: filterBoard,
+                resourceType: filterType,
+              })
+            }
+          }
         })
         .catch(console.error)
         .finally(() => setLoading(false))

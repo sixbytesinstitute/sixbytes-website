@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useId, useState, useRef, useEffect } from "react"
 import { IconChevronDown, IconCheck } from "./icons"
 
 export interface SelectOption {
@@ -32,6 +32,8 @@ export default function CustomSelect({
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const selectId = useId()
+  const listboxId = `${selectId}-options`
 
   // Normalize options array
   const formattedOptions: SelectOption[] = options.map((opt) => {
@@ -68,7 +70,7 @@ export default function CustomSelect({
   return (
     <div className={`relative w-full ${className}`} ref={containerRef}>
       {label && (
-        <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80 mb-1.5 font-sans">
+        <label htmlFor={selectId} className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80 mb-1.5 font-sans">
           {label}
         </label>
       )}
@@ -76,11 +78,13 @@ export default function CustomSelect({
       {/* Main Trigger Button */}
       <button
         type="button"
+        id={selectId}
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-controls={isOpen ? listboxId : undefined}
         className={`w-full flex items-center justify-between gap-2.5 px-4 py-2.5 rounded-xl text-left text-sm transition-all duration-200 font-sans border ${
           isOpen
             ? "bg-navy-mid/95 border-orange-500/50 shadow-lg shadow-orange-500/10 ring-1 ring-orange-500/30 text-cream"
@@ -110,7 +114,7 @@ export default function CustomSelect({
       {/* Animated Dropdown Menu */}
       {isOpen && (
         <div className="absolute z-50 left-0 right-0 mt-1.5 max-h-60 overflow-y-auto rounded-xl bg-[#0f1318]/98 border border-white/10 p-1.5 shadow-2xl shadow-black/80 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150 scrollbar-thin scrollbar-thumb-white/10">
-          <div role="listbox" className="space-y-0.5">
+          <div id={listboxId} role="listbox" aria-label={label || placeholder} className="space-y-0.5">
             {formattedOptions.length === 0 ? (
               <div className="px-3 py-2 text-xs text-muted-custom text-center">No options available</div>
             ) : (

@@ -35,11 +35,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://sixbytes.in"),
   title: {
-    default: "SixBytes Educational Institute | Premier Coaching in Premnagar & Shyampur, Dehradun",
+    default: "Coaching Institute in Dehradun | SixBytes",
     template: "%s | SixBytes Educational Institute",
   },
   description:
-    "Dehradun's premier coaching institute for CBSE & ICSE Class 9–12 (Science & Maths), NDA, RIMC, RMS, and Sainik School preparation. Located in Shyampur, Premnagar, Dehradun. Founded by Jaspal Singh Chauhan.",
+    "SixBytes offers CBSE and ICSE coaching for Classes 9–12, NDA, RIMC and Sainik School in Premnagar and Shyampur, Dehradun.",
   keywords: [
     "best coaching in premnagar",
     "best institute in shyampur",
@@ -65,9 +65,9 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://sixbytes.in",
     siteName: "SixBytes Educational Institute",
-    title: "SixBytes Educational Institute | Best Coaching in Premnagar & Shyampur",
+    title: "Coaching Institute in Dehradun | SixBytes",
     description:
-      "Transforming student potential with rigorous academics, small batches, and expert mentorship for Boards & Defence entrance exams in Premnagar and Shyampur, Dehradun.",
+      "SixBytes offers CBSE and ICSE coaching for Classes 9–12, NDA, RIMC and Sainik School in Premnagar and Shyampur, Dehradun.",
     images: [
       {
         url: "/logo.png",

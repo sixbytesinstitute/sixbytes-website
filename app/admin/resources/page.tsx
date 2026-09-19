@@ -373,12 +373,18 @@ export default function AdminResourcesPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Title */}
               <div className="space-y-1">
-                <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80">
-                  Target Search Headline (Include Class, Subject & Topic)
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80">
+                    Target Search Headline (Include Class, Subject & Topic)
+                  </label>
+                  <span className={`text-[10px] ${form.title.length > 60 ? "text-amber-400" : "text-muted-custom/60"}`}>
+                    {form.title.length}/60 chars
+                  </span>
+                </div>
                 <input
                   type="text"
                   required
+                  maxLength={60}
                   placeholder="e.g. CBSE Class 10 Science Chapter 10 Light Reflection Formulas & Important Questions"
                   value={form.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
@@ -416,6 +422,7 @@ export default function AdminResourcesPage() {
                 </div>
                 <textarea
                   required
+                  maxLength={160}
                   rows={2}
                   placeholder="Free comprehensive study notes, formula cheatsheet, and top 10 solved questions for CBSE Class 10 Science Light chapter by SixBytes Dehradun."
                   value={form.metaDescription}

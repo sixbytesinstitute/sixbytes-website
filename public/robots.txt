@@ -5,7 +5,11 @@ Disallow: /admin
 Disallow: /admin/*
 Disallow: /dashboard
 Disallow: /dashboard/*
+Disallow: /faculty
+Disallow: /faculty/*
 Disallow: /student-login
+Disallow: /login
+Disallow: /settings
 Disallow: /api
 Disallow: /api/*
 

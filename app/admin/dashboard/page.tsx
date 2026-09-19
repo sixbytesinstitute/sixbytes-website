@@ -197,9 +197,10 @@ export default function AdminDashboard() {
             recentUsers.map((user) => {
               const roleBadge = {
                 admin: { bg: "bg-amber-500/10", text: "text-amber-300", border: "border-amber-500/30", label: "Admin" },
+                manager: { bg: "bg-purple-500/10", text: "text-purple-300", border: "border-purple-500/30", label: "Manager" },
                 faculty: { bg: "bg-orange-500/10", text: "text-orange-400", border: "border-orange-500/30", label: "Faculty" },
                 student: { bg: "bg-white/[0.06]", text: "text-cream", border: "border-white/15", label: `Student (Class ${user.class || "—"})` },
-              }[user.role as "admin" | "faculty" | "student"] || { bg: "bg-white/5", text: "text-cream", border: "border-white/10", label: user.role }
+              }[user.role as "admin" | "manager" | "faculty" | "student"] || { bg: "bg-white/5", text: "text-cream", border: "border-white/10", label: user.role }
 
               return (
                 <div

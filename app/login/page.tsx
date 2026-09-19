@@ -50,6 +50,9 @@ export default function LoginPage() {
           case "admin":
             router.push("/admin/dashboard")
             break
+          case "manager":
+            router.push("/manager/resources")
+            break
           case "faculty":
             router.push("/faculty/dashboard")
             break
@@ -102,7 +105,7 @@ export default function LoginPage() {
               Welcome Back
             </h1>
             <p className="text-xs sm:text-sm text-muted-custom font-sans">
-              Sign in with your SixBytes credentials to access your dashboard — students, faculty, and admin.
+              Sign in with your SixBytes credentials to access your dashboard — students, faculty, content managers, and admin.
             </p>
           </div>
 
@@ -120,7 +123,7 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Email Field */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-cream/90 flex items-center gap-1.5">
+              <label htmlFor="login-email" className="text-xs font-semibold uppercase tracking-wider text-cream/90 flex items-center gap-1.5">
                 <span>Email Address</span>
               </label>
               <div className="relative">
@@ -139,7 +142,7 @@ export default function LoginPage() {
             {/* Password Field */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-wider text-cream/90">
+                <label htmlFor="login-password" className="text-xs font-semibold uppercase tracking-wider text-cream/90">
                   Password
                 </label>
                 <a

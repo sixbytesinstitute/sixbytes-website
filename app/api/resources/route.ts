@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
 
+export const revalidate = 300;
+
 // ─── GET: List published resources (PUBLIC) ─────────────
 export async function GET(req: NextRequest) {
   try {
@@ -54,11 +56,18 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .lean();
 
-    return NextResponse.json({
-      success: true,
-      count: resources.length,
-      resources,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        count: resources.length,
+        resources,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+        },
+      }
+    );
   } catch (error) {
     console.error("PUBLIC RESOURCES ERROR:", error);
     return NextResponse.json(

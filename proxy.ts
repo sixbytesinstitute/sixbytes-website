@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
+import { getDashboardPath } from "@/lib/permissions";
 
 // ─── Role-based route protection ────────────────────────
 // Next.js 16 uses proxy.ts instead of middleware.ts
@@ -53,8 +54,7 @@ export function proxy(request: NextRequest) {
   // ── Login page: redirect authenticated users to their dashboard ──
   if (pathname === "/login") {
     if (user) {
-      const dashboardUrl = getDashboardUrl(user.role);
-      return NextResponse.redirect(new URL(dashboardUrl, request.url));
+      return NextResponse.redirect(new URL(getDashboardPath(user.role), request.url));
     }
     return NextResponse.next();
   }
@@ -71,16 +71,20 @@ export function proxy(request: NextRequest) {
   // ── Role-based access control ────────────────────────
   if (pathname.startsWith("/admin")) {
     if (user.role !== "admin") {
-      return NextResponse.redirect(
-        new URL(getDashboardUrl(user.role), request.url)
-      );
+      return NextResponse.redirect(new URL(getDashboardPath(user.role), request.url));
+    }
+  }
+
+  if (pathname.startsWith("/manager")) {
+    if (user.role !== "manager") {
+      return NextResponse.redirect(new URL(getDashboardPath(user.role), request.url));
     }
   }
 
   if (pathname.startsWith("/faculty")) {
     if (user.role !== "faculty") {
       return NextResponse.redirect(
-        new URL(getDashboardUrl(user.role), request.url)
+        new URL(getDashboardPath(user.role), request.url)
       );
     }
   }
@@ -88,7 +92,7 @@ export function proxy(request: NextRequest) {
   if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
     if (user.role !== "student") {
       return NextResponse.redirect(
-        new URL(getDashboardUrl(user.role), request.url)
+        new URL(getDashboardPath(user.role), request.url)
       );
     }
   }
@@ -97,18 +101,6 @@ export function proxy(request: NextRequest) {
 }
 
 // ─── Helper ─────────────────────────────────────────────
-function getDashboardUrl(role: string): string {
-  switch (role) {
-    case "admin":
-      return "/admin/dashboard";
-    case "faculty":
-      return "/faculty/dashboard";
-    case "student":
-    default:
-      return "/dashboard";
-  }
-}
-
 // ─── Matcher Config ─────────────────────────────────────
 // Run proxy on all routes except static files and images
 export const config = {

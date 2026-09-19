@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node --experimental-strip-types --experimental-test-isolation=none --test tests/seo-and-roles.test.mjs",
     "seed": "npx tsx lib/seed-admins.ts"
   },
   "dependencies": {

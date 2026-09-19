@@ -21,10 +21,17 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      resource,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        resource,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+        },
+      }
+    );
   } catch (error) {
     console.error("PUBLIC RESOURCE DETAIL ERROR:", error);
     return NextResponse.json(

@@ -13,6 +13,7 @@ const ResourceSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, "Title is required"],
+    maxlength: 60,
     trim: true,
   },
   metaDescription: {
@@ -50,6 +51,7 @@ const ResourceSchema = new mongoose.Schema({
   content: {
     type: String,
     required: [true, "Article content is required"],
+    maxlength: 200000,
   },
 
   keywords: {

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 // ─── Types ──────────────────────────────────────────────
 export interface TokenPayload {
   userId: string;
-  role: "admin" | "faculty" | "student";
+  role: "admin" | "manager" | "faculty" | "student";
   email: string;
   class?: string;
 }

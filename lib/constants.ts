@@ -5,7 +5,7 @@
 
 export const CLASSES = ["9", "10", "11", "12", "NDA"] as const;
 export const STREAMS = ["PCM", "PCB", "General", "Defence", "N/A"] as const;
-export const ROLES = ["admin", "faculty", "student"] as const;
+export const ROLES = ["admin", "manager", "faculty", "student"] as const;
 
 export const SUBJECTS = [
   "Mathematics",

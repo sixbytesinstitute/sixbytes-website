@@ -1,53 +1,48 @@
 import { MetadataRoute } from "next";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
+import { canonicalUrl } from "@/lib/seo-policy";
+
+export const revalidate = 300;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixbytes.in";
-
   // Static marketing & public pages
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}`,
+      url: canonicalUrl("/"),
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/about`,
+      url: canonicalUrl("/about"),
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/courses`,
+      url: canonicalUrl("/courses"),
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/results`,
+      url: canonicalUrl("/results"),
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/resources`,
+      url: canonicalUrl("/resources"),
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/contact`,
+      url: canonicalUrl("/contact"),
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
     },
   ];
 
@@ -59,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .lean();
 
     const resourcePages: MetadataRoute.Sitemap = resources.map((r) => ({
-      url: `${baseUrl}/resources/${r.slug}`,
+      url: canonicalUrl(`/resources/${r.slug}`),
       lastModified: r.updatedAt || r.createdAt || new Date(),
       changeFrequency: "weekly",
       priority: 0.8,

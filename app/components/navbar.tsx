@@ -28,11 +28,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMenuOpen(false)
-  }, [pathname])
-
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -80,7 +75,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links — Premium & Minimalist, No Neon Bleeds */}
-          <nav className="hidden md:flex items-center gap-1" aria-label="Main Navigation">
+          <nav className="hidden lg:flex items-center gap-1" aria-label="Main Navigation">
             {NAV_LINKS.map((link) => {
               const active = isActive(link.href)
               return (
@@ -103,7 +98,7 @@ export default function Navbar() {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <Link
               href="/login"
               className="text-xs font-semibold uppercase tracking-wider text-muted-custom hover:text-cream px-3.5 py-2 rounded-lg hover:bg-white/[0.05] transition-colors border border-transparent hover:border-white/10"
@@ -128,7 +123,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg text-muted-custom hover:text-cream hover:bg-white/[0.06] transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="lg:hidden p-2 rounded-lg text-muted-custom hover:text-cream hover:bg-white/[0.06] transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
             aria-expanded={menuOpen}
             aria-label="Toggle navigation menu"
           >
@@ -156,13 +151,15 @@ export default function Navbar() {
       {/* Mobile Slide-Out Navigation Drawer */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md md:hidden"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md lg:hidden"
           onClick={() => setMenuOpen(false)}
-          aria-hidden="true"
         >
           <div
             className="fixed right-0 top-0 bottom-0 w-4/5 max-w-sm bg-[#0f1318] border-l border-white/10 p-6 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Main navigation"
           >
             <div>
               {/* Drawer Header */}
@@ -198,6 +195,7 @@ export default function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
+                      onClick={() => setMenuOpen(false)}
                       className={`px-4 py-3 rounded-xl text-sm font-medium flex items-center justify-between transition-colors ${
                         active
                           ? "bg-white/[0.08] text-orange-400 font-semibold border border-white/[0.12]"

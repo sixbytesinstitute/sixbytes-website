@@ -227,6 +227,8 @@ export default function SettingsPage() {
         return "/admin/dashboard"
       case "faculty":
         return "/faculty/dashboard"
+      case "manager":
+        return "/manager/resources"
       default:
         return "/dashboard"
     }

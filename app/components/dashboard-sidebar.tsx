@@ -24,7 +24,7 @@ interface SidebarLink {
 }
 
 interface DashboardSidebarProps {
-  role: "admin" | "faculty"
+  role: "admin" | "manager" | "faculty"
   userName?: string
   userEmail?: string
   userAvatar?: string
@@ -52,7 +52,12 @@ export default function DashboardSidebar({ role, userName, userEmail, userAvatar
     { href: "/settings", label: "Account Security", icon: <IconSettings size={18} /> },
   ]
 
-  const links = role === "admin" ? adminLinks : facultyLinks
+  const managerLinks: SidebarLink[] = [
+    { href: "/manager/resources", label: "SEO Resources", icon: <IconBookOpen size={18} /> },
+    { href: "/settings", label: "Account Security", icon: <IconSettings size={18} /> },
+  ]
+
+  const links = role === "admin" ? adminLinks : role === "manager" ? managerLinks : facultyLinks
 
   const handleLogout = async () => {
     setLoggingOut(true)
@@ -77,7 +82,7 @@ export default function DashboardSidebar({ role, userName, userEmail, userAvatar
               SixBytes
             </span>
             <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-orange-400">
-              {role === "admin" ? "Admin Console" : "Faculty Portal"}
+               {role === "admin" ? "Admin Console" : role === "manager" ? "Content Manager" : "Faculty Portal"}
             </span>
           </div>
         </Link>

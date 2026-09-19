@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
 import { withAuth } from "@/lib/middleware-auth";
 import { submitUrlsToIndexNow } from "@/lib/indexnow";
+import { isSafeResourceHtml, SEO_LIMITS } from "@/lib/seo-policy";
 
 // ─── PUT: Update resource ───────────────────────────────
 export const PUT = withAuth(
@@ -23,6 +25,27 @@ export const PUT = withAuth(
           updates[field] = body[field];
         }
       }
+
+      if (updates.title !== undefined && (typeof updates.title !== "string" || updates.title.trim().length > SEO_LIMITS.title)) {
+        return NextResponse.json(
+          { success: false, error: `Title must be ${SEO_LIMITS.title} characters or fewer` },
+          { status: 400 }
+        );
+      }
+
+      if (updates.metaDescription !== undefined && (typeof updates.metaDescription !== "string" || updates.metaDescription.trim().length > SEO_LIMITS.description)) {
+        return NextResponse.json(
+          { success: false, error: `Meta description must be ${SEO_LIMITS.description} characters or fewer` },
+          { status: 400 }
+        );
+      }
+
+      if (updates.content !== undefined && (typeof updates.content !== "string" || !isSafeResourceHtml(updates.content))) {
+        return NextResponse.json(
+          { success: false, error: "Article content contains unsupported or unsafe HTML" },
+          { status: 400 }
+        );
+      }
       updates.updatedAt = new Date();
 
       const resource = await Resource.findByIdAndUpdate(id, updates, {
@@ -36,6 +59,11 @@ export const PUT = withAuth(
           { status: 404 }
         );
       }
+
+      revalidateTag("published-resources", "max");
+      revalidateTag(`published-resource:${resource.slug}`, "max");
+      revalidatePath("/resources");
+      revalidatePath(`/resources/${resource.slug}`);
 
       if (resource.published) {
         submitUrlsToIndexNow([`https://sixbytes.in/resources/${resource.slug}`]).catch(() => {});
@@ -54,7 +82,7 @@ export const PUT = withAuth(
       );
     }
   },
-  ["admin"]
+  ["admin", "manager"]
 );
 
 // ─── DELETE: Delete resource ────────────────────────────
@@ -73,6 +101,11 @@ export const DELETE = withAuth(
         );
       }
 
+      revalidateTag("published-resources", "max");
+      revalidateTag(`published-resource:${resource.slug}`, "max");
+      revalidatePath("/resources");
+      revalidatePath(`/resources/${resource.slug}`);
+
       return NextResponse.json({
         success: true,
         message: "Resource deleted successfully",
@@ -85,5 +118,5 @@ export const DELETE = withAuth(
       );
     }
   },
-  ["admin"]
+  ["admin", "manager"]
 );

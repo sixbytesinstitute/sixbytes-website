@@ -10,17 +10,20 @@ import OrbitRings from "../components/ui/orbit-rings"
 import PremiumIcon, { type IconName } from "../components/ui/premium-icon"
 
 export const metadata = {
-  title: "About SixBytes Institute | Top Coaching in Premnagar & Shyampur, Dehradun",
+  title: { absolute: "About SixBytes Institute | Dehradun" },
   description:
-    "Learn about SixBytes Educational Institute, founded by Jaspal Singh Chauhan. Our mission, 6 academic pillars, and track record of board & defence exam success in Shyampur, Premnagar, Dehradun.",
+    "Meet SixBytes Institute, founded by Jaspal Singh Chauhan for small-batch CBSE, ICSE and defence exam coaching in Dehradun.",
   alternates: {
     canonical: "https://sixbytes.in/about",
   },
   openGraph: {
-    title: "About SixBytes Institute | Top Coaching in Premnagar & Shyampur, Dehradun",
+    title: "About SixBytes Institute | Dehradun",
     description:
-      "Learn about SixBytes Educational Institute, founded by Jaspal Singh Chauhan. Our mission, 6 academic pillars, and track record of board & defence exam success.",
+      "Meet SixBytes Institute, founded by Jaspal Singh Chauhan for small-batch CBSE, ICSE and defence exam coaching in Dehradun.",
     url: "https://sixbytes.in/about",
+    siteName: "SixBytes Educational Institute",
+    type: "website",
+    images: [{ url: "https://sixbytes.in/logo.png", width: 800, height: 800, alt: "SixBytes Educational Institute" }],
   },
 }
 

@@ -69,7 +69,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
   phone: String,
   password: String,
-  role: { type: String, enum: ["admin", "faculty", "student"] },
+  role: { type: String, enum: ["admin", "manager", "faculty", "student"] },
   class: String,
   stream: String,
   subjects: [String],

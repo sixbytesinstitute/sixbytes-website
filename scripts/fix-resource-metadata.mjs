@@ -1,6 +1,18 @@
 import mongoose from "mongoose";
 import fs from "fs";
 
+const TITLE_LIMIT = 60;
+const DESCRIPTION_LIMIT = 160;
+
+function truncateAtWord(value, limit) {
+  const normalized = String(value || "").trim().replace(/\s+/g, " ");
+  if (normalized.length <= limit) return normalized;
+
+  const truncated = normalized.slice(0, limit + 1).trim();
+  const lastSpace = truncated.lastIndexOf(" ");
+  return (lastSpace > Math.floor(limit * 0.6) ? truncated.slice(0, lastSpace) : truncated.slice(0, limit)).trim();
+}
+
 // Read MongoDB URI from .env.local
 const envContent = fs.readFileSync(".env.local", "utf-8");
 let mongoUri = "";
@@ -26,6 +38,14 @@ async function fixMetadata() {
   let updatedCount = 0;
   for (const item of all) {
     const updates = {};
+
+    if (item.title && item.title.length > TITLE_LIMIT) {
+      updates.title = truncateAtWord(item.title, TITLE_LIMIT);
+    }
+
+    if (item.metaDescription && item.metaDescription.length > DESCRIPTION_LIMIT) {
+      updates.metaDescription = truncateAtWord(item.metaDescription, DESCRIPTION_LIMIT);
+    }
 
     if (!item.resourceType) {
       if (

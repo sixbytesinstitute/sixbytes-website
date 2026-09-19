@@ -8,17 +8,20 @@ import JsonLd from "../components/seo/json-ld"
 import PremiumIcon from "../components/ui/premium-icon"
 
 export const metadata = {
-  title: "Contact & Location | SixBytes Institute Shyampur & Premnagar, Dehradun",
+  title: { absolute: "Contact SixBytes Institute | Dehradun" },
   description:
-    "Visit SixBytes Educational Institute Opp. Lane No. 3, Sai Vihar, Shyampur, Premnagar, Dehradun. Call +91 75368 39760 or chat on WhatsApp for demo class bookings.",
+    "Visit SixBytes Institute in Shyampur, Premnagar, Dehradun. Call +91 75368 39760 or WhatsApp to book a demo class.",
   alternates: {
     canonical: "https://sixbytes.in/contact",
   },
   openGraph: {
-    title: "Contact & Location | SixBytes Institute Shyampur & Premnagar, Dehradun",
+    title: "Contact SixBytes Institute | Dehradun",
     description:
-      "Visit SixBytes Educational Institute Opp. Lane No. 3, Sai Vihar, Shyampur, Premnagar, Dehradun. Call +91 75368 39760 or chat on WhatsApp.",
+      "Visit SixBytes Institute in Shyampur, Premnagar, Dehradun. Call +91 75368 39760 or WhatsApp to book a demo class.",
     url: "https://sixbytes.in/contact",
+    siteName: "SixBytes Educational Institute",
+    type: "website",
+    images: [{ url: "https://sixbytes.in/logo.png", width: 800, height: 800, alt: "SixBytes Educational Institute" }],
   },
 }
 

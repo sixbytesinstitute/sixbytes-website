@@ -13,6 +13,7 @@ import {
   IconAlertCircle,
   IconGraduationCap,
   IconTeacher,
+  IconShield,
 } from "@/app/components/ui/icons"
 
 interface UserRecord {
@@ -160,6 +161,7 @@ export default function AdminUsersPage() {
   const roleFilterOptions = [
     { value: "", label: "All Account Roles" },
     { value: "student", label: "Students" },
+    { value: "manager", label: "Content Managers" },
     { value: "faculty", label: "Faculty Members" },
     { value: "admin", label: "Super Admins" },
   ]
@@ -251,9 +253,10 @@ export default function AdminUsersPage() {
                 {users.map((u) => {
                   const roleStyle = {
                     admin: "bg-amber-500/10 text-amber-300 border-amber-500/30",
+                    manager: "bg-purple-500/10 text-purple-300 border-purple-500/30",
                     faculty: "bg-orange-500/10 text-orange-400 border-orange-500/30",
                     student: "bg-white/[0.06] text-cream border-white/15",
-                  }[u.role as "admin" | "faculty" | "student"] || "bg-white/5 text-cream border-white/10"
+                  }[u.role as "admin" | "manager" | "faculty" | "student"] || "bg-white/5 text-cream border-white/10"
 
                   return (
                     <tr key={u._id} className="hover:bg-white/[0.02] transition-colors">
@@ -274,6 +277,7 @@ export default function AdminUsersPage() {
                       <td className="px-5 py-3.5">
                         <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${roleStyle}`}>
                           {u.role === "student" && <IconGraduationCap size={12} />}
+                          {u.role === "manager" && <IconShield size={12} />}
                           {u.role === "faculty" && <IconTeacher size={12} />}
                           <span>{u.role}</span>
                         </span>
@@ -299,6 +303,8 @@ export default function AdminUsersPage() {
                               {u.subjects?.join(", ") || "No subjects"}
                             </p>
                           </div>
+                        ) : u.role === "manager" ? (
+                          <span className="text-[11px] text-purple-300">Public resource publishing</span>
                         ) : (
                           <span className="text-[11px] text-muted-custom">System Admin</span>
                         )}
@@ -417,7 +423,7 @@ export default function AdminUsersPage() {
                 <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80 mb-2">
                   Select User Role
                 </label>
-                <div className="grid grid-cols-2 gap-3 p-1 rounded-xl bg-black/40 border border-white/[0.06]">
+              <div className="grid grid-cols-3 gap-3 p-1 rounded-xl bg-black/40 border border-white/[0.06]">
                   <button
                     type="button"
                     onClick={() => setForm({ ...form, role: "student" })}
@@ -429,6 +435,18 @@ export default function AdminUsersPage() {
                   >
                     <IconGraduationCap size={16} />
                     <span>Student</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, role: "manager" })}
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      form.role === "manager"
+                        ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md shadow-purple-500/20"
+                        : "text-muted-custom hover:text-cream"
+                    }`}
+                  >
+                    <IconShield size={16} />
+                    <span>Manager</span>
                   </button>
                   <button
                     type="button"

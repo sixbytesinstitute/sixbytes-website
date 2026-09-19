@@ -9,17 +9,20 @@ import FAQItem from "../components/ui/faq-item"
 import PremiumIcon, { type IconName } from "../components/ui/premium-icon"
 
 export const metadata = {
-  title: "Courses & Programs | Class 9–12 & Defence Coaching in Dehradun",
+  title: { absolute: "Courses & Defence Coaching | SixBytes" },
   description:
-    "Explore courses at SixBytes Institute: Class 9–10 Foundation, Class 11–12 Science (PCM/PCB), and Defence Wing (NDA, RIMC, Sainik School). Located in Shyampur & Premnagar, Dehradun.",
+    "Explore Class 9–12 Science, Mathematics, NDA, RIMC, RMS and Sainik School coaching at SixBytes in Premnagar and Shyampur, Dehradun.",
   alternates: {
     canonical: "https://sixbytes.in/courses",
   },
   openGraph: {
-    title: "Courses & Programs | Class 9–12 & Defence Coaching in Dehradun",
+    title: "Courses & Defence Coaching | SixBytes",
     description:
-      "Class 9–10 Foundation, Class 11–12 Science (PCM/PCB), and Defence Wing (NDA, RIMC, Sainik School) coaching at SixBytes Institute.",
+      "Explore Class 9–12 Science, Mathematics, NDA, RIMC, RMS and Sainik School coaching at SixBytes in Dehradun.",
     url: "https://sixbytes.in/courses",
+    siteName: "SixBytes Educational Institute",
+    type: "website",
+    images: [{ url: "https://sixbytes.in/logo.png", width: 800, height: 800, alt: "SixBytes Educational Institute" }],
   },
 }
 

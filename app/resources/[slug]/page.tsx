@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import connectDB from "@/lib/mongodb";
-import Resource from "@/models/Resource";
+import { getPublishedResource } from "@/lib/resources";
+import { canonicalUrl, normalizeMetaDescription, normalizeSeoTitle, PUBLIC_SITE_URL } from "@/lib/seo-policy";
 import ResourceDetailClient, { ResourceDetail } from "./resource-detail-client";
+
+export const revalidate = 300;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -12,10 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
 
   try {
-    await connectDB();
-    const resource = await Resource.findOne({ slug, published: true })
-      .select("title metaDescription subject targetClass board keywords createdAt updatedAt")
-      .lean();
+    const resource = await getPublishedResource(slug);
 
     if (!resource) {
       return {
@@ -25,20 +24,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       };
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixbytes.in";
-    const canonicalUrl = `${baseUrl}/resources/${slug}`;
+    const title = normalizeSeoTitle(resource.title);
+    const description = normalizeMetaDescription(resource.metaDescription);
+    const resourceCanonicalUrl = canonicalUrl(`/resources/${slug}`);
 
     return {
-      title: resource.title,
-      description: resource.metaDescription,
+      title: { absolute: title },
+      description,
       keywords: resource.keywords || [],
       alternates: {
-        canonical: canonicalUrl,
+        canonical: resourceCanonicalUrl,
       },
       openGraph: {
-        title: `${resource.title} | SixBytes Institute`,
-        description: resource.metaDescription,
-        url: canonicalUrl,
+        title,
+        description,
+        url: resourceCanonicalUrl,
         siteName: "SixBytes Educational Institute",
         type: "article",
         publishedTime: resource.createdAt ? new Date(resource.createdAt).toISOString() : undefined,
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         tags: resource.keywords || [],
         images: [
           {
-            url: `${baseUrl}/logo.png`,
+            url: `${PUBLIC_SITE_URL}/logo.png`,
             width: 800,
             height: 800,
             alt: resource.title,
@@ -56,9 +56,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
       twitter: {
         card: "summary_large_image",
-        title: resource.title,
-        description: resource.metaDescription,
-        images: [`${baseUrl}/logo.png`],
+        title,
+        description,
+        images: [`${PUBLIC_SITE_URL}/logo.png`],
       },
       robots: {
         index: true,
@@ -84,8 +84,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ResourceDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  await connectDB();
-  const rawResource = await Resource.findOne({ slug, published: true }).lean();
+  const rawResource = await getPublishedResource(slug);
 
   if (!rawResource) {
     notFound();
@@ -109,14 +108,14 @@ export default async function ResourceDetailPage({ params }: PageProps) {
     updatedAt: rawResource.updatedAt ? new Date(rawResource.updatedAt).toISOString() : undefined,
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://sixbytes.in";
-  const canonicalUrl = `${baseUrl}/resources/${serialized.slug}`;
+  const baseUrl = PUBLIC_SITE_URL;
+  const resourceCanonicalUrl = canonicalUrl(`/resources/${serialized.slug}`);
 
   // Schema.org LearningResource & Article Structured Data
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LearningResource",
-    "@id": canonicalUrl,
+    "@id": resourceCanonicalUrl,
     name: serialized.title,
     headline: serialized.title,
     description: serialized.metaDescription,
@@ -131,7 +130,7 @@ export default async function ResourceDetailPage({ params }: PageProps) {
       targetName: serialized.subject,
     },
     inLanguage: "en",
-    url: canonicalUrl,
+    url: resourceCanonicalUrl,
     datePublished: serialized.createdAt,
     dateModified: serialized.updatedAt || serialized.createdAt,
     keywords: (serialized.keywords || []).join(", "),

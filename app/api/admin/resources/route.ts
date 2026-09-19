@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
 import { withAuth } from "@/lib/middleware-auth";
 import { submitUrlsToIndexNow } from "@/lib/indexnow";
+import { isSafeResourceHtml, SEO_LIMITS } from "@/lib/seo-policy";
 
 // ─── Slug generator ─────────────────────────────────────
 function generateSlug(title: string): string {
@@ -34,6 +36,27 @@ export const POST = withAuth(
         );
       }
 
+      if (typeof title !== "string" || title.trim().length > SEO_LIMITS.title) {
+        return NextResponse.json(
+          { success: false, error: `Title must be ${SEO_LIMITS.title} characters or fewer` },
+          { status: 400 }
+        );
+      }
+
+      if (typeof metaDescription !== "string" || metaDescription.trim().length > SEO_LIMITS.description) {
+        return NextResponse.json(
+          { success: false, error: `Meta description must be ${SEO_LIMITS.description} characters or fewer` },
+          { status: 400 }
+        );
+      }
+
+      if (typeof content !== "string" || !isSafeResourceHtml(content)) {
+        return NextResponse.json(
+          { success: false, error: "Article content contains unsupported or unsafe HTML" },
+          { status: 400 }
+        );
+      }
+
       // Auto-generate slug from title if not provided
       const finalSlug = slug ? generateSlug(slug) : generateSlug(title);
 
@@ -59,7 +82,12 @@ export const POST = withAuth(
         createdBy: user.userId,
       });
 
+      revalidateTag("published-resources", "max");
+      revalidatePath("/resources");
+
       if (resource.published) {
+        revalidateTag(`published-resource:${resource.slug}`, "max");
+        revalidatePath(`/resources/${resource.slug}`);
         submitUrlsToIndexNow([`https://sixbytes.in/resources/${resource.slug}`]).catch(() => {});
       }
 
@@ -84,7 +112,7 @@ export const POST = withAuth(
       );
     }
   },
-  ["admin"]
+  ["admin", "manager"]
 );
 
 // ─── GET: List all resources (including unpublished) ────
@@ -127,5 +155,5 @@ export const GET = withAuth(
       );
     }
   },
-  ["admin"]
+  ["admin", "manager"]
 );

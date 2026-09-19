@@ -4,7 +4,7 @@ import User from "@/models/User";
 import bcrypt from "bcrypt";
 import { withAuth } from "@/lib/middleware-auth";
 
-// ─── POST: Create a new user (student or faculty) ──────
+// ─── POST: Create a new user (student, manager, or faculty) ──────
 export const POST = withAuth(
   async (req: NextRequest) => {
     try {
@@ -21,9 +21,9 @@ export const POST = withAuth(
         );
       }
 
-      if (!["student", "faculty"].includes(role)) {
+      if (!["student", "manager", "faculty"].includes(role)) {
         return NextResponse.json(
-          { success: false, error: "Role must be 'student' or 'faculty'" },
+          { success: false, error: "Role must be 'student', 'manager', or 'faculty'" },
           { status: 400 }
         );
       }
@@ -59,8 +59,8 @@ export const POST = withAuth(
         role,
         class: role === "student" ? userClass : "",
         stream: stream || "N/A",
-        subjects: role === "faculty" ? (subjects || []) : [],
-        assignedClasses: role === "faculty" ? (assignedClasses || []) : [],
+         subjects: role === "faculty" ? (subjects || []) : [],
+         assignedClasses: role === "faculty" ? (assignedClasses || []) : [],
         mustChangePassword: true,
         isActive: true,
       });

@@ -9,17 +9,20 @@ import Counter from "../components/ui/counter"
 import PremiumIcon from "../components/ui/premium-icon"
 
 export const metadata = {
-  title: "Results & Board Toppers | SixBytes Institute Premnagar & Shyampur",
+  title: { absolute: "Board Results & Toppers | SixBytes" },
   description:
-    "Explore the top board examination scores and rankers from SixBytes Educational Institute in Shyampur & Premnagar, Dehradun. Consistent 94%+ toppers in Class 10 & 12 Science.",
+    "See Class 10 and 12 board results, toppers and academic achievements from SixBytes Institute in Premnagar and Shyampur, Dehradun.",
   alternates: {
     canonical: "https://sixbytes.in/results",
   },
   openGraph: {
-    title: "Results & Board Toppers | SixBytes Institute Premnagar & Shyampur",
+    title: "Board Results & Toppers | SixBytes",
     description:
-      "Consistent 94%+ toppers in CBSE & ICSE Class 10 & 12 Science at SixBytes Educational Institute, Dehradun.",
+      "See Class 10 and 12 board results, toppers and academic achievements from SixBytes Institute in Dehradun.",
     url: "https://sixbytes.in/results",
+    siteName: "SixBytes Educational Institute",
+    type: "website",
+    images: [{ url: "https://sixbytes.in/logo.png", width: 800, height: 800, alt: "SixBytes Educational Institute" }],
   },
 }
 

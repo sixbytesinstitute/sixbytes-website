@@ -16,6 +16,7 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
   // Routes where the public marketing Navbar and Footer should NOT be rendered
   const isDashboard =
     pathname.startsWith("/admin") ||
+    pathname.startsWith("/manager") ||
     pathname.startsWith("/faculty") ||
     pathname === "/dashboard"
 

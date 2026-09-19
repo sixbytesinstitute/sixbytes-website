@@ -12,9 +12,9 @@ import PremiumIcon, { type IconName } from "./components/ui/premium-icon"
 import FAQItem from "./components/ui/faq-item"
 
 export const metadata = {
-  title: "SixBytes Educational Institute | Premier Coaching in Premnagar & Shyampur, Dehradun",
+  title: { absolute: "Coaching Institute in Dehradun | SixBytes" },
   description:
-    "Dehradun's top-ranked coaching institute for Class 9–12 CBSE/ICSE board exams, NDA, RIMC, and Sainik School. Small batches, personalized learning, expert faculty, and proven 94% board results.",
+    "SixBytes offers CBSE and ICSE coaching for Classes 9–12, NDA, RIMC and Sainik School in Premnagar and Shyampur, Dehradun.",
   keywords: [
     "coaching institute in Premnagar",
     "coaching institute in Shyampur",
@@ -29,6 +29,15 @@ export const metadata = {
   ],
   alternates: {
     canonical: "https://sixbytes.in",
+  },
+  openGraph: {
+    title: "Coaching Institute in Dehradun | SixBytes",
+    description:
+      "SixBytes offers CBSE and ICSE coaching for Classes 9–12, NDA, RIMC and Sainik School in Premnagar and Shyampur, Dehradun.",
+    url: "https://sixbytes.in",
+    siteName: "SixBytes Educational Institute",
+    type: "website",
+    images: [{ url: "https://sixbytes.in/logo.png", width: 800, height: 800, alt: "SixBytes Educational Institute" }],
   },
 }
 
@@ -267,16 +276,14 @@ export default function Home() {
           </RevealWrapper>
 
           {/* Hero Headings */}
-          <RevealWrapper delay={100}>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold text-cream tracking-tight leading-[1.1] mb-2">
-              Where Academic Potential
-            </h1>
-          </RevealWrapper>
-          <RevealWrapper delay={200}>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold text-gradient-orange tracking-tight leading-[1.1] mb-5">
-              Becomes Proven Legacy
-            </h1>
-          </RevealWrapper>
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold tracking-tight leading-[1.1] mb-5">
+            <RevealWrapper delay={100} as="span">
+              <span className="block text-cream">Where Academic Potential</span>
+            </RevealWrapper>
+            <RevealWrapper delay={200} as="span">
+              <span className="block text-gradient-orange">Becomes Proven Legacy</span>
+            </RevealWrapper>
+          </h1>
 
           {/* Subtitle */}
           <RevealWrapper delay={300}>

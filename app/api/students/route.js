@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Student from "@/models/Student";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 // 📌 POST → Create Student
 export async function POST(req) {

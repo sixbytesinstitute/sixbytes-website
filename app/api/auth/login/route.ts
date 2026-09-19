@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { signToken, COOKIE_NAME, COOKIE_CONFIG } from "@/lib/auth";
 
 export async function POST(req: Request) {
@@ -72,10 +72,10 @@ export async function POST(req: Request) {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error("LOGIN ERROR:", error);
     return NextResponse.json(
-      { success: false, error: "An unexpected server error occurred." },
+      { success: false, error: error?.message || "An unexpected server error occurred." },
       { status: 500 }
     );
   }

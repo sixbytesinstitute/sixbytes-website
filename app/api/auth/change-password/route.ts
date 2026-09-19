@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { withAuth } from "@/lib/middleware-auth";
 
 export const POST = withAuth(async (req: NextRequest, { user }) => {

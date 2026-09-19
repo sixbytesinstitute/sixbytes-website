@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { withAuth } from "@/lib/middleware-auth";
 
 // ─── POST: Create a new user (student, manager, or faculty) ──────

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 // ─── GET: List published resources (PUBLIC) ─────────────
 export async function GET(req: NextRequest) {

@@ -8,7 +8,7 @@
  */
 
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import dns from "dns";

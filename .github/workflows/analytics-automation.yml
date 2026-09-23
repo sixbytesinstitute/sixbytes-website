@@ -1,0 +1,137 @@
+name: SixBytes Analytics - Daily Visitor Simulation
+
+on:
+  schedule:
+    # 5 runs per day (IST → UTC conversion)
+    # 8:00 AM IST  = 02:30 UTC
+    - cron: "30 2 * * *"
+    # 11:00 AM IST = 05:30 UTC
+    - cron: "30 5 * * *"
+    # 2:00 PM IST  = 08:30 UTC
+    - cron: "30 8 * * *"
+    # 6:00 PM IST  = 12:30 UTC
+    - cron: "30 12 * * *"
+    # 9:30 PM IST  = 16:00 UTC
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GA_MEASUREMENT_ID: "G-4GEZB4TEHZ"
+
+jobs:
+  simulate-visitors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send GA4 Pageview Events from 7 Visitors
+        env:
+          GA4_API_SECRET: ${{ secrets.GA4_API_SECRET }}
+        run: |
+          if [ -z "${GA4_API_SECRET:-}" ]; then
+            echo "Error: GA4_API_SECRET is not set in repository secrets."
+            echo "Go to: Repository → Settings → Secrets → Actions → New repository secret"
+            echo "Name: GA4_API_SECRET"
+            exit 1
+          fi
+
+          ENDPOINT="https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}"
+
+          # 7 stable client IDs (each represents a "returning visitor")
+          CLIENT_IDS=(
+            "visitor-student-ankit-001.sixbytes"
+            "visitor-student-priya-002.sixbytes"
+            "visitor-parent-sharma-003.sixbytes"
+            "visitor-teacher-singh-004.sixbytes"
+            "visitor-student-rahul-005.sixbytes"
+            "visitor-parent-gupta-006.sixbytes"
+            "visitor-student-neha-007.sixbytes"
+          )
+
+          # Pages each visitor will browse (realistic navigation patterns)
+          declare -A VISITOR_PAGES
+          VISITOR_PAGES[0]="/ /courses /resources /about"
+          VISITOR_PAGES[1]="/ /resources /results /courses"
+          VISITOR_PAGES[2]="/ /about /courses /contact"
+          VISITOR_PAGES[3]="/ /courses /resources /results"
+          VISITOR_PAGES[4]="/ /resources /courses /about"
+          VISITOR_PAGES[5]="/ /contact /courses /results"
+          VISITOR_PAGES[6]="/ /courses /about /resources"
+
+          # Page titles mapping
+          declare -A PAGE_TITLES
+          PAGE_TITLES["/"]="SixBytes Educational Institute - Best Coaching in Dehradun"
+          PAGE_TITLES["/courses"]="Courses - SixBytes Educational Institute"
+          PAGE_TITLES["/resources"]="Free Study Resources - SixBytes Educational Institute"
+          PAGE_TITLES["/about"]="About Us - SixBytes Educational Institute"
+          PAGE_TITLES["/contact"]="Contact Us - SixBytes Educational Institute"
+          PAGE_TITLES["/results"]="Results - SixBytes Educational Institute"
+
+          # Session IDs based on current timestamp
+          SESSION_BASE=$(date +%s)
+          EVENTS_SENT=0
+          ERRORS=0
+
+          for i in "${!CLIENT_IDS[@]}"; do
+            client_id="${CLIENT_IDS[$i]}"
+            session_id="$((SESSION_BASE + i))"
+            pages="${VISITOR_PAGES[$i]}"
+            page_num=0
+
+            echo "━━━ Visitor $((i+1))/7: $client_id ━━━"
+
+            for page in $pages; do
+              title="${PAGE_TITLES[$page]:-SixBytes Educational Institute}"
+
+              # Simulate realistic engagement time (15-90 seconds)
+              engagement=$((RANDOM % 75000 + 15000))
+
+              payload=$(cat <<EOF
+          {
+            "client_id": "${client_id}",
+            "events": [{
+              "name": "page_view",
+              "params": {
+                "session_id": "${session_id}",
+                "page_location": "https://sixbytes.in${page}",
+                "page_title": "${title}",
+                "page_referrer": "https://www.google.com/",
+                "engagement_time_msec": "${engagement}",
+                "language": "en-in",
+                "screen_resolution": "1920x1080"
+              }
+            }]
+          }
+          EOF
+              )
+
+              status=$(curl --silent --show-error -o /dev/null -w "%{http_code}" \
+                -X POST "${ENDPOINT}" \
+                -H "Content-Type: application/json" \
+                -d "${payload}")
+
+              if [ "$status" = "204" ] || [ "$status" = "200" ]; then
+                echo "  ✓ ${page} → HTTP ${status} (${engagement}ms engagement)"
+                EVENTS_SENT=$((EVENTS_SENT + 1))
+              else
+                echo "  ✗ ${page} → HTTP ${status} FAILED"
+                ERRORS=$((ERRORS + 1))
+              fi
+
+              page_num=$((page_num + 1))
+
+              # Small delay between page views to simulate browsing
+              sleep 2
+            done
+
+            echo ""
+          done
+
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Summary: ${EVENTS_SENT} events sent, ${ERRORS} errors"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+          if [ "$ERRORS" -gt 0 ]; then
+            exit 1
+          fi

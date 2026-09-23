@@ -2,7 +2,8 @@
 
 import Script from "next/script"
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-4GEZB4TEHZ"
+const rawGaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-4GEZB4TEHZ"
+const GA_ID = rawGaId.replace(/[^a-zA-Z0-9_-]/g, "").trim() || "G-4GEZB4TEHZ"
 
 /**
  * Google Analytics 4 component.

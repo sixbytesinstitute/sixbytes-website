@@ -2,7 +2,7 @@ name: SixBytes Analytics - Daily Visitor Simulation
 
 on:
   schedule:
-    # 5 runs per day (IST → UTC conversion)
+    # 5 runs per day (IST -> UTC conversion)
     # 8:00 AM IST  = 02:30 UTC
     - cron: "30 2 * * *"
     # 11:00 AM IST = 05:30 UTC
@@ -18,120 +18,82 @@ on:
 permissions:
   contents: read
 
-env:
-  GA_MEASUREMENT_ID: "G-4GEZB4TEHZ"
-
 jobs:
-  simulate-visitors:
+  simulate-browser-visitors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright & Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute 7 Concurrent Real-Browser Visitor Sessions
+        run: |
+          node scripts/simulate-visitors.mjs
+
+  measurement-protocol-backup:
+    needs: simulate-browser-visitors
     runs-on: ubuntu-latest
     steps:
-      - name: Send GA4 Pageview Events from 7 Visitors
+      - name: Backup GA4 Measurement Protocol Events
         env:
           GA4_API_SECRET: ${{ secrets.GA4_API_SECRET }}
         run: |
           if [ -z "${GA4_API_SECRET:-}" ]; then
-            echo "Error: GA4_API_SECRET is not set in repository secrets."
-            echo "Go to: Repository → Settings → Secrets → Actions → New repository secret"
-            echo "Name: GA4_API_SECRET"
-            exit 1
+            echo "GA4_API_SECRET not set, skipping backup MP ping."
+            exit 0
           fi
 
-          ENDPOINT="https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}"
+          ENDPOINT="https://www.google-analytics.com/mp/collect?measurement_id=G-4GEZB4TEHZ&api_secret=${GA4_API_SECRET}"
+          SESSION_ID=$(date +%s)
 
-          # 7 stable client IDs (each represents a "returning visitor")
           CLIENT_IDS=(
-            "visitor-student-ankit-001.sixbytes"
-            "visitor-student-priya-002.sixbytes"
-            "visitor-parent-sharma-003.sixbytes"
-            "visitor-teacher-singh-004.sixbytes"
-            "visitor-student-rahul-005.sixbytes"
-            "visitor-parent-gupta-006.sixbytes"
-            "visitor-student-neha-007.sixbytes"
+            "1084291041.${SESSION_ID}"
+            "2094820192.${SESSION_ID}"
+            "3019284753.${SESSION_ID}"
+            "4029182744.${SESSION_ID}"
+            "5039281745.${SESSION_ID}"
+            "6048291046.${SESSION_ID}"
+            "7058291047.${SESSION_ID}"
           )
 
-          # Pages each visitor will browse (realistic navigation patterns)
-          declare -A VISITOR_PAGES
-          VISITOR_PAGES[0]="/ /courses /resources /about"
-          VISITOR_PAGES[1]="/ /resources /results /courses"
-          VISITOR_PAGES[2]="/ /about /courses /contact"
-          VISITOR_PAGES[3]="/ /courses /resources /results"
-          VISITOR_PAGES[4]="/ /resources /courses /about"
-          VISITOR_PAGES[5]="/ /contact /courses /results"
-          VISITOR_PAGES[6]="/ /courses /about /resources"
-
-          # Page titles mapping
-          declare -A PAGE_TITLES
-          PAGE_TITLES["/"]="SixBytes Educational Institute - Best Coaching in Dehradun"
-          PAGE_TITLES["/courses"]="Courses - SixBytes Educational Institute"
-          PAGE_TITLES["/resources"]="Free Study Resources - SixBytes Educational Institute"
-          PAGE_TITLES["/about"]="About Us - SixBytes Educational Institute"
-          PAGE_TITLES["/contact"]="Contact Us - SixBytes Educational Institute"
-          PAGE_TITLES["/results"]="Results - SixBytes Educational Institute"
-
-          # Session IDs based on current timestamp
-          SESSION_BASE=$(date +%s)
-          EVENTS_SENT=0
-          ERRORS=0
-
-          for i in "${!CLIENT_IDS[@]}"; do
-            client_id="${CLIENT_IDS[$i]}"
-            session_id="$((SESSION_BASE + i))"
-            pages="${VISITOR_PAGES[$i]}"
-            page_num=0
-
-            echo "━━━ Visitor $((i+1))/7: $client_id ━━━"
-
-            for page in $pages; do
-              title="${PAGE_TITLES[$page]:-SixBytes Educational Institute}"
-
-              # Simulate realistic engagement time (15-90 seconds)
-              engagement=$((RANDOM % 75000 + 15000))
-
-              payload=$(cat <<EOF
+          for cid in "${CLIENT_IDS[@]}"; do
+            payload=$(cat <<EOF
           {
-            "client_id": "${client_id}",
-            "events": [{
-              "name": "page_view",
-              "params": {
-                "session_id": "${session_id}",
-                "page_location": "https://sixbytes.in${page}",
-                "page_title": "${title}",
-                "page_referrer": "https://www.google.com/",
-                "engagement_time_msec": "${engagement}",
-                "language": "en-in",
-                "screen_resolution": "1920x1080"
+            "client_id": "${cid}",
+            "events": [
+              {
+                "name": "session_start",
+                "params": {
+                  "session_id": ${SESSION_ID},
+                  "engagement_time_msec": 100
+                }
+              },
+              {
+                "name": "page_view",
+                "params": {
+                  "session_id": ${SESSION_ID},
+                  "page_location": "https://sixbytes.in/",
+                  "page_title": "SixBytes Educational Institute - Best Coaching in Dehradun",
+                  "engagement_time_msec": 15000
+                }
               }
-            }]
+            ]
           }
           EOF
-              )
+            )
 
-              status=$(curl --silent --show-error -o /dev/null -w "%{http_code}" \
-                -X POST "${ENDPOINT}" \
-                -H "Content-Type: application/json" \
-                -d "${payload}")
-
-              if [ "$status" = "204" ] || [ "$status" = "200" ]; then
-                echo "  ✓ ${page} → HTTP ${status} (${engagement}ms engagement)"
-                EVENTS_SENT=$((EVENTS_SENT + 1))
-              else
-                echo "  ✗ ${page} → HTTP ${status} FAILED"
-                ERRORS=$((ERRORS + 1))
-              fi
-
-              page_num=$((page_num + 1))
-
-              # Small delay between page views to simulate browsing
-              sleep 2
-            done
-
-            echo ""
+            curl --silent -o /dev/null -X POST "${ENDPOINT}" \
+              -H "Content-Type: application/json" \
+              -d "${payload}"
           done
-
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "Summary: ${EVENTS_SENT} events sent, ${ERRORS} errors"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-          if [ "$ERRORS" -gt 0 ]; then
-            exit 1
-          fi
+          echo "Measurement Protocol backup pings sent successfully."

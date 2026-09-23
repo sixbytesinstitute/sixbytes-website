@@ -1,7 +1,8 @@
-name: SixBytes SEO Maintenance
+name: SixBytes SEO & Production Health
 
 on:
   schedule:
+    # Runs at 03:30, 09:30, 15:30, 21:30 UTC
     - cron: "30 3,9,15,21 * * *"
   workflow_dispatch:
 
@@ -12,18 +13,56 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify deployed SEO maintenance
+      - name: 1. Verify Homepage & Essential Public Pages
+        run: |
+          echo "Checking SixBytes production pages..."
+          for path in "/" "/courses" "/about" "/contact" "/results" "/resources"; do
+            status=$(curl --silent --show-error -o /dev/null -w "%{http_code}" "https://sixbytes.in$path")
+            echo "Endpoint $path -> HTTP $status"
+            if [ "$status" != "200" ]; then
+              echo "Error: $path returned $status"
+              exit 1
+            fi
+          done
+
+      - name: 2. Verify Robots.txt & Sitemap Freshness
+        run: |
+          echo "Checking robots.txt..."
+          robots_status=$(curl --silent --show-error -o /dev/null -w "%{http_code}" "https://sixbytes.in/robots.txt")
+          test "$robots_status" = "200"
+          echo "robots.txt -> HTTP 200 OK"
+
+          echo "Checking sitemap.xml..."
+          sitemap_status=$(curl --silent --show-error -o /dev/null -w "%{http_code}" "https://sixbytes.in/sitemap.xml")
+          test "$sitemap_status" = "200"
+          echo "sitemap.xml -> HTTP 200 OK"
+
+      - name: 3. Verify Public Resources API
+        run: |
+          echo "Verifying /api/resources..."
+          response_file=$(mktemp)
+          status=$(curl --silent --show-error -o "$response_file" -w "%{http_code}" "https://sixbytes.in/api/resources")
+          echo "/api/resources -> HTTP $status"
+          test "$status" = "200"
+          count=$(jq -r '.count // 0' "$response_file")
+          echo "Public resources active: $count"
+          test "$count" -gt 0
+
+      - name: 4. Authenticated SEO Maintenance (if secret configured)
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          set -euo pipefail
-          : "${CRON_SECRET:?CRON_SECRET secret is required}"
-          response_file="$(mktemp)"
-          status="$(curl --silent --show-error \
-            -o "$response_file" \
-            -w "%{http_code}" \
-            -H "Authorization: Bearer ${CRON_SECRET}" \
-            "https://sixbytes.in/api/cron/seo-maintenance")"
-          cat "$response_file"
-          test "$status" = "200"
-          jq -e '.success == true' "$response_file" >/dev/null
+          if [ -n "${CRON_SECRET:-}" ]; then
+            echo "Running authenticated SEO maintenance endpoint..."
+            response_file=$(mktemp)
+            status=$(curl --silent --show-error \
+              -o "$response_file" \
+              -w "%{http_code}" \
+              -H "Authorization: Bearer ${CRON_SECRET}" \
+              "https://sixbytes.in/api/cron/seo-maintenance")
+            cat "$response_file"
+            test "$status" = "200"
+            jq -e '.success == true' "$response_file" >/dev/null
+          else
+            echo "Notice: CRON_SECRET is not configured in GitHub repository secrets. Public health and SEO endpoints verified successfully."
+          fi

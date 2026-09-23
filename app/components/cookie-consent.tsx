@@ -28,13 +28,17 @@ export default function CookieConsent() {
   const handleAccept = () => {
     // Set consent cookie for 1 year
     document.cookie = `${CONSENT_COOKIE}=accepted; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
+    if (typeof window !== "undefined" && (window as unknown as { gtag?: Function }).gtag) {
+      (window as unknown as { gtag: Function }).gtag("consent", "update", { analytics_storage: "granted" })
+    }
     setVisible(false)
-    // Reload to trigger GA4 script loading
-    window.location.reload()
   }
 
   const handleDecline = () => {
     document.cookie = `${CONSENT_COOKIE}=declined; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
+    if (typeof window !== "undefined" && (window as unknown as { gtag?: Function }).gtag) {
+      (window as unknown as { gtag: Function }).gtag("consent", "update", { analytics_storage: "denied" })
+    }
     setVisible(false)
   }
 

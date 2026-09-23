@@ -5,6 +5,7 @@ import Resource from "@/models/Resource";
 import { withAuth } from "@/lib/middleware-auth";
 import { submitUrlsToIndexNow } from "@/lib/indexnow";
 import { isSafeResourceHtml, SEO_LIMITS } from "@/lib/seo-policy";
+import { escapeRegex } from "@/lib/sanitize";
 
 // ─── Slug generator ─────────────────────────────────────
 function generateSlug(title: string): string {
@@ -26,7 +27,7 @@ export const POST = withAuth(
       const body = await req.json();
       const {
         title, slug, metaDescription, subject,
-        targetClass, chapter, content, keywords, published,
+        targetClass, board, chapter, content, keywords, published, resourceType,
       } = body;
 
       if (!title || !metaDescription || !subject || !targetClass || !content) {
@@ -75,10 +76,12 @@ export const POST = withAuth(
         metaDescription: metaDescription.trim(),
         subject,
         targetClass,
+        board: board || "CBSE & ICSE",
         chapter: chapter || null,
         content,
         keywords: keywords || [],
         published: published || false,
+        resourceType: resourceType || "topic_guide",
         createdBy: user.userId,
       });
 
@@ -130,10 +133,11 @@ export const GET = withAuth(
       if (subject) filter.subject = subject;
       if (targetClass) filter.targetClass = targetClass;
       if (search) {
+        const safeSearch = escapeRegex(search);
         filter.$or = [
-          { title: { $regex: search, $options: "i" } },
-          { metaDescription: { $regex: search, $options: "i" } },
-          { keywords: { $regex: search, $options: "i" } },
+          { title: { $regex: safeSearch, $options: "i" } },
+          { metaDescription: { $regex: safeSearch, $options: "i" } },
+          { keywords: { $regex: safeSearch, $options: "i" } },
         ];
       }
 

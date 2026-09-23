@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
+import mongoose from "mongoose";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
 import { withAuth } from "@/lib/middleware-auth";
@@ -12,11 +13,19 @@ export const PUT = withAuth(
     try {
       await connectDB();
       const id = params?.id;
+
+      if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        return NextResponse.json(
+          { success: false, error: "Invalid resource ID" },
+          { status: 400 }
+        );
+      }
+
       const body = await req.json();
 
       const allowedFields = [
         "title", "slug", "metaDescription", "subject",
-        "targetClass", "chapter", "content", "keywords", "published",
+        "targetClass", "board", "chapter", "content", "keywords", "published", "resourceType",
       ];
 
       const updates: Record<string, unknown> = {};
@@ -92,6 +101,13 @@ export const DELETE = withAuth(
       await connectDB();
       const id = params?.id;
 
+      if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        return NextResponse.json(
+          { success: false, error: "Invalid resource ID" },
+          { status: 400 }
+        );
+      }
+
       const resource = await Resource.findByIdAndDelete(id);
 
       if (!resource) {
@@ -120,3 +136,42 @@ export const DELETE = withAuth(
   },
   ["admin", "manager"]
 );
+
+// ─── GET: Fetch single resource with full content ───────
+export const GET = withAuth(
+  async (req: NextRequest, { params }) => {
+    try {
+      await connectDB();
+      const id = params?.id;
+
+      if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        return NextResponse.json(
+          { success: false, error: "Invalid resource ID" },
+          { status: 400 }
+        );
+      }
+
+      const resource = await Resource.findById(id).lean();
+
+      if (!resource) {
+        return NextResponse.json(
+          { success: false, error: "Resource not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        resource,
+      });
+    } catch (error) {
+      console.error("GET RESOURCE ERROR:", error);
+      return NextResponse.json(
+        { success: false, error: "Failed to fetch resource" },
+        { status: 500 }
+      );
+    }
+  },
+  ["admin", "manager"]
+);
+

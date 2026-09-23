@@ -10,6 +10,7 @@ import ShimmerLine from "./components/ui/shimmer-line"
 import OrbitRings from "./components/ui/orbit-rings"
 import PremiumIcon, { type IconName } from "./components/ui/premium-icon"
 import FAQItem from "./components/ui/faq-item"
+import { safeJsonLdStringify } from "@/lib/sanitize"
 
 export const metadata = {
   title: { absolute: "Coaching Institute in Dehradun | SixBytes" },
@@ -251,7 +252,7 @@ export default function Home() {
       {/* FAQ Schema for Google Rich Snippets */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(faqJsonLd) }}
       />
 
       {/* ══════════════════════════════════════════════════════════════════════

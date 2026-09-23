@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublishedResource } from "@/lib/resources";
 import { canonicalUrl, normalizeMetaDescription, normalizeSeoTitle, PUBLIC_SITE_URL } from "@/lib/seo-policy";
+import { extractFaqSchemaFromHtml } from "@/lib/resource-blocks";
+import { safeJsonLdStringify } from "@/lib/sanitize";
 import ResourceDetailClient, { ResourceDetail } from "./resource-detail-client";
 
 export const revalidate = 300;
@@ -123,6 +125,10 @@ export default async function ResourceDetailPage({ params }: PageProps) {
     learningResourceType:
       serialized.resourceType === "question_bank"
         ? "Assessment / Solved Board Questions"
+        : serialized.resourceType === "program_tutorial"
+        ? "Programming Tutorial / Practical Lab"
+        : serialized.resourceType === "formula_sheet"
+        ? "Formula Cheatsheet / Quick Revision"
         : "Concept Guide / Revision Notes",
     educationalAlignment: {
       "@type": "AlignmentObject",
@@ -158,12 +164,22 @@ export default async function ResourceDetailPage({ params }: PageProps) {
     },
   };
 
+  const faqJsonLd = extractFaqSchemaFromHtml(serialized.content);
+
+  // Escaping < as \u003c prevents </script> injection in inline JSON-LD script tags
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(faqJsonLd) }}
+        />
+      )}
       <ResourceDetailClient initialResource={serialized} />
     </>
   );

@@ -75,6 +75,42 @@ const VISITORS = [
       "Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_10 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
     pages: ["/", "/about", "/courses", "/contact"],
   },
+  {
+    name: "Student Rohit (Class 10 PYQ Solutions)",
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+    pages: ["/resources", "/courses", "/"],
+  },
+  {
+    name: "Student Tanvi (Class 12 Maths Formulae)",
+    userAgent:
+      "Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.88 Mobile Safari/537.36",
+    pages: ["/resources", "/courses", "/about"],
+  },
+  {
+    name: "Parent Negi (Premnagar Defence Aspirant)",
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+    pages: ["/courses", "/results", "/contact"],
+  },
+  {
+    name: "Student Ayush (ICSE Physics Revision)",
+    userAgent:
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15",
+    pages: ["/resources", "/courses", "/"],
+  },
+  {
+    name: "Student Mansi (Computer Science Python Notes)",
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0",
+    pages: ["/resources", "/courses", "/results"],
+  },
+  {
+    name: "Parent Chauhan (CBSE Coaching Dehradun)",
+    userAgent:
+      "Mozilla/5.0 (Linux; Android 13; SM-A536B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.99 Mobile Safari/537.36",
+    pages: ["/", "/courses", "/contact"],
+  },
 ]
 
 async function runVisitorSession(browser, visitor, index) {

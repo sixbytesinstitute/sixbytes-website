@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Resource from "@/models/Resource";
+import { escapeRegex } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -30,18 +31,20 @@ export async function GET(req: NextRequest) {
     if (targetClass) filter.targetClass = targetClass;
     if (type) filter.resourceType = type;
     if (board) {
+      const safeBoard = escapeRegex(board);
       filter.$or = [
-        { board: { $regex: board, $options: "i" } },
-        { keywords: { $regex: board, $options: "i" } },
+        { board: { $regex: safeBoard, $options: "i" } },
+        { keywords: { $regex: safeBoard, $options: "i" } },
       ];
     }
     if (search) {
+      const safeSearch = escapeRegex(search);
       const searchConditions = [
-        { title: { $regex: search, $options: "i" } },
-        { metaDescription: { $regex: search, $options: "i" } },
-        { keywords: { $regex: search, $options: "i" } },
-        { board: { $regex: search, $options: "i" } },
-        { subject: { $regex: search, $options: "i" } },
+        { title: { $regex: safeSearch, $options: "i" } },
+        { metaDescription: { $regex: safeSearch, $options: "i" } },
+        { keywords: { $regex: safeSearch, $options: "i" } },
+        { board: { $regex: safeSearch, $options: "i" } },
+        { subject: { $regex: safeSearch, $options: "i" } },
       ];
       if (filter.$or) {
         filter.$and = [{ $or: filter.$or }, { $or: searchConditions }];

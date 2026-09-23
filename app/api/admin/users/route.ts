@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { withAuth } from "@/lib/middleware-auth";
+import { escapeRegex } from "@/lib/sanitize";
 
 // ─── POST: Create a new user (student, manager, or faculty) ──────
 export const POST = withAuth(
@@ -109,9 +110,10 @@ export const GET = withAuth(
       if (role) filter.role = role;
       if (userClass) filter.class = userClass;
       if (search) {
+        const safeSearch = escapeRegex(search);
         filter.$or = [
-          { name: { $regex: search, $options: "i" } },
-          { email: { $regex: search, $options: "i" } },
+          { name: { $regex: safeSearch, $options: "i" } },
+          { email: { $regex: safeSearch, $options: "i" } },
         ];
       }
 

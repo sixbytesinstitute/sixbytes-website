@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
 import { Playfair_Display, Cormorant_Garamond, DM_Sans } from "next/font/google"
 import SiteLayout from "./components/site-layout"
+import { safeJsonLdStringify } from "@/lib/sanitize"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -177,7 +178,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(organizationJsonLd) }}
         />
       </head>
       <body className="bg-obsidian text-cream font-sans antialiased min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">

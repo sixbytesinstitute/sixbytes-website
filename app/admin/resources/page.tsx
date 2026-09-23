@@ -15,6 +15,7 @@ import {
   IconExternalLink,
   IconSparkles,
 } from "@/app/components/ui/icons"
+import ResourceStudio, { type ResourceFormData } from "@/app/components/resources/resource-studio"
 
 interface ResourceRecord {
   _id: string
@@ -23,6 +24,8 @@ interface ResourceRecord {
   metaDescription: string
   subject: string
   targetClass: string
+  board?: string
+  resourceType?: string
   chapter: string | null
   keywords: string[]
   published: boolean
@@ -42,12 +45,14 @@ export default function AdminResourcesPage() {
   const [success, setSuccess] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<ResourceFormData>({
     title: "",
     slug: "",
     metaDescription: "",
     subject: "Mathematics",
     targetClass: "10",
+    board: "CBSE & ICSE",
+    resourceType: "topic_guide",
     chapter: "",
     keywords: "",
     content: "",
@@ -92,6 +97,8 @@ export default function AdminResourcesPage() {
       metaDescription: "",
       subject: "Mathematics",
       targetClass: "10",
+      board: "CBSE & ICSE",
+      resourceType: "topic_guide",
       chapter: "",
       keywords: "",
       content: "",
@@ -102,30 +109,50 @@ export default function AdminResourcesPage() {
     setShowModal(true)
   }
 
-  const handleTitleChange = (val: string) => {
-    const autoSlug = val
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_]+/g, "-")
-      .replace(/-+/g, "-")
-    setForm((prev) => ({
-      ...prev,
-      title: val,
-      slug: !editingId ? autoSlug : prev.slug,
-    }))
+  const openEditModal = async (id: string) => {
+    try {
+      setLoading(true)
+      const res = await fetch(`/api/admin/resources/${id}`)
+      const data = await res.json()
+      if (data.success && data.resource) {
+        const r = data.resource
+        setEditingId(id)
+        setForm({
+          title: r.title || "",
+          slug: r.slug || "",
+          metaDescription: r.metaDescription || "",
+          subject: r.subject || "Mathematics",
+          targetClass: r.targetClass || "10",
+          board: r.board || "CBSE & ICSE",
+          resourceType: r.resourceType || "topic_guide",
+          chapter: r.chapter || "",
+          keywords: Array.isArray(r.keywords) ? r.keywords.join(", ") : (r.keywords || ""),
+          content: r.content || "",
+          published: r.published ?? true,
+        })
+        setError("")
+        setSuccess("")
+        setShowModal(true)
+      } else {
+        setError("Failed to load resource for editing")
+      }
+    } catch (err) {
+      console.error(err)
+      setError("Failed to fetch resource details")
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+  const handleStudioSubmit = async (formData: ResourceFormData) => {
     setError("")
     setSuccess("")
     setSubmitting(true)
 
     const payload = {
-      ...form,
-      keywords: form.keywords
-        ? form.keywords.split(",").map((k) => k.trim()).filter(Boolean)
+      ...formData,
+      keywords: formData.keywords
+        ? formData.keywords.split(",").map((k) => k.trim()).filter(Boolean)
         : [],
     }
 
@@ -234,6 +261,25 @@ export default function AdminResourcesPage() {
         </div>
       )}
 
+      {success && (
+        <div
+          role="status"
+          className="flex items-center justify-between gap-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-sm text-emerald-200"
+        >
+          <div className="flex items-center gap-2.5">
+            <IconCheck size={18} className="text-emerald-400 shrink-0" />
+            <p className="font-semibold text-emerald-100">{success}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSuccess("")}
+            className="p-1 text-emerald-400/60 hover:text-emerald-300 transition-colors cursor-pointer"
+          >
+            <IconX size={16} />
+          </button>
+        </div>
+      )}
+
       {/* Filter & Search Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-2 relative">
@@ -305,14 +351,33 @@ export default function AdminResourcesPage() {
                       </Link>
                     </td>
 
-                    {/* Class & Subject */}
+                    {/* Class, Subject & Type */}
                     <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-white/[0.06] text-cream border border-white/10">
                           Class {r.targetClass}
                         </span>
                         <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20">
                           {r.subject}
+                        </span>
+                        <span
+                          className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${
+                            r.resourceType === "question_bank"
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                              : r.resourceType === "program_tutorial"
+                              ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+                              : r.resourceType === "formula_sheet"
+                              ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
+                              : "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                          }`}
+                        >
+                          {r.resourceType === "question_bank"
+                            ? "Q&A Bank"
+                            : r.resourceType === "program_tutorial"
+                            ? "Code Lab"
+                            : r.resourceType === "formula_sheet"
+                            ? "Formulas"
+                            : "Guide"}
                         </span>
                       </div>
                     </td>
@@ -348,6 +413,12 @@ export default function AdminResourcesPage() {
                     <td className="px-5 py-3.5 text-right whitespace-nowrap">
                       <div className="inline-flex items-center gap-2">
                         <button
+                          onClick={() => openEditModal(r._id)}
+                          className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-orange-500/20 text-orange-400 hover:bg-orange-500/10 transition-colors cursor-pointer"
+                        >
+                          Edit
+                        </button>
+                        <button
                           onClick={() => handleTogglePublish(r)}
                           className="text-xs font-semibold px-2.5 py-1 rounded-lg border border-white/10 text-muted-custom hover:text-cream hover:bg-white/[0.04] transition-colors cursor-pointer"
                         >
@@ -369,198 +440,16 @@ export default function AdminResourcesPage() {
         )}
       </div>
 
-      {/* Publish / Edit Modal */}
+      {/* Visual Resource Studio & Live Preview */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
-            onClick={() => setShowModal(false)}
-          />
-
-          <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl bg-[#0f1318] border border-white/10 p-6 sm:p-7 space-y-5 shadow-2xl shadow-black/90 backdrop-blur-2xl animate-in zoom-in-95 duration-200 scrollbar-thin scrollbar-thumb-white/10 font-sans">
-            {/* Modal Header */}
-            <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
-              <div>
-                <div className="inline-flex items-center gap-1.5 text-[9px] uppercase font-bold tracking-[0.2em] text-orange-400 mb-1">
-                  SEO Content Studio
-                </div>
-                <h2 className="text-xl font-display font-bold text-cream">
-                  {editingId ? "Edit SEO Article" : "Publish New Topic / Chapter"}
-                </h2>
-              </div>
-              <button
-                onClick={() => setShowModal(false)}
-                className="p-1 rounded-lg text-muted-custom hover:text-cream hover:bg-white/[0.06] transition-colors"
-                aria-label="Close dialog"
-              >
-                <IconX size={20} />
-              </button>
-            </div>
-
-            {error && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-300 flex items-center gap-2">
-                <IconAlertCircle size={16} className="text-red-400 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Title */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80">
-                    Target Search Headline (Include Class, Subject & Topic)
-                  </label>
-                  <span className={`text-[10px] ${form.title.length > 60 ? "text-amber-400" : "text-muted-custom/60"}`}>
-                    {form.title.length}/60 chars
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  required
-                  maxLength={60}
-                  placeholder="e.g. CBSE Class 10 Science Chapter 10 Light Reflection Formulas & Important Questions"
-                  value={form.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-navy-mid/70 border border-white/10 hover:border-white/20 text-cream placeholder:text-muted-custom/60 text-xs sm:text-sm focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/30"
-                />
-              </div>
-
-              {/* Slug */}
-              <div className="space-y-1">
-                <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80">
-                  Permanent URL Slug
-                </label>
-                <div className="flex items-center rounded-xl bg-navy-mid/70 border border-white/10 px-3.5 py-1">
-                  <span className="text-xs text-muted-custom/60 font-mono">/resources/</span>
-                  <input
-                    type="text"
-                    required
-                    placeholder="class-10-light-reflection-notes"
-                    value={form.slug}
-                    onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                    className="flex-1 py-1.5 px-1 bg-transparent text-cream placeholder:text-muted-custom/60 text-xs sm:text-sm focus:outline-none font-mono"
-                  />
-                </div>
-              </div>
-
-              {/* Meta Description */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80">
-                    Google Meta Description (Snippet)
-                  </label>
-                  <span className={`text-[10px] ${form.metaDescription.length > 160 ? "text-amber-400" : "text-muted-custom/60"}`}>
-                    {form.metaDescription.length}/160 chars
-                  </span>
-                </div>
-                <textarea
-                  required
-                  maxLength={160}
-                  rows={2}
-                  placeholder="Free comprehensive study notes, formula cheatsheet, and top 10 solved questions for CBSE Class 10 Science Light chapter by SixBytes Dehradun."
-                  value={form.metaDescription}
-                  onChange={(e) => setForm({ ...form, metaDescription: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-navy-mid/70 border border-white/10 hover:border-white/20 text-cream placeholder:text-muted-custom/60 text-xs sm:text-sm focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/30 resize-none"
-                />
-              </div>
-
-              {/* Class, Subject, Chapter */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <CustomSelect
-                    label="Target Class"
-                    options={classOptions}
-                    value={form.targetClass}
-                    onChange={(val) => setForm({ ...form, targetClass: val })}
-                  />
-                </div>
-                <div>
-                  <CustomSelect
-                    label="Subject"
-                    options={subjectFormOptions}
-                    value={form.subject}
-                    onChange={(val) => setForm({ ...form, subject: val })}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80 mb-1.5">
-                    Chapter Name (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Chapter 10: Light"
-                    value={form.chapter}
-                    onChange={(e) => setForm({ ...form, chapter: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-navy-mid/70 border border-white/10 hover:border-white/20 text-cream placeholder:text-muted-custom/60 text-xs sm:text-sm focus:outline-none focus:border-orange-500/60"
-                  />
-                </div>
-              </div>
-
-              {/* Keywords */}
-              <div className="space-y-1">
-                <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80">
-                  Target Search Keywords (comma-separated)
-                </label>
-                <input
-                  type="text"
-                  placeholder="cbse class 10 science notes, light chapter questions, physics formula sheet dehradun"
-                  value={form.keywords}
-                  onChange={(e) => setForm({ ...form, keywords: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-navy-mid/70 border border-white/10 hover:border-white/20 text-cream placeholder:text-muted-custom/60 text-xs sm:text-sm focus:outline-none focus:border-orange-500/60"
-                />
-              </div>
-
-              {/* Content Body */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <label className="block text-[11px] font-semibold uppercase tracking-wider text-cream/80">
-                    Article Body Content (HTML & Clean Formatting)
-                  </label>
-                  <span className="text-[10px] text-orange-400 flex items-center gap-1">
-                    <IconSparkles size={12} />
-                    <span>Supports &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;pre&gt;</span>
-                  </span>
-                </div>
-                <textarea
-                  required
-                  rows={8}
-                  placeholder={`<h2>1. Core Concepts of Reflection</h2>\n<p>Light travels in straight lines. When light hits an opaque surface, it bounces back...</p>\n\n<h2>2. Essential Formulas</h2>\n<ul>\n  <li><strong>Mirror Formula:</strong> 1/f = 1/v + 1/u</li>\n  <li><strong>Magnification:</strong> m = -v/u = h'/h</li>\n</ul>`}
-                  value={form.content}
-                  onChange={(e) => setForm({ ...form, content: e.target.value })}
-                  className="w-full font-mono text-xs px-4 py-3 rounded-xl bg-navy-mid/70 border border-white/10 hover:border-white/20 text-cream placeholder:text-muted-custom/50 focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/30 leading-relaxed"
-                />
-              </div>
-
-              {/* Publish Checkbox */}
-              <div className="pt-2">
-                <label className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.08] cursor-pointer hover:bg-white/[0.04] transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={form.published}
-                    onChange={(e) => setForm({ ...form, published: e.target.checked })}
-                    className="w-4 h-4 rounded border-white/20 text-orange-500 focus:ring-orange-500 bg-navy-mid"
-                  />
-                  <div>
-                    <p className="text-xs font-semibold text-cream">Publish immediately</p>
-                    <p className="text-[11px] text-muted-custom">When checked, article is publicly discoverable at /resources/{form.slug || "slug"}</p>
-                  </div>
-                </label>
-              </div>
-
-              {/* Submit Button */}
-              <div className="pt-3">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-orange-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
-                >
-                  {submitting ? "Publishing to Search Index..." : editingId ? "Save Changes" : "Publish SEO Article"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <ResourceStudio
+          initialData={form}
+          editingId={editingId}
+          onSubmit={handleStudioSubmit}
+          onClose={() => setShowModal(false)}
+          submitting={submitting}
+          error={error}
+        />
       )}
     </div>
   )

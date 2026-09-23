@@ -1,21 +1,13 @@
-import { connectDB } from "@/lib/mongodb";
-import Student from "@/models/Student";
 import { NextResponse } from "next/server";
 
-export async function DELETE(req, { params }) {
-  try {
-    await connectDB();
-
-    await Student.findByIdAndDelete(params.id);
-
-    return NextResponse.json({
-      success: true,
-      message: "Student deleted",
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
-  }
+// Security Hardening: Deprecated unauthenticated prototype route
+export async function DELETE() {
+  return NextResponse.json(
+    {
+      success: false,
+      deprecated: true,
+      error: "This prototype endpoint has been deprecated. Use authenticated portal routes (/api/admin/users).",
+    },
+    { status: 410 }
+  );
 }

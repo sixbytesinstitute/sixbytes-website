@@ -10,7 +10,12 @@ export async function POST(req: Request) {
 
     const { email, password } = await req.json();
 
-    if (!email || !password) {
+    if (
+      typeof email !== "string" ||
+      typeof password !== "string" ||
+      !email.trim() ||
+      !password
+    ) {
       return NextResponse.json(
         { success: false, error: "Please provide both email and password" },
         { status: 400 }
@@ -25,7 +30,7 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { success: false, error: "No account found with this email" },
+        { success: false, error: "Invalid email or password. Please try again." },
         { status: 401 }
       );
     }
@@ -35,7 +40,7 @@ export async function POST(req: Request) {
 
     if (!isMatch) {
       return NextResponse.json(
-        { success: false, error: "Incorrect password. Please try again." },
+        { success: false, error: "Invalid email or password. Please try again." },
         { status: 401 }
       );
     }

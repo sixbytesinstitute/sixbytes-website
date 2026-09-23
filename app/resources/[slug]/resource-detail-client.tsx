@@ -116,6 +116,34 @@ export default function ResourceDetailClient({
 
   const isLight = theme === "light";
   const boardName = resource.board || "CBSE & ICSE";
+  const typeBadge =
+    resource.resourceType === "question_bank"
+      ? {
+          label: "Solved Board Q&A",
+          className: isLight
+            ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+            : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+        }
+      : resource.resourceType === "program_tutorial"
+      ? {
+          label: "Programming Lab",
+          className: isLight
+            ? "bg-cyan-50 text-cyan-800 border-cyan-200"
+            : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+        }
+      : resource.resourceType === "formula_sheet"
+      ? {
+          label: "Formula Cheatsheet",
+          className: isLight
+            ? "bg-amber-50 text-amber-800 border-amber-200"
+            : "bg-amber-500/10 text-amber-300 border-amber-500/20",
+        }
+      : {
+          label: "Concept Topic Guide",
+          className: isLight
+            ? "bg-purple-50 text-purple-800 border-purple-200"
+            : "bg-purple-500/10 text-purple-400 border-purple-500/20",
+        };
 
   return (
     <div
@@ -227,6 +255,11 @@ export default function ResourceDetailClient({
         >
           {/* Metadata Badges */}
           <div className="flex items-center gap-2 flex-wrap">
+            <span
+              className={`text-[10px] font-bold px-3 py-1 rounded-full border ${typeBadge.className}`}
+            >
+              {typeBadge.label}
+            </span>
             <span
               className={`text-[10px] font-bold px-3 py-1 rounded-full border ${
                 isLight

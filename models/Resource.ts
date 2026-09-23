@@ -38,7 +38,7 @@ const ResourceSchema = new mongoose.Schema({
   },
   resourceType: {
     type: String,
-    enum: ["topic_guide", "question_bank", "formula_sheet"],
+    enum: ["topic_guide", "question_bank", "formula_sheet", "program_tutorial"],
     default: "topic_guide",
     index: true,
   },

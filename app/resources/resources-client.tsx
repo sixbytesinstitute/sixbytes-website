@@ -206,8 +206,10 @@ export default function ResourcesPage({ initialResources }: { initialResources: 
             >
               {[
                 { label: "All Study Resources", value: "" },
-                { label: "Full Chapter Concept Guides", value: "topic_guide" },
-                { label: "Solved Board Questions (Q&A)", value: "question_bank" },
+                { label: "Concept Guides", value: "topic_guide" },
+                { label: "Solved Questions (Q&A)", value: "question_bank" },
+                { label: "Programming Labs", value: "program_tutorial" },
+                { label: "Formula Sheets", value: "formula_sheet" },
               ].map((tab) => {
                 const isActive = filterType === tab.value
                 return (
@@ -217,7 +219,7 @@ export default function ResourcesPage({ initialResources }: { initialResources: 
                       setFilterType(tab.value)
                       setLoading(true)
                     }}
-                    className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                       isActive
                         ? "bg-orange-500 text-white shadow-md shadow-orange-500/25"
                         : isLight
@@ -377,7 +379,34 @@ export default function ResourcesPage({ initialResources }: { initialResources: 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {resources.map((item) => {
               const boardLabel = item.board || "CBSE & ICSE"
-              const isQA = item.resourceType === "question_bank"
+              const typeBadge =
+                item.resourceType === "question_bank"
+                  ? {
+                      label: "Solved Board Q&A",
+                      className: isLight
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                        : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+                    }
+                  : item.resourceType === "program_tutorial"
+                  ? {
+                      label: "Programming Lab",
+                      className: isLight
+                        ? "bg-cyan-50 text-cyan-800 border-cyan-200"
+                        : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+                    }
+                  : item.resourceType === "formula_sheet"
+                  ? {
+                      label: "Formula Cheatsheet",
+                      className: isLight
+                        ? "bg-amber-50 text-amber-800 border-amber-200"
+                        : "bg-amber-500/10 text-amber-300 border-amber-500/20",
+                    }
+                  : {
+                      label: "Concept Topic Guide",
+                      className: isLight
+                        ? "bg-purple-50 text-purple-800 border-purple-200"
+                        : "bg-purple-500/10 text-purple-400 border-purple-500/20",
+                    }
               return (
                 <Link
                   key={item._id}
@@ -392,17 +421,9 @@ export default function ResourcesPage({ initialResources }: { initialResources: 
                     {/* Header Tags */}
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
-                        className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
-                          isQA
-                            ? isLight
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                              : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                            : isLight
-                            ? "bg-purple-50 text-purple-800 border-purple-200"
-                            : "bg-purple-500/10 text-purple-400 border-purple-500/20"
-                        }`}
+                        className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${typeBadge.className}`}
                       >
-                        {isQA ? "Solved Board Q&A" : "Concept Topic Guide"}
+                        {typeBadge.label}
                       </span>
 
                       <span

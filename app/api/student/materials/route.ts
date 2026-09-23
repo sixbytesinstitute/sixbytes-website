@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Material from "@/models/Material";
 import { withAuth } from "@/lib/middleware-auth";
+import { escapeRegex } from "@/lib/sanitize";
 
 // ─── GET: Materials for student's class ─────────────────
 export const GET = withAuth(
@@ -24,7 +25,7 @@ export const GET = withAuth(
       if (subject) filter.subject = subject;
       if (category) filter.category = category;
       if (search) {
-        filter.title = { $regex: search, $options: "i" };
+        filter.title = { $regex: escapeRegex(search), $options: "i" };
       }
 
       const materials = await Material.find(filter)

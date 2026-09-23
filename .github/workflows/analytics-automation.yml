@@ -64,6 +64,11 @@ jobs:
             "5039281745.${SESSION_ID}"
             "6048291046.${SESSION_ID}"
             "7058291047.${SESSION_ID}"
+            "8068291048.${SESSION_ID}"
+            "9078291049.${SESSION_ID}"
+            "1018291050.${SESSION_ID}"
+            "1128291051.${SESSION_ID}"
+            "1238291052.${SESSION_ID}"
           )
 
           for cid in "${CLIENT_IDS[@]}"; do

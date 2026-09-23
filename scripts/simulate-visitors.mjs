@@ -4,51 +4,81 @@ const BASE_URL = process.env.TARGET_URL || "https://sixbytes.in"
 
 const VISITORS = [
   {
-    name: "Student Ankit",
+    name: "Student Ankit (CBSE Class 10)",
     userAgent:
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
     pages: ["/", "/courses", "/resources", "/about"],
   },
   {
-    name: "Student Priya",
+    name: "Student Priya (ICSE Class 10)",
     userAgent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
     pages: ["/", "/resources", "/results", "/courses"],
   },
   {
-    name: "Parent Sharma",
+    name: "Parent Sharma (Premnagar)",
     userAgent:
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0",
     pages: ["/", "/about", "/courses", "/contact"],
   },
   {
-    name: "Teacher Singh",
+    name: "Teacher Singh (Senior Educator)",
     userAgent:
       "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
     pages: ["/", "/courses", "/resources", "/results"],
   },
   {
-    name: "Student Rahul",
+    name: "Student Rahul (Class 12 Science)",
     userAgent:
       "Mozilla/5.0 (iPhone; CPU iPhone OS 17_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Mobile/15E148 Safari/604.1",
     pages: ["/", "/resources", "/courses", "/about"],
   },
   {
-    name: "Parent Gupta",
+    name: "Parent Gupta (NDA Aspirant Parent)",
     userAgent:
       "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.88 Mobile Safari/537.36",
     pages: ["/", "/contact", "/courses", "/results"],
   },
   {
-    name: "Student Neha",
+    name: "Student Neha (Class 9 Foundation)",
     userAgent:
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
     pages: ["/", "/courses", "/about", "/resources"],
   },
+  {
+    name: "Student Vikram (NDA & RIMC Aspirant)",
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    pages: ["/", "/courses", "/results", "/contact"],
+  },
+  {
+    name: "Student Sneha (Board Revision)",
+    userAgent:
+      "Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.103 Mobile Safari/537.36",
+    pages: ["/", "/resources", "/results", "/courses"],
+  },
+  {
+    name: "Parent Verma (Sainik School Admission)",
+    userAgent:
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
+    pages: ["/", "/courses", "/contact", "/about"],
+  },
+  {
+    name: "Student Aarav (CBSE Science Guides)",
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0",
+    pages: ["/", "/resources", "/about", "/courses"],
+  },
+  {
+    name: "Parent Rawat (Class 11 PCM Enrolment)",
+    userAgent:
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 16_7_10 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
+    pages: ["/", "/about", "/courses", "/contact"],
+  },
 ]
 
 async function runVisitorSession(browser, visitor, index) {
-  console.log(`[Start] Visitor ${index + 1}: ${visitor.name}`)
+  console.log(`[Start] Visitor ${index + 1}/${VISITORS.length}: ${visitor.name}`)
 
   const context = await browser.newContext({
     userAgent: visitor.userAgent,
@@ -111,7 +141,7 @@ async function main() {
   })
 
   try {
-    // Run all 7 visitors CONCURRENTLY so they appear simultaneously as Active Users in GA Realtime!
+    // Run all 12 visitors CONCURRENTLY so they appear simultaneously as Active Users in GA Realtime!
     await Promise.all(
       VISITORS.map((visitor, idx) => runVisitorSession(browser, visitor, idx))
     )

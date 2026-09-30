@@ -170,7 +170,7 @@ jobs:
               }
             ]
           }
-EOF
+            EOF
             )
 
             curl --silent -o /dev/null -X POST "${ENDPOINT}" \

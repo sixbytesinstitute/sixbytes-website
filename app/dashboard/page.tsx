@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import GDriveViewer from "../components/gdrive-viewer"
+import ActivityGraph from "../components/dashboard/activity-graph"
+import AvatarModal from "../components/dashboard/avatar-modal"
 import {
   IconClipboard,
   IconFolder,
@@ -18,10 +20,14 @@ import {
   IconGraduationCap,
   IconX,
   IconDashboard,
+  IconEdit,
+  IconSparkles,
+  IconBity,
+  IconBookOpen,
 } from "@/app/components/ui/icons"
-import { getAvatarById } from "@/lib/avatars"
+import { getAvatarById, AvatarGlyph } from "@/lib/avatars"
 
-type Tab = "assignments" | "materials" | "notices"
+type Tab = "overview" | "assignments" | "materials" | "notices"
 
 interface Assignment {
   _id: string
@@ -61,12 +67,13 @@ interface UserProfile {
   stream: string
   role: string
   avatar?: string
+  isEnrolled?: boolean
 }
 
 export default function StudentDashboard() {
   const router = useRouter()
   const [user, setUser] = useState<UserProfile | null>(null)
-  const [tab, setTab] = useState<Tab>("assignments")
+  const [tab, setTab] = useState<Tab>("overview")
   const [assignments, setAssignments] = useState<Assignment[]>([])
   const [materials, setMaterials] = useState<Material[]>([])
   const [notices, setNotices] = useState<Notice[]>([])
@@ -74,16 +81,12 @@ export default function StudentDashboard() {
   const [previewId, setPreviewId] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [selectedSubjectFilter, setSelectedSubjectFilter] = useState("")
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false)
 
   useEffect(() => {
     async function fetchAll() {
       try {
-        const [meRes, assignRes, matRes, noticeRes] = await Promise.all([
-          fetch("/api/auth/me").then((r) => r.json()),
-          fetch("/api/student/assignments").then((r) => r.json()),
-          fetch("/api/student/materials").then((r) => r.json()),
-          fetch("/api/student/notices").then((r) => r.json()),
-        ])
+        const meRes = await fetch("/api/auth/me").then((r) => r.json())
 
         if (meRes.success && meRes.user.role === "student") {
           setUser(meRes.user)
@@ -91,14 +94,29 @@ export default function StudentDashboard() {
             router.push("/settings")
             return
           }
+
+          // Log login activity
+          fetch("/api/student/activity", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "login" }),
+          }).catch(() => {})
+
+          // Only fetch enrolled-student data if enrolled
+          if (meRes.user.isEnrolled) {
+            const [assignRes, matRes, noticeRes] = await Promise.all([
+              fetch("/api/student/assignments").then((r) => r.json()),
+              fetch("/api/student/materials").then((r) => r.json()),
+              fetch("/api/student/notices").then((r) => r.json()),
+            ])
+            if (assignRes.success) setAssignments(assignRes.assignments)
+            if (matRes.success) setMaterials(matRes.materials)
+            if (noticeRes.success) setNotices(noticeRes.notices)
+          }
         } else {
           router.push("/login")
           return
         }
-
-        if (assignRes.success) setAssignments(assignRes.assignments)
-        if (matRes.success) setMaterials(matRes.materials)
-        if (noticeRes.success) setNotices(noticeRes.notices)
       } catch {
         router.push("/login")
       } finally {
@@ -125,11 +143,17 @@ export default function StudentDashboard() {
   if (!user) return null
 
   const urgentNotices = notices.filter((n) => n.priority !== "normal").length
+  const isEnrolled = user.isEnrolled ?? false
 
   const tabs: { key: Tab; label: string; count: number; icon: React.ReactNode }[] = [
-    { key: "assignments", label: "Assignments", count: assignments.length, icon: <IconClipboard size={16} /> },
-    { key: "materials", label: "Study Vault", count: materials.length, icon: <IconFolder size={16} /> },
-    { key: "notices", label: "Notice Board", count: notices.length, icon: <IconBell size={16} /> },
+    { key: "overview", label: "Overview", count: 0, icon: <IconDashboard size={16} /> },
+    ...(isEnrolled
+      ? [
+          { key: "assignments" as Tab, label: "Assignments", count: assignments.length, icon: <IconClipboard size={16} /> },
+          { key: "materials" as Tab, label: "Study Vault", count: materials.length, icon: <IconFolder size={16} /> },
+          { key: "notices" as Tab, label: "Notice Board", count: notices.length, icon: <IconBell size={16} /> },
+        ]
+      : []),
   ]
 
   const priorityBadgeStyle: Record<string, { badge: string; card: string; label: string }> = {
@@ -213,19 +237,34 @@ export default function StudentDashboard() {
             {(() => {
               const av = getAvatarById(user.avatar)
               return (
-                <div
-                  className={`w-9 h-9 rounded-xl ${av.borderColor} border flex items-center justify-center text-xs font-bold ${av.textColor} shrink-0 shadow-md`}
+                <button
+                  type="button"
+                  onClick={() => setAvatarModalOpen(true)}
+                  title="Click to customize your profile avatar"
+                  className={`group relative w-10 h-10 rounded-xl ${av.borderColor} border flex items-center justify-center font-bold ${av.textColor} shrink-0 shadow-md cursor-pointer hover:scale-105 hover:ring-2 hover:ring-orange-500/50 transition-all`}
                   style={{ background: av.gradient }}
                 >
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
+                  <AvatarGlyph iconName={av.iconName} initial={user.name.charAt(0).toUpperCase()} size={16} />
+                  <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-orange-500 text-white flex items-center justify-center shadow-sm opacity-90 group-hover:opacity-100">
+                    <IconEdit size={9} />
+                  </span>
+                </button>
               )
             })()}
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-cream truncate">{user.name}</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-cream truncate">{user.name}</p>
+                <button
+                  type="button"
+                  onClick={() => setAvatarModalOpen(true)}
+                  className="text-[10px] text-orange-400 hover:text-orange-300 font-medium transition-colors cursor-pointer"
+                >
+                  Edit
+                </button>
+              </div>
               <div className="flex items-center gap-1.5 mt-1">
                 <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-cream border border-white/10">
-                  Class {user.class}
+                  Class {user.class || "Student"}
                 </span>
                 {user.stream && user.stream !== "N/A" && (
                   <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20">
@@ -300,25 +339,81 @@ export default function StudentDashboard() {
       <main className="lg:ml-64 min-h-screen p-6 lg:p-8 max-w-6xl mx-auto space-y-8">
         {/* Welcome Banner */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-white/[0.08]">
-          <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-[10px] uppercase font-bold tracking-[0.16em] text-orange-400 mb-2">
-              Class {user.class} {user.stream !== "N/A" ? `· ${user.stream}` : ""}
+          <div className="flex items-start gap-4">
+            {(() => {
+              const av = getAvatarById(user.avatar)
+              return (
+                <button
+                  type="button"
+                  onClick={() => setAvatarModalOpen(true)}
+                  title="Click to customize profile avatar"
+                  className={`group relative w-14 h-14 rounded-2xl ${av.borderColor} border-2 flex items-center justify-center font-bold ${av.textColor} shrink-0 shadow-xl cursor-pointer hover:scale-105 hover:ring-2 hover:ring-orange-500/50 transition-all`}
+                  style={{ background: av.gradient }}
+                >
+                  <AvatarGlyph iconName={av.iconName} initial={user.name.charAt(0).toUpperCase()} size={24} />
+                  <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-orange-500 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <IconSparkles size={11} />
+                  </span>
+                </button>
+              )
+            })()}
+            <div>
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-[10px] uppercase font-bold tracking-[0.16em] text-orange-400">
+                  {isEnrolled ? (
+                    <>{"Class " + user.class} {user.stream !== "N/A" ? `· ${user.stream}` : ""}</>
+                  ) : (
+                    <>Free Account</>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAvatarModalOpen(true)}
+                  className="inline-flex items-center gap-1 text-[10px] text-muted-custom hover:text-cream px-2.5 py-0.5 rounded-full bg-white/[0.04] border border-white/10 hover:border-white/20 transition-all cursor-pointer"
+                >
+                  <span>Change Avatar</span>
+                </button>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-display font-bold text-cream">
+                Hello, {user.name.split(" ")[0]}
+              </h1>
+              <p className="text-xs sm:text-sm text-muted-custom mt-1">
+                {isEnrolled
+                  ? `You have ${assignments.length} assignments assigned and ${materials.length} notes ready to study.`
+                  : "Explore free resources, track your progress, and build your study streak!"}
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-display font-bold text-cream">
-              Hello, {user.name.split(" ")[0]}
-            </h1>
-            <p className="text-xs sm:text-sm text-muted-custom mt-1">
-              You have {assignments.length} assignments assigned and {materials.length} notes ready to study.
-            </p>
           </div>
 
-          {urgentNotices > 0 && (
+          {urgentNotices > 0 && isEnrolled && (
             <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-red-500/[0.08] border border-red-500/30 text-red-400 text-xs font-semibold">
               <IconAlertCircle size={16} />
               <span>{urgentNotices} Urgent Notice{urgentNotices > 1 ? "s" : ""}</span>
             </div>
           )}
         </div>
+
+        {/* Enrollment CTA for non-enrolled students */}
+        {!isEnrolled && (
+          <div className="rounded-2xl border border-orange-500/30 bg-gradient-to-r from-orange-500/[0.08] via-amber-500/[0.05] to-orange-500/[0.08] p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-orange-500/15 border border-orange-500/25 flex items-center justify-center text-orange-400 shrink-0">
+              <IconGraduationCap size={24} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-semibold text-cream font-display">Unlock the Full SixBytes Experience</h3>
+              <p className="text-xs text-muted-custom mt-1">Enroll at SixBytes to get assignments, study materials, faculty notes, and personalized notice alerts.</p>
+            </div>
+            <a
+              href="https://wa.me/917536839760?text=Hello%20SixBytes!%20I%20want%20to%20enroll%20in%20your%20coaching%20program."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-semibold shadow-lg shadow-orange-500/25 transition-all"
+            >
+              <IconGraduationCap size={16} />
+              <span>Enroll Now</span>
+            </a>
+          </div>
+        )}
 
         {/* Tab Navigation Pill Row */}
         <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3 overflow-x-auto">
@@ -342,6 +437,65 @@ export default function StudentDashboard() {
             </button>
           ))}
         </div>
+
+        {/* TAB 0: OVERVIEW — Activity Graph + Streaks */}
+        {tab === "overview" && (
+          <div className="space-y-6">
+            <ActivityGraph />
+
+            {/* Quick Links for non-enrolled */}
+            {!isEnrolled && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Link
+                  href="/resources"
+                  className="rounded-2xl border border-white/[0.08] bg-navy-mid/40 p-5 space-y-2 hover:border-orange-500/30 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                      <IconBookOpen size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-cream font-display group-hover:text-orange-400 transition-colors">Study Vault</h3>
+                      <p className="text-[11px] text-muted-custom">Curated guides, formulas & solved questions</p>
+                    </div>
+                  </div>
+                </Link>
+                <div
+                  className="rounded-2xl border border-white/[0.08] bg-navy-mid/40 p-5 space-y-2 hover:border-orange-500/40 transition-all group cursor-pointer"
+                  onClick={() => {
+                    const tutorBtn = (document.querySelector('button[data-tutor-launcher="true"]') ||
+                      document.querySelector('button[aria-label="Open Bity Socratic AI"]')) as HTMLButtonElement
+                    tutorBtn?.click()
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/25 flex items-center justify-center text-orange-400 shadow-inner group-hover:scale-105 transition-transform">
+                      <IconBity size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-cream font-display group-hover:text-orange-300 transition-colors">Bity</h3>
+                      <p className="text-[11px] text-muted-custom">SixBytes Socratic companion • Conceptual hints</p>
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  href="/settings"
+                  className="rounded-2xl border border-white/[0.08] bg-navy-mid/40 p-5 space-y-2 hover:border-orange-500/30 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
+                      <IconSettings size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-cream font-display group-hover:text-orange-400 transition-colors">Profile & Settings</h3>
+                      <p className="text-[11px] text-muted-custom">Customize avatar, name & credentials</p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* TAB 1: ASSIGNMENTS */}
         {tab === "assignments" && (
@@ -576,6 +730,15 @@ export default function StudentDashboard() {
           </div>
         )}
       </main>
+      <AvatarModal
+        isOpen={avatarModalOpen}
+        onClose={() => setAvatarModalOpen(false)}
+        currentAvatar={user.avatar}
+        userName={user.name}
+        onAvatarUpdated={(newId) => {
+          setUser((prev) => (prev ? { ...prev, avatar: newId } : null))
+        }}
+      />
     </div>
   )
 }

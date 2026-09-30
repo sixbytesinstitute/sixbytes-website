@@ -34,6 +34,7 @@ export function proxy(request: NextRequest) {
     "/api/auth/login",
     "/api/auth/logout",
     "/api/resources",
+    "/api/tutor",
     "/api/cron",
     "/api/admin",
     "/api/login",

@@ -17,11 +17,56 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
-  simulate-browser-visitors:
+  resolve-runner:
+    name: Probe & Select Runner (Uttarakhand Local vs Cloud Fallback)
     runs-on: ubuntu-latest
+    outputs:
+      chosen_runner: ${{ steps.detect.outputs.runner }}
+      is_self_hosted: ${{ steps.detect.outputs.is_self_hosted }}
+    steps:
+      - name: Detect Online Self-Hosted Runner
+        id: detect
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OVERRIDE="${{ vars.ACTIONS_RUNNER }}"
+          if [ -n "$OVERRIDE" ] && [ "$OVERRIDE" != "auto" ]; then
+            echo "Explicit ACTIONS_RUNNER override detected: $OVERRIDE"
+            echo "runner=$OVERRIDE" >> $GITHUB_OUTPUT
+            if [ "$OVERRIDE" = "self-hosted" ]; then
+              echo "is_self_hosted=true" >> $GITHUB_OUTPUT
+            else
+              echo "is_self_hosted=false" >> $GITHUB_OUTPUT
+            fi
+            exit 0
+          fi
+
+          echo "Querying GitHub Actions API to check for an active self-hosted runner..."
+          API_URL="https://api.github.com/repos/${{ github.repository }}/actions/runners"
+          RESP=$(curl -s -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$API_URL" 2>/dev/null || echo "{}")
+
+          ONLINE=$(echo "$RESP" | grep -o '"status"[[:space:]]*:[[:space:]]*"online"' | head -n 1)
+
+          if [ -n "$ONLINE" ]; then
+            echo "Self-hosted runner is ONLINE in Dehradun / Uttarakhand! Routing workflow to self-hosted..."
+            echo "runner=self-hosted" >> $GITHUB_OUTPUT
+            echo "is_self_hosted=true" >> $GITHUB_OUTPUT
+          else
+            echo "Self-hosted runner is offline or unconfigured. Falling back seamlessly to ubuntu-latest with Indian proxy rotation..."
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "is_self_hosted=false" >> $GITHUB_OUTPUT
+          fi
+
+  simulate-browser-visitors:
+    needs: resolve-runner
+    runs-on: ${{ needs.resolve-runner.outputs.chosen_runner }}
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -36,17 +81,32 @@ jobs:
           npm install --no-save playwright
           npx playwright install --with-deps chromium
 
-      - name: Execute 7 Concurrent Real-Browser Visitor Sessions
+      - name: Verify Runner Egress IP
+        run: |
+          echo "Checking outbound runner IP address & geolocation..."
+          curl -s --connect-timeout 5 https://ipapi.co/json/ || curl -s --connect-timeout 5 https://api.ipify.org
+          echo ""
+
+      - name: Execute 12 Concurrent Real-Browser Visitor Sessions
+        env:
+          INDIA_PROXY: ${{ secrets.INDIA_PROXY }}
+          IS_SELF_HOSTED: ${{ needs.resolve-runner.outputs.is_self_hosted }}
         run: |
           node scripts/simulate-visitors.mjs
 
   measurement-protocol-backup:
-    needs: simulate-browser-visitors
-    runs-on: ubuntu-latest
+    needs: [resolve-runner, simulate-browser-visitors]
+    if: always() && needs.simulate-browser-visitors.result != 'cancelled'
+    runs-on: ${{ needs.resolve-runner.outputs.chosen_runner }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Backup GA4 Measurement Protocol Events
         env:
           GA4_API_SECRET: ${{ secrets.GA4_API_SECRET }}
+          INDIA_PROXY: ${{ secrets.INDIA_PROXY }}
+          IS_SELF_HOSTED: ${{ needs.resolve-runner.outputs.is_self_hosted }}
         run: |
           if [ -z "${GA4_API_SECRET:-}" ]; then
             echo "GA4_API_SECRET not set, skipping backup MP ping."
@@ -55,6 +115,22 @@ jobs:
 
           ENDPOINT="https://www.google-analytics.com/mp/collect?measurement_id=G-4GEZB4TEHZ&api_secret=${GA4_API_SECRET}"
           SESSION_ID=$(date +%s)
+
+          CURL_PROXY_FLAG=""
+          if [ "${IS_SELF_HOSTED}" = "true" ]; then
+            echo "Executing directly on authentic Uttarakhand self-hosted runner; skipping proxy flag."
+          elif [ -n "${INDIA_PROXY:-}" ]; then
+            echo "Using configured INDIA_PROXY for Measurement Protocol"
+            CURL_PROXY_FLAG="--proxy ${INDIA_PROXY}"
+          else
+            echo "Testing backup Indian proxy for Measurement Protocol..."
+            if curl -s --proxy "socks5://34.131.37.209:40001" --connect-timeout 4 "https://api.ipify.org" >/dev/null 2>&1; then
+              echo "Using verified Indian SOCKS5 proxy (socks5://34.131.37.209:40001)"
+              CURL_PROXY_FLAG="--proxy socks5://34.131.37.209:40001"
+            else
+              echo "No active proxy responding; continuing direct."
+            fi
+          fi
 
           CLIENT_IDS=(
             "1084291041.${SESSION_ID}"
@@ -94,10 +170,11 @@ jobs:
               }
             ]
           }
-          EOF
+EOF
             )
 
             curl --silent -o /dev/null -X POST "${ENDPOINT}" \
+              ${CURL_PROXY_FLAG} \
               -H "Content-Type: application/json" \
               -d "${payload}"
           done

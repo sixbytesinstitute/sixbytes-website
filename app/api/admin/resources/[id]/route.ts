@@ -58,7 +58,7 @@ export const PUT = withAuth(
       updates.updatedAt = new Date();
 
       const resource = await Resource.findByIdAndUpdate(id, updates, {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       });
 

@@ -189,8 +189,8 @@ const AnnouncementSchema = new mongoose.Schema({
 
 ## 6. Frontend UI/UX Architecture
 
-- **Login Screen ([`/student-login`](file:///D:/sixbytes-website/app/student-login/page.jsx))**: Redesigned into the Obsidian Dark Theme with glowing ambient particles, frosted glass card, instant validation, and direct demo assistance link.
-- **Student Dashboard ([`/dashboard`](file:///D:/sixbytes-website/app/dashboard/page.jsx))**:
+- **Login Screen ([`/student-login`](file:///D:/sixbytes-website/app/student-login/page.tsx))**: Redesigned into the Obsidian Dark Theme with glowing ambient particles, frosted glass card, instant validation, and direct demo assistance link.
+- **Student Dashboard ([`/dashboard`](file:///D:/sixbytes-website/app/dashboard/page.tsx))**:
   - **Top Bar**: Student name, class badge, search bar, and logout action.
   - **Quick Stats**: Total materials available, new notices, and bookmarked notes.
   - **Category Pills**: *All*, *Class Notes*, *Formula Sheets*, *PYQ Question Banks*, *Mock Tests*.

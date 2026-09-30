@@ -6,39 +6,62 @@ import Link from "next/link"
 import ParticleField from "../components/ui/particle-field"
 import OrbitRings from "../components/ui/orbit-rings"
 import TagPill from "../components/ui/tag-pill"
-import PremiumIcon from "../components/ui/premium-icon"
 import ShimmerLine from "../components/ui/shimmer-line"
 
 export default function LoginPage() {
   const router = useRouter()
 
+  const [mode, setMode] = useState<"login" | "register">("login")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [regName, setRegName] = useState("")
+  const [regPhone, setRegPhone] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  const handleLogin = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError("")
 
-    if (!email || !password) {
-      setError("Please enter both email and password")
-      return
+    if (mode === "register") {
+      if (!regName.trim() || !email || !password || !regPhone.trim()) {
+        setError("All fields are required")
+        return
+      }
+      if (password.length < 6) {
+        setError("Password must be at least 6 characters")
+        return
+      }
+    } else {
+      if (!email || !password) {
+        setError("Please enter both email and password")
+        return
+      }
     }
 
     setLoading(true)
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const endpoint = mode === "register" ? "/api/auth/register" : "/api/auth/login"
+      const body = mode === "register"
+        ? { name: regName.trim(), email, password, phone: regPhone.trim() }
+        : { email, password }
+
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(body),
       })
 
       const data = await res.json()
 
       if (data.success) {
+        if (mode === "register") {
+          router.push("/dashboard")
+          return
+        }
+
         // If user must change password on first login, redirect to settings
         if (data.user.mustChangePassword) {
           router.push("/settings")
@@ -62,14 +85,19 @@ export default function LoginPage() {
             break
         }
       } else {
-        setError(data.error || "Login failed. Please verify your credentials.")
+        setError(data.error || "Something went wrong. Please try again.")
       }
     } catch (err) {
       console.error(err)
-      setError("Unable to connect to login service. Please check your connection.")
+      setError("Unable to connect. Please check your connection.")
     } finally {
       setLoading(false)
     }
+  }
+
+  const switchMode = () => {
+    setMode(mode === "login" ? "register" : "login")
+    setError("")
   }
 
   return (
@@ -98,14 +126,16 @@ export default function LoginPage() {
             </Link>
 
             <div className="inline-block">
-              <TagPill variant="orange">Secure Access</TagPill>
+              <TagPill variant="orange">{mode === "login" ? "Secure Access" : "Free Account"}</TagPill>
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-display font-bold text-cream">
-              Welcome Back
+              {mode === "login" ? "Welcome Back" : "Create Your Account"}
             </h1>
             <p className="text-xs sm:text-sm text-muted-custom font-sans">
-              Sign in with your SixBytes credentials to access your dashboard — students, faculty, content managers, and admin.
+              {mode === "login"
+                ? "Sign in with your SixBytes credentials to access your dashboard."
+                : "Sign up for free to track your progress, build streaks, and explore SixBytes resources."}
             </p>
           </div>
 
@@ -119,40 +149,76 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name Field (Register only) */}
+            {mode === "register" && (
+              <div className="space-y-1.5">
+                <label htmlFor="reg-name" className="text-xs font-semibold uppercase tracking-wider text-cream/90">
+                  Full Name
+                </label>
+                <input
+                  id="reg-name"
+                  type="text"
+                  placeholder="Your full name"
+                  value={regName}
+                  onChange={(e) => setRegName(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-cream placeholder:text-muted-custom/60 text-sm focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/40 transition-all font-sans"
+                />
+              </div>
+            )}
+
             {/* Email Field */}
             <div className="space-y-1.5">
               <label htmlFor="login-email" className="text-xs font-semibold uppercase tracking-wider text-cream/90 flex items-center gap-1.5">
                 <span>Email Address</span>
               </label>
-              <div className="relative">
+              <input
+                id="login-email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-cream placeholder:text-muted-custom/60 text-sm focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/40 transition-all font-sans"
+              />
+            </div>
+
+            {/* Phone Field (Register only) */}
+            {mode === "register" && (
+              <div className="space-y-1.5">
+                <label htmlFor="reg-phone" className="text-xs font-semibold uppercase tracking-wider text-cream/90">
+                  Phone Number
+                </label>
                 <input
-                  id="login-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="reg-phone"
+                  type="tel"
+                  placeholder="10-digit mobile number"
+                  value={regPhone}
+                  onChange={(e) => setRegPhone(e.target.value)}
                   required
                   className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-cream placeholder:text-muted-custom/60 text-sm focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/40 transition-all font-sans"
                 />
               </div>
-            </div>
+            )}
 
             {/* Password Field */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label htmlFor="login-password" className="text-xs font-semibold uppercase tracking-wider text-cream/90">
-                  Password
+                  Password{mode === "register" ? " (min 6 chars)" : ""}
                 </label>
-                <a
-                  href="https://wa.me/917536839760?text=Hello%20SixBytes!%20I%20forgot%20my%20portal%20password."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[11px] text-orange-400 hover:text-orange-300 transition-colors font-medium"
-                >
-                  Forgot password?
-                </a>
+                {mode === "login" && (
+                  <a
+                    href="https://wa.me/917536839760?text=Hello%20SixBytes!%20I%20forgot%20my%20portal%20password."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] text-orange-400 hover:text-orange-300 transition-colors font-medium"
+                  >
+                    Forgot password?
+                  </a>
+                )}
               </div>
               <div className="relative">
                 <input
@@ -162,6 +228,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  minLength={mode === "register" ? 6 : undefined}
                   className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-cream placeholder:text-muted-custom/60 text-sm focus:outline-none focus:border-orange-500/60 focus:ring-1 focus:ring-orange-500/40 transition-all font-sans pr-10"
                 />
                 <button
@@ -197,31 +264,29 @@ export default function LoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                   </svg>
-                  <span>Verifying Credentials...</span>
+                  <span>{mode === "login" ? "Signing In..." : "Creating Account..."}</span>
                 </>
               ) : (
                 <>
-                  <span>Sign In</span>
+                  <span>{mode === "login" ? "Sign In" : "Create Free Account"}</span>
                   <span>→</span>
                 </>
               )}
             </button>
           </form>
 
-          {/* Footer Assistance */}
+          {/* Mode Toggle */}
           <div className="pt-4 border-t border-white/10 text-center space-y-3">
             <p className="text-xs text-muted-custom">
-              Not yet enrolled in SixBytes classroom batches?
+              {mode === "login" ? "Don't have an account?" : "Already have an account?"}
             </p>
-            <a
-              href="https://wa.me/917536839760?text=Hello%20SixBytes!%20I%20am%20a%20new%20student%20and%20want%20to%20enroll."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-orange-400 hover:text-orange-300 transition-colors"
+            <button
+              type="button"
+              onClick={switchMode}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-orange-400 hover:text-orange-300 transition-colors cursor-pointer"
             >
-              <PremiumIcon name="chat" size="xs" variant="orange" className="!w-5 !h-5 border-none bg-transparent" />
-              <span>Apply for New Admission via WhatsApp</span>
-            </a>
+              <span>{mode === "login" ? "Create a Free Account →" : "← Back to Sign In"}</span>
+            </button>
           </div>
         </div>
 

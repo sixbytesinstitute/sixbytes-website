@@ -42,7 +42,7 @@ export const PUT = withAuth(
       // Fields that admin can update (never password via this route)
       const allowedFields = [
         "name", "phone", "class", "stream",
-        "subjects", "assignedClasses", "isActive", "role",
+        "subjects", "assignedClasses", "isActive", "role", "isEnrolled",
       ];
 
       const updates: Record<string, unknown> = {};
@@ -54,7 +54,7 @@ export const PUT = withAuth(
       updates.updatedAt = new Date();
 
       const user = await User.findByIdAndUpdate(id, updates, {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       }).select("-password");
 
@@ -91,7 +91,7 @@ export const DELETE = withAuth(
       const user = await User.findByIdAndUpdate(
         id,
         { isActive: false, updatedAt: new Date() },
-        { new: true }
+        { returnDocument: "after" }
       ).select("-password");
 
       if (!user) {

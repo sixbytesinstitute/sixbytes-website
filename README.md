@@ -41,8 +41,8 @@ This repository contains the complete full-stack web application, including the 
 | [`/results`](app/results/page.tsx) | Marketing | Academic Hall of Fame, Star Toppers gallery, Scorecards, and Teaching Methodology. |
 | [`/contact`](app/contact/page.tsx) | Marketing | Campus Address, Interactive Google Map embed, Daily Batch Schedules, and Direct WhatsApp Booking. |
 | [`/student-login`](app/student-login/page.tsx) | Portal | Secure Student Authentication in Obsidian Dark theme with interactive password reveal. |
-| [`/dashboard`](app/dashboard/page.jsx) | Portal | Student Study Materials Repository with class filtering and document downloads. |
-| [`/admin`](app/admin/page.jsx) / [`/admin/upload`](app/admin/upload/page.jsx) | Admin | Administrative portal for student management and Cloudinary study material uploads. |
+| [`/dashboard`](app/dashboard/page.tsx) | Portal | Student Study Materials Repository with class filtering and document downloads. |
+| [`/admin`](app/admin/dashboard/page.tsx) / [`/admin/resources`](app/admin/resources/page.tsx) | Admin | Administrative portal for student management and study material uploads. |
 
 ---
 

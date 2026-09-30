@@ -29,6 +29,7 @@ export const GET = withAuth(async (req: NextRequest, { user }) => {
         subjects: dbUser.subjects,
         assignedClasses: dbUser.assignedClasses,
         mustChangePassword: dbUser.mustChangePassword,
+        isEnrolled: dbUser.isEnrolled ?? false,
         avatar: dbUser.avatar || "",
         createdAt: dbUser.createdAt,
       },

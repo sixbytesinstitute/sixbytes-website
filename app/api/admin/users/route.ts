@@ -60,10 +60,11 @@ export const POST = withAuth(
         role,
         class: role === "student" ? userClass : "",
         stream: stream || "N/A",
-         subjects: role === "faculty" ? (subjects || []) : [],
-         assignedClasses: role === "faculty" ? (assignedClasses || []) : [],
+        subjects: role === "faculty" ? (subjects || []) : [],
+        assignedClasses: role === "faculty" ? (assignedClasses || []) : [],
         mustChangePassword: true,
         isActive: true,
+        isEnrolled: typeof body.isEnrolled === "boolean" ? body.isEnrolled : true,
       });
 
       return NextResponse.json(
@@ -77,6 +78,7 @@ export const POST = withAuth(
             phone: newUser.phone,
             role: newUser.role,
             class: newUser.class,
+            isEnrolled: newUser.isEnrolled,
           },
           defaultPassword, // Show ONCE to admin
         },
@@ -137,3 +139,50 @@ export const GET = withAuth(
   },
   ["admin"]
 );
+
+// ─── PATCH: Update user status (isEnrolled, isActive) ──────────
+export const PATCH = withAuth(
+  async (req: NextRequest) => {
+    try {
+      await connectDB();
+      const body = await req.json();
+      const { userId, isEnrolled, isActive } = body;
+
+      if (!userId) {
+        return NextResponse.json(
+          { success: false, error: "User ID is required" },
+          { status: 400 }
+        );
+      }
+
+      const updateData: Record<string, unknown> = {};
+      if (typeof isEnrolled === "boolean") updateData.isEnrolled = isEnrolled;
+      if (typeof isActive === "boolean") updateData.isActive = isActive;
+
+      const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+        returnDocument: "after",
+      }).select("-password");
+
+      if (!updatedUser) {
+        return NextResponse.json(
+          { success: false, error: "User not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "User status updated successfully",
+        user: updatedUser,
+      });
+    } catch (error) {
+      console.error("UPDATE USER STATUS ERROR:", error);
+      return NextResponse.json(
+        { success: false, error: "Failed to update user status" },
+        { status: 500 }
+      );
+    }
+  },
+  ["admin"]
+);
+

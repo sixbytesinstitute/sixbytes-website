@@ -15,6 +15,7 @@ import {
   IconTeacher,
   IconShield,
 } from "@/app/components/ui/icons"
+import { getAvatarById, AvatarGlyph } from "@/lib/avatars"
 
 interface UserRecord {
   _id: string
@@ -27,6 +28,8 @@ interface UserRecord {
   subjects: string[]
   assignedClasses: string[]
   isActive: boolean
+  isEnrolled?: boolean
+  avatar?: string
   createdAt: string
 }
 
@@ -126,6 +129,19 @@ export default function AdminUsersPage() {
         method,
         headers: body ? { "Content-Type": "application/json" } : {},
         body,
+      })
+      fetchUsers()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleToggleEnrolled = async (userId: string, isEnrolled: boolean) => {
+    try {
+      await fetch(`/api/admin/users/${userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isEnrolled: !isEnrolled }),
       })
       fetchUsers()
     } catch (err) {
@@ -263,9 +279,21 @@ export default function AdminUsersPage() {
                       {/* Name & Avatar */}
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 flex items-center justify-center font-bold text-cream text-xs shrink-0">
-                            {u.name.charAt(0).toUpperCase()}
-                          </div>
+                          {(() => {
+                            const av = getAvatarById(u.avatar)
+                            return (
+                              <div
+                                className={`w-8 h-8 rounded-lg ${av.borderColor} border flex items-center justify-center font-bold ${av.textColor} text-xs shrink-0 shadow-sm`}
+                                style={{ background: av.gradient }}
+                              >
+                                <AvatarGlyph
+                                  iconName={av.iconName}
+                                  initial={u.name.charAt(0).toUpperCase()}
+                                  size={14}
+                                />
+                              </div>
+                            )
+                          })()}
                           <div>
                             <p className="font-semibold text-cream">{u.name}</p>
                             <p className="text-[11px] text-muted-custom">{u.email}</p>
@@ -273,14 +301,30 @@ export default function AdminUsersPage() {
                         </div>
                       </td>
 
-                      {/* Role Badge */}
+                      {/* Role & Enrollment Badge */}
                       <td className="px-5 py-3.5">
-                        <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${roleStyle}`}>
-                          {u.role === "student" && <IconGraduationCap size={12} />}
-                          {u.role === "manager" && <IconShield size={12} />}
-                          {u.role === "faculty" && <IconTeacher size={12} />}
-                          <span>{u.role}</span>
-                        </span>
+                        <div className="flex flex-col gap-1 items-start">
+                          <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${roleStyle}`}>
+                            {u.role === "student" && <IconGraduationCap size={12} />}
+                            {u.role === "manager" && <IconShield size={12} />}
+                            {u.role === "faculty" && <IconTeacher size={12} />}
+                            <span>{u.role}</span>
+                          </span>
+                          {u.role === "student" && (
+                            <button
+                              type="button"
+                              onClick={() => handleToggleEnrolled(u._id, u.isEnrolled ?? false)}
+                              title="Click to toggle Enrolled / Free status"
+                              className={`text-[9px] font-bold px-2 py-0.5 rounded-full border transition cursor-pointer ${
+                                u.isEnrolled
+                                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
+                                  : "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20"
+                              }`}
+                            >
+                              {u.isEnrolled ? "Enrolled ✓" : "Free User"}
+                            </button>
+                          )}
+                        </div>
                       </td>
 
                       {/* Assignment / Class */}
@@ -330,16 +374,32 @@ export default function AdminUsersPage() {
                       {/* Actions */}
                       <td className="px-5 py-3.5 text-right">
                         {u.role !== "admin" ? (
-                          <button
-                            onClick={() => handleToggleActive(u._id, u.isActive)}
-                            className={`text-xs font-semibold px-3 py-1 rounded-lg border transition-all cursor-pointer ${
-                              u.isActive
-                                ? "border-red-500/20 text-red-400/90 hover:bg-red-500/10 hover:border-red-500/30"
-                                : "border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30"
-                            }`}
-                          >
-                            {u.isActive ? "Deactivate" : "Reactivate"}
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            {u.role === "student" && (
+                              <button
+                                type="button"
+                                onClick={() => handleToggleEnrolled(u._id, u.isEnrolled ?? false)}
+                                className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                                  u.isEnrolled
+                                    ? "border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                                    : "border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
+                                }`}
+                                title={u.isEnrolled ? "Revoke enrollment (convert to Free User)" : "Mark as Enrolled Student"}
+                              >
+                                {u.isEnrolled ? "Make Free" : "Enroll"}
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleToggleActive(u._id, u.isActive)}
+                              className={`text-xs font-semibold px-3 py-1 rounded-lg border transition-all cursor-pointer ${
+                                u.isActive
+                                  ? "border-red-500/20 text-red-400/90 hover:bg-red-500/10 hover:border-red-500/30"
+                                  : "border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30"
+                              }`}
+                            >
+                              {u.isActive ? "Deactivate" : "Reactivate"}
+                            </button>
+                          </div>
                         ) : (
                           <span className="text-[10px] text-muted-custom/50 uppercase tracking-widest font-mono">Protected</span>
                         )}

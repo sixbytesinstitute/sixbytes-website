@@ -54,7 +54,7 @@ export async function POST(
     const resource = await Resource.findOneAndUpdate(
       { slug, published: true },
       { $inc: { viewCount: 1 } },
-      { new: true }
+      { returnDocument: "after" }
     ).select("slug viewCount").lean();
 
     if (!resource) {

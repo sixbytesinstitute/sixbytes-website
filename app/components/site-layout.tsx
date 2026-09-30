@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import Navbar from "./navbar"
 import Footer from "./footer"
 import ClientProviders from "./client-providers"
+import { TutorWidget } from "./tutor/tutor-widget"
 
 interface SiteLayoutProps {
   children: React.ReactNode
@@ -28,6 +29,7 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
       </main>
       {!isDashboard && <Footer />}
       <ClientProviders />
+      <TutorWidget />
     </>
   )
 }

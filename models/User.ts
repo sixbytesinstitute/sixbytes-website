@@ -68,6 +68,12 @@ const UserSchema = new mongoose.Schema({
     default: true,
     index: true,
   },
+  /** Whether the student is enrolled at SixBytes (admin-set). Non-enrolled = lite dashboard. */
+  isEnrolled: {
+    type: Boolean,
+    default: false,
+    index: true,
+  },
 
   // ── Profile avatar ────────────────────────────────────
   avatar: {

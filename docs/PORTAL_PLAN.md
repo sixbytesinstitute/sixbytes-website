@@ -41,23 +41,23 @@ models/
 ## Tasks
 
 ### Task 1: Database Models & Schemas
-- [ ] Upgrade [`models/Student.js`](file:///D:/sixbytes-website/models/Student.js) with indexed `email`, `class`, `stream`, and `role`.
-- [ ] Upgrade [`models/Material.js`](file:///D:/sixbytes-website/models/Material.js) with `subject`, `category`, `isPublic`, and `downloadCount`.
-- [ ] Create [`models/Announcement.js`](file:///D:/sixbytes-website/models/Announcement.js) for institute notices and alerts.
+- [ ] Upgrade [`models/User.ts`](file:///D:/sixbytes-website/models/User.ts) with indexed `email`, `class`, `stream`, and `role`.
+- [ ] Upgrade [`models/Material.ts`](file:///D:/sixbytes-website/models/Material.ts) with `subject`, `category`, `isPublic`, and `downloadCount`.
+- [ ] Create [`models/Notice.ts`](file:///D:/sixbytes-website/models/Notice.ts) for institute notices and alerts.
 
 ### Task 2: Backend APIs & JWT Session Management
-- [ ] Upgrade [`app/api/login/route.js`](file:///D:/sixbytes-website/app/api/login/route.js) to support bcrypt verification and secure JWT cookie generation with JSON response fallback.
-- [ ] Create [`app/api/logout/route.js`](file:///D:/sixbytes-website/app/api/logout/route.js) to clear session state.
-- [ ] Create [`app/api/student/me/route.js`](file:///D:/sixbytes-website/app/api/student/me/route.js) to verify session and return current student profile.
-- [ ] Upgrade [`app/api/material/route.js`](file:///D:/sixbytes-website/app/api/material/route.js) to support multi-parameter filtering (`class`, `subject`, `category`, `q`).
-- [ ] Create [`app/api/announcements/route.js`](file:///D:/sixbytes-website/app/api/announcements/route.js) to return notices by class.
+- [ ] Upgrade [`app/api/auth/login/route.ts`](file:///D:/sixbytes-website/app/api/auth/login/route.ts) to support bcrypt verification and secure JWT cookie generation with JSON response fallback.
+- [ ] Create [`app/api/auth/logout/route.ts`](file:///D:/sixbytes-website/app/api/auth/logout/route.ts) to clear session state.
+- [ ] Create [`app/api/auth/me/route.ts`](file:///D:/sixbytes-website/app/api/auth/me/route.ts) to verify session and return current student profile.
+- [ ] Upgrade [`app/api/faculty/materials/route.ts`](file:///D:/sixbytes-website/app/api/faculty/materials/route.ts) to support multi-parameter filtering (`class`, `subject`, `category`, `q`).
+- [ ] Create [`app/api/student/notices/route.ts`](file:///D:/sixbytes-website/app/api/student/notices/route.ts) to return notices by class.
 
 ### Task 3: Redesign Student Login Page
-- [ ] Rebuild [`app/student-login/page.tsx`](file:///D:/sixbytes-website/app/student-login/page.jsx) in the Obsidian Dark theme.
+- [ ] Rebuild [`app/student-login/page.tsx`](file:///D:/sixbytes-website/app/student-login/page.tsx) in the Obsidian Dark theme.
 - [ ] Add particle field canvas, glassmorphic login card, loading states, error alerts, and demo session link.
 
 ### Task 4: Build Student Resource Dashboard
-- [ ] Rebuild [`app/dashboard/page.tsx`](file:///D:/sixbytes-website/app/dashboard/page.jsx) into a complete Student Resource Hub:
+- [ ] Rebuild [`app/dashboard/page.tsx`](file:///D:/sixbytes-website/app/dashboard/page.tsx) into a complete Student Resource Hub:
   - Header: Student name, class badge, search bar, and logout.
   - Category Pills: *All*, *Class Notes*, *Formula Sheets*, *PYQs*, *Mock Tests*.
   - Subject Filters: *Mathematics*, *Physics*, *Chemistry*, *Biology*, *English*, *Defence GAT*.

@@ -13,7 +13,7 @@ import {
   IconUsers,
   IconSettings,
 } from "../components/ui/icons"
-import { AVATAR_OPTIONS, getAvatarById } from "@/lib/avatars"
+import { AVATAR_OPTIONS, getAvatarById, AvatarGlyph } from "@/lib/avatars"
 
 /* ─── Types ─────────────────────────────────────────────── */
 interface UserProfile {
@@ -157,12 +157,18 @@ function AvatarBubble({
     lg: "w-14 h-14 text-xl",
     xl: "w-20 h-20 text-3xl",
   }
+  const iconSizes = {
+    sm: 14,
+    md: 18,
+    lg: 24,
+    xl: 32,
+  }
   return (
     <div
       className={`${sizeClasses[size]} rounded-2xl ${av.borderColor} border flex items-center justify-center font-bold ${av.textColor} shrink-0 shadow-lg`}
       style={{ background: av.gradient }}
     >
-      {initial}
+      <AvatarGlyph iconName={av.iconName} initial={initial} size={iconSizes[size]} />
     </div>
   )
 }
@@ -183,9 +189,35 @@ export default function SettingsPage() {
   const [profileEmail, setProfileEmail] = useState("")
   const [profilePhone, setProfilePhone] = useState("")
   const [selectedAvatar, setSelectedAvatar] = useState("")
+  const [avatarSaving, setAvatarSaving] = useState(false)
+  const [avatarSuccess, setAvatarSuccess] = useState(false)
+  const [avatarCategory, setAvatarCategory] = useState<"all" | "persona" | "gradient">("all")
   const [profileLoading, setProfileLoading] = useState(false)
   const [profileError, setProfileError] = useState("")
   const [profileSuccess, setProfileSuccess] = useState("")
+
+  const handleAvatarChange = async (newId: string) => {
+    setSelectedAvatar(newId)
+    setAvatarSaving(true)
+    setAvatarSuccess(false)
+    try {
+      const res = await fetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatar: newId }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setUser((prev) => (prev ? { ...prev, avatar: newId } : null))
+        setAvatarSuccess(true)
+        setTimeout(() => setAvatarSuccess(false), 2500)
+      }
+    } catch {
+      // silently handle
+    } finally {
+      setAvatarSaving(false)
+    }
+  }
 
   /* Password Form */
   const [currentPassword, setCurrentPassword] = useState("")
@@ -439,40 +471,103 @@ export default function SettingsPage() {
           <div className="space-y-6">
             {/* Avatar Picker Card */}
             <div className="rounded-2xl bg-[#0f1318]/90 border border-white/[0.08] backdrop-blur-2xl shadow-2xl shadow-black/60 overflow-hidden">
-              <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
-                <AvatarBubble
-                  avatarId={selectedAvatar}
-                  initial={profileName.charAt(0)?.toUpperCase() || "U"}
-                  size="md"
-                />
-                <div>
-                  <h2 className="text-sm font-semibold text-cream">Profile Avatar</h2>
-                  <p className="text-[11px] text-muted-custom">Choose a color theme for your profile picture</p>
+              <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <AvatarBubble
+                    avatarId={selectedAvatar}
+                    initial={profileName.charAt(0)?.toUpperCase() || "U"}
+                    size="md"
+                  />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-sm font-semibold text-cream">Profile Avatar</h2>
+                      {avatarSuccess && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                          <IconCheck size={11} /> Saved
+                        </span>
+                      )}
+                      {avatarSaving && (
+                        <span className="text-[10px] text-orange-400 font-medium animate-pulse">
+                          Saving...
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-muted-custom">
+                      Choose an academic persona badge or color gradient (auto-saves on click)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="hidden sm:flex items-center gap-1.5 bg-white/[0.03] p-1 rounded-xl border border-white/[0.06]">
+                  {(
+                    [
+                      { key: "all", label: "All" },
+                      { key: "persona", label: "Personas" },
+                      { key: "gradient", label: "Gradients" },
+                    ] as const
+                  ).map((tab) => (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      onClick={() => setAvatarCategory(tab.key)}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                        avatarCategory === tab.key
+                          ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
+                          : "text-muted-custom hover:text-cream border border-transparent"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
+              {/* Mobile Category Bar */}
+              <div className="sm:hidden px-6 pt-3 flex gap-1.5 border-b border-white/[0.06] pb-2">
+                {(
+                  [
+                    { key: "all", label: "All" },
+                    { key: "persona", label: "Personas" },
+                    { key: "gradient", label: "Gradients" },
+                  ] as const
+                ).map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setAvatarCategory(tab.key)}
+                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                      avatarCategory === tab.key
+                        ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
+                        : "text-muted-custom hover:text-cream border border-transparent"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
               <div className="p-6">
-                <div className="grid grid-cols-6 sm:grid-cols-12 gap-2.5">
-                  {AVATAR_OPTIONS.map((av) => {
+                <div className="grid grid-cols-4 sm:grid-cols-8 md:grid-cols-12 gap-2.5">
+                  {AVATAR_OPTIONS.filter((av) => avatarCategory === "all" || av.category === avatarCategory).map((av) => {
                     const isSelected = selectedAvatar === av.id
                     return (
                       <button
                         key={av.id}
                         type="button"
-                        onClick={() => setSelectedAvatar(av.id)}
+                        onClick={() => handleAvatarChange(av.id)}
                         title={av.label}
-                        className={`relative w-full aspect-square rounded-xl border-2 transition-all duration-200 cursor-pointer hover:scale-110 ${
+                        className={`group relative w-full aspect-square rounded-xl border-2 transition-all duration-200 cursor-pointer hover:scale-110 flex items-center justify-center ${
                           isSelected
-                            ? `${av.borderColor} ring-2 ring-orange-400/50 ring-offset-1 ring-offset-[#0a0c0e] scale-110`
+                            ? `${av.borderColor} ring-2 ring-orange-400/50 ring-offset-1 ring-offset-[#0a0c0e] scale-110 shadow-lg shadow-orange-500/20`
                             : "border-transparent hover:border-white/20"
                         }`}
                         style={{ background: av.gradient }}
                       >
-                        <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-bold ${av.textColor}`}>
-                          {profileName.charAt(0)?.toUpperCase() || "U"}
+                        <span className={`flex items-center justify-center font-bold transition-transform group-hover:scale-110 ${av.textColor}`}>
+                          <AvatarGlyph iconName={av.iconName} initial={profileName.charAt(0)?.toUpperCase() || "U"} size={16} />
                         </span>
                         {isSelected && (
-                          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-orange-500 flex items-center justify-center">
+                          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-orange-500 flex items-center justify-center shadow-sm">
                             <IconCheck size={10} className="text-white" />
                           </span>
                         )}

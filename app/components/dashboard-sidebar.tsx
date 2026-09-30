@@ -15,7 +15,7 @@ import {
   IconLogout,
   IconX,
 } from "./ui/icons"
-import { getAvatarById } from "@/lib/avatars"
+import { getAvatarById, AvatarGlyph } from "@/lib/avatars"
 
 interface SidebarLink {
   href: string
@@ -103,12 +103,14 @@ export default function DashboardSidebar({ role, userName, userEmail, userAvatar
           {(() => {
             const av = getAvatarById(userAvatar)
             return (
-              <div
-                className={`w-9 h-9 rounded-xl ${av.borderColor} border flex items-center justify-center text-xs font-bold ${av.textColor} shrink-0`}
+              <Link
+                href="/settings"
+                title="Account Settings & Avatar"
+                className={`w-9 h-9 rounded-xl ${av.borderColor} border flex items-center justify-center font-bold ${av.textColor} shrink-0 hover:scale-105 transition-all shadow-sm group`}
                 style={{ background: av.gradient }}
               >
-                {userName ? userName.charAt(0).toUpperCase() : "U"}
-              </div>
+                <AvatarGlyph iconName={av.iconName} initial={userName ? userName.charAt(0).toUpperCase() : "U"} size={16} />
+              </Link>
             )
           })()}
           <div className="min-w-0 flex-1">

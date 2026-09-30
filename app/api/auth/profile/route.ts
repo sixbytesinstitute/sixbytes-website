@@ -10,7 +10,43 @@ export const PUT = withAuth(async (req: NextRequest, { user }) => {
     const body = await req.json();
     const { name, phone, email, avatar } = body;
 
-    // Validate
+    // ── Avatar-Only Update Support ─────────────────────────
+    // If only avatar is provided (e.g. from fast avatar picker or dashboard), update immediately
+    const isAvatarOnly = typeof avatar === "string" && !name && !phone && !email;
+    if (isAvatarOnly) {
+      const updatedUser = await User.findByIdAndUpdate(
+        user.userId,
+        { avatar: avatar.trim(), updatedAt: new Date() },
+        { returnDocument: "after" }
+      ).select("-password");
+
+      if (!updatedUser) {
+        return NextResponse.json(
+          { success: false, error: "User not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Avatar updated successfully",
+        user: {
+          id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          phone: updatedUser.phone,
+          role: updatedUser.role,
+          class: updatedUser.class,
+          stream: updatedUser.stream,
+          subjects: updatedUser.subjects,
+          assignedClasses: updatedUser.assignedClasses,
+          isEnrolled: updatedUser.isEnrolled ?? false,
+          avatar: updatedUser.avatar || "",
+        },
+      });
+    }
+
+    // Validate full profile form
     if (!name || !name.trim()) {
       return NextResponse.json(
         { success: false, error: "Name is required" },
@@ -84,7 +120,7 @@ export const PUT = withAuth(async (req: NextRequest, { user }) => {
     const updatedUser = await User.findByIdAndUpdate(
       user.userId,
       updatePayload,
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     ).select("-password");
 
     if (!updatedUser) {
@@ -118,3 +154,5 @@ export const PUT = withAuth(async (req: NextRequest, { user }) => {
     );
   }
 });
+
+export const PATCH = PUT;
